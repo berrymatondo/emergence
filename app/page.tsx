@@ -25,7 +25,7 @@ const HomePage = () => {
     /*     <div className="flex min-h-screen flex-col items-center justify-between p-24">
      */
     <div className="h-full  w-full md:container flex max-md:flex-col justify-start items-center my-auto max-md:gap-8">
-      <div className="bg-red-600 md:container md:py-24 max-md:pt-16 flex flex-col gap-4 justify-center md:my-auto  dark:bg-transparent">
+      <div className=" md:container md:py-24 max-md:pt-10 flex flex-col gap-4 justify-center md:my-auto  dark:bg-transparent">
         <div className="flex justify-center text-teal-700 text-xl font-bold">
           <strong className="text-9xl max-md:text-7xl">E</strong>
           <div className="leading-10 flex flex-col items-start justify-center">
