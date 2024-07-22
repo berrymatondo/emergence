@@ -19,6 +19,8 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
 import {
   Sheet,
   SheetClose,
@@ -30,8 +32,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { MdOutlineDiamond } from "react-icons/md";
-import { useRouter } from "next/navigation";
+import { MdExitToApp, MdOutlineDiamond } from "react-icons/md";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 type ValorisationProps = {
   st?: any;
@@ -40,13 +43,33 @@ type ValorisationProps = {
   ic?: any;
   ex?: any;
   tp?: any;
+  chem?: any;
+  lk?: any;
+  item?: any;
 };
-export const Valorisation = ({ st, sd, sl, ic, ex, tp }: ValorisationProps) => {
+export const Valorisation = ({
+  st,
+  sd,
+  sl,
+  ic,
+  ex,
+  tp,
+  chem,
+  lk,
+  item,
+}: ValorisationProps) => {
+  //console.log("sb", lk);
+  //console.log("sb", chem);
+  //console.log("item.link", item.link);
+
   const router = useRouter();
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <div className="flex items-center">
+        <div
+          className={`flex items-center ${lk == chem ? "text-sky-600" : ""} `}
+        >
           {ex ? (
             <>
               {ic}
@@ -80,7 +103,9 @@ export const Valorisation = ({ st, sd, sl, ic, ex, tp }: ValorisationProps) => {
         <div className="flex flex-col gap-3 my-8">
           {sl?.map((el: any) => (
             <SheetClose key={el.id} asChild>
-              <Button onClick={() => router.push(el.link)}>{el.title}</Button>
+              <Button onClick={() => router.replace(el.link)}>
+                {el.title}
+              </Button>
             </SheetClose>
           ))}
         </div>
@@ -94,36 +119,52 @@ type SimpleLinkProps = {
   link?: any;
   ex?: any;
   tp?: any;
+  chem?: any;
 };
 
-const SimpleLink = ({ title, link, ex, tp }: SimpleLinkProps) => {
+const SimpleLink = ({ title, link, ex, tp, chem }: SimpleLinkProps) => {
   const router = useRouter();
 
+  //console.log("link", link);
+
+  //${chem == "valorisation" ? "bg-green-600" : ""}
+
   return (
-    <div className="flex items-center">
+    <div
+      className={`flex items-center ${
+        link == chem ? "text-sky-600 rounded-lg " : ""
+      }`}
+    >
       {ex ? (
         <>
-          <RiDashboardLine size={20} />
+          <Link href={"/" + link} className="flex gap-4 m-1">
+            <RiDashboardLine size={20} />
+            <p className="font-medium text-md">{title}</p>{" "}
+          </Link>
+          {/*           <RiDashboardLine size={20} />
           <Button
-            onClick={() => router.push(link)}
+            onClick={() => router.replace(link)}
             variant="empty"
             className="font-medium text-md"
           >
             {title}
-          </Button>
+          </Button> */}
         </>
       ) : (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              {" "}
-              <Button
-                onClick={() => router.push(link)}
+              <Link href={"/" + link} className="flex gap-4 m-1 pl-4">
+                <RiDashboardLine size={20} />
+                <p className="font-medium text-md">{title}</p>{" "}
+              </Link>
+              {/*               <Button
+                onClick={() => router.replace(link)}
                 variant="empty"
                 className="font-medium text-md"
               >
                 <RiDashboardLine size={20} />
-              </Button>
+              </Button> */}
             </TooltipTrigger>
             <TooltipContent>
               <p className="text-sky-888">{tp}</p>
@@ -138,7 +179,7 @@ const SimpleLink = ({ title, link, ex, tp }: SimpleLinkProps) => {
 const ListItems = [
   {
     id: 1,
-    link: "/overview",
+    link: "overview",
     icon: <RiDashboardLine size={20} />,
     tooltip: "Overview",
     title: "Overview",
@@ -146,7 +187,7 @@ const ListItems = [
 
   {
     id: 2,
-    link: "/valirosation",
+    link: "valorisation",
     icon: <IoStatsChartOutline size={20} />,
     tooltip: "Valorisation",
     subtitle: "Valorisation",
@@ -173,7 +214,7 @@ const ListItems = [
   },
   {
     id: "3",
-    link: "/anadette",
+    link: "anadette",
     icon: <GiPayMoney size={20} />,
     tooltip: "Analyse de la dette",
     subtitle: "Analyse de la dette",
@@ -197,7 +238,7 @@ const ListItems = [
   },
   {
     id: "4",
-    link: "/anadev",
+    link: "anadev",
     icon: <BsCurrencyExchange size={20} />,
     tooltip: "Analyse de devise",
     subtitle: "Analyse de devise",
@@ -225,7 +266,7 @@ const ListItems = [
   },
   {
     id: "5",
-    link: "/anamp",
+    link: "anamp",
     icon: <MdOutlineDiamond size={20} />,
     tooltip: "Analyse des matières premières",
     subtitle: "Analyse des matières premières",
@@ -258,7 +299,7 @@ const ListItems = [
   },
   {
     id: "6",
-    link: "/banque",
+    link: "banque",
     icon: <BsBank size={20} />,
     tooltip: "Banque Centrale",
     subtitle: "Banque Centrale",
@@ -278,7 +319,7 @@ const ListItems = [
   },
   {
     id: "7",
-    link: "/marche",
+    link: "marche",
     icon: <RiExchange2Line size={20} />,
     tooltip: "Marché",
     subtitle: "Marché",
@@ -305,7 +346,7 @@ const ListItems = [
   },
   {
     id: "8",
-    link: "/industrie",
+    link: "industrie",
     icon: <LiaIndustrySolid size={20} />,
     tooltip: "Industrie",
     subtitle: "Industrie",
@@ -329,21 +370,33 @@ const ListItems = [
 const Sidebar = () => {
   const [expended, setExpended] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+  const chem = pathname?.split("/")[1].split("/")[0];
+
+  console.log("Pathname: " + chem);
+
   return (
     <aside className="h-screen">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-2 pb-2 flex justify-between items-center">
-          <div
-            className={`hover:cursor-pointer flex items-center gap-2 overflow-hidden transition-all ${
-              expended ? "w-52" : "w-0"
-            }`}
-            onClick={() => router.push("/")}
-          >
-            <GiSuspensionBridge size={40} className="text-teal-900" />{" "}
-            <p className="text-sky-600 text-xl font-semibold">
-              <strong className="text-2xl">E</strong>
-              <span>mergence</span>
-            </p>
+          <div className="flex flex-col ml-4">
+            <div
+              className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all ${
+                expended ? "w-52" : "w-0"
+              }`}
+              onClick={() => router.replace("/")}
+            >
+              <GiSuspensionBridge size={40} className="text-teal-900" />{" "}
+              <div className=" flex text-teal-700 text-xl font-semibold">
+                <strong className="text-4xl">E</strong>
+                <div className="leading-4 flex flex-col items-start justify-center">
+                  <span className="pt-1">merging</span>
+                  <span className="text-sm">
+                    <strong>M</strong>arkets
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
           <Button onClick={() => setExpended(!expended)} variant="empty">
             {expended ? (
@@ -353,7 +406,7 @@ const Sidebar = () => {
             )}
           </Button>
         </div>
-        <ul className="flex-1 px-3">
+        <ul className="flex-1 px-3 mt-8">
           {ListItems.map((item) => (
             <div
               key={item.id}
@@ -362,9 +415,9 @@ const Sidebar = () => {
               }`}
             >
               <div
-                className={`flex items-center gap-2 overflow-hidden transition-all ${
+                className={` flex items-center gap-2 overflow-hidden transition-all ${
                   expended ? "w-68" : "w-10"
-                }`}
+                } `}
               >
                 {item.subtitle ? (
                   <Valorisation
@@ -374,6 +427,9 @@ const Sidebar = () => {
                     ic={item.icon}
                     ex={expended}
                     tp={item.tooltip}
+                    chem={chem}
+                    lk={item.link}
+                    item={item}
                   />
                 ) : (
                   <SimpleLink
@@ -381,6 +437,7 @@ const Sidebar = () => {
                     link={item.link}
                     ex={expended}
                     tp={item.tooltip}
+                    chem={chem}
                   />
                 )}
               </div>
@@ -408,7 +465,7 @@ const Sidebar = () => {
               <h4 className="font-semibold">RD Congo</h4>
               <span className="text-xs text-gray-600">rdcongo@gmail.com</span>
             </div>
-            <RiMore2Line size={25} />
+            <MdExitToApp className="text-red-600" size={30} />
           </div>
         </div>
       </nav>
