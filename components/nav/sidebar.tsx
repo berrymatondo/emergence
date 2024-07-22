@@ -86,7 +86,7 @@ export const Valorisation = ({
                     {ic}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent side="right">
                   <p className="text-sky-888">{tp}</p>
                 </TooltipContent>
               </Tooltip>
@@ -372,103 +372,105 @@ const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const chem = pathname?.split("/")[1].split("/")[0];
-
-  console.log("Pathname: " + chem);
+  const [connected, setConnected] = useState(false);
 
   return (
     <aside className="h-screen">
-      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
-        <div className="p-2 pb-2 flex justify-between items-center">
-          <div className="flex flex-col ml-4">
-            <div
-              className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all ${
-                expended ? "w-52" : "w-0"
-              }`}
-              onClick={() => router.replace("/")}
-            >
-              <GiSuspensionBridge size={40} className="text-teal-900" />{" "}
-              <div className=" flex text-teal-700 text-xl font-semibold">
-                <strong className="text-4xl">E</strong>
-                <div className="leading-4 flex flex-col items-start justify-center">
-                  <span className="pt-1">merging</span>
-                  <span className="text-sm">
-                    <strong>M</strong>arkets
-                  </span>
+      {connected && (
+        <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+          <div className="p-2 pb-2 flex justify-between items-center">
+            <div className="flex flex-col ml-4">
+              <div
+                className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all ${
+                  expended ? "w-52" : "w-0"
+                }`}
+                onClick={() => router.replace("/")}
+              >
+                <GiSuspensionBridge size={40} className="text-teal-900" />{" "}
+                <div className=" flex text-teal-700 text-xl font-semibold">
+                  <strong className="text-4xl">E</strong>
+                  <div className="leading-4 flex flex-col items-start justify-center">
+                    <span className="pt-1">merging</span>
+                    <span className="text-sm">
+                      <strong>M</strong>arkets
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
+            <Button onClick={() => setExpended(!expended)} variant="empty">
+              {expended ? (
+                <FiChevronsLeft size={30} />
+              ) : (
+                <FiChevronsRight size={30} />
+              )}
+            </Button>
           </div>
-          <Button onClick={() => setExpended(!expended)} variant="empty">
-            {expended ? (
-              <FiChevronsLeft size={30} />
-            ) : (
-              <FiChevronsRight size={30} />
-            )}
-          </Button>
-        </div>
-        <ul className="flex-1 px-3 mt-8">
-          {ListItems.map((item) => (
+          <ul className="flex-1 px-3 mt-8">
+            {ListItems.map((item) => (
+              <div
+                key={item.id}
+                className={`flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
+                  expended ? " px-3" : "px-0"
+                }`}
+              >
+                <div
+                  className={` flex items-center gap-2 overflow-hidden transition-all ${
+                    expended ? "w-68" : "w-10"
+                  } `}
+                >
+                  {item.subtitle ? (
+                    <Valorisation
+                      st={item.subtitle}
+                      sd={item.subdesc}
+                      sl={item.sublinks}
+                      ic={item.icon}
+                      ex={expended}
+                      tp={item.tooltip}
+                      chem={chem}
+                      lk={item.link}
+                      item={item}
+                    />
+                  ) : (
+                    <SimpleLink
+                      title={item.title}
+                      link={item.link}
+                      ex={expended}
+                      tp={item.tooltip}
+                      chem={chem}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </ul>
+          <div className="border-t flex p-3">
+            <div className="overflow-hidden relative  w-10 h-10 rounded-full">
+              <Image
+                alt="bcg"
+                src={avatar}
+                placeholder="blur"
+                quality={100}
+                fill
+                sizes="100vw"
+                className="object-cover z-10 rounded-lg"
+              />
+            </div>
+
             <div
-              key={item.id}
-              className={`flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
-                expended ? " px-3" : "px-0"
+              className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all ${
+                expended ? "w-52" : "w-0"
               }`}
             >
-              <div
-                className={` flex items-center gap-2 overflow-hidden transition-all ${
-                  expended ? "w-68" : "w-10"
-                } `}
-              >
-                {item.subtitle ? (
-                  <Valorisation
-                    st={item.subtitle}
-                    sd={item.subdesc}
-                    sl={item.sublinks}
-                    ic={item.icon}
-                    ex={expended}
-                    tp={item.tooltip}
-                    chem={chem}
-                    lk={item.link}
-                    item={item}
-                  />
-                ) : (
-                  <SimpleLink
-                    title={item.title}
-                    link={item.link}
-                    ex={expended}
-                    tp={item.tooltip}
-                    chem={chem}
-                  />
-                )}
+              <div className="leading-4">
+                <h4 className="font-semibold">RD Congo</h4>
+                <span className="text-xs text-gray-600">rdcongo@gmail.com</span>
               </div>
+              <MdExitToApp className="text-red-600" size={30} />
             </div>
-          ))}
-        </ul>
-        <div className="border-t flex p-3">
-          <div className="overflow-hidden relative  w-10 h-10 rounded-full">
-            <Image
-              alt="bcg"
-              src={avatar}
-              placeholder="blur"
-              quality={100}
-              fill
-              sizes="100vw"
-              className="object-cover z-10 rounded-lg"
-            />
           </div>
-          <div
-            className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all ${
-              expended ? "w-52" : "w-0"
-            }`}
-          >
-            <div className="leading-4">
-              <h4 className="font-semibold">RD Congo</h4>
-              <span className="text-xs text-gray-600">rdcongo@gmail.com</span>
-            </div>
-            <MdExitToApp className="text-red-600" size={30} />
-          </div>
-        </div>
-      </nav>
+        </nav>
+      )}
     </aside>
   );
 };
