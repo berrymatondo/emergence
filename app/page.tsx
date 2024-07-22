@@ -21,7 +21,7 @@ export default function Home() {
       <p className="text-center">
         <span className="text-xs">{"Vous n'avez pas de compte ?"}</span>
         <Link href="/auth/register" className="px-2 underline">
-          S'inscrire
+          {"S'inscrire"}
         </Link>
       </p>
     </div>
