@@ -31,7 +31,7 @@ export default function LoginForm() {
 
           <div className="md:hidden flex justify-center ">
             <GiSuspensionBridge
-              size={100}
+              size={50}
               className="md:hidden opacity-70 text-sky-600 dark:text-white"
             />
           </div>
@@ -39,16 +39,16 @@ export default function LoginForm() {
             className="md:absolute md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2
   flex max-md:justify-center text-teal-700 text-xl font-bold"
           >
-            <strong className="text-9xl">E</strong>
+            <strong className="text-9xl max-md:text-7xl">E</strong>
             <div className="leading-10 flex flex-col items-start justify-center">
-              <span className="pt-1 text-6xl">merging</span>
-              <span className="text-4xl py-4">
+              <span className="pt-1 text-6xl max-md:text-2xl">merging</span>
+              <span className="text-4xl max-md:text-xl md:py-4">
                 <strong>M</strong>arkets
               </span>
             </div>
           </div>
         </div>
-        <p className="text-sm text-center md:hidden">
+        <p className="text-sm max-md:text-xs text-center md:hidden">
           Connecting You To Tomorrow’s Market Leaders
         </p>
         <Card className="max-md:my-4 my-auto w-full max-w-lg">
