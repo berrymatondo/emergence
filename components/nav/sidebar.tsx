@@ -29,9 +29,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { MdHome, MdOutlineDiamond } from "react-icons/md";
+
+import { MdOutlineDiamond } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
 type ValorisationProps = {
@@ -362,16 +361,6 @@ const Sidebar = () => {
                 expended ? " px-3" : "px-0"
               }`}
             >
-              {/*               {!expended && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{item.icon}</TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-sky-888">{item.tooltip}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )} */}
               <div
                 className={`flex items-center gap-2 overflow-hidden transition-all ${
                   expended ? "w-68" : "w-10"
