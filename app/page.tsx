@@ -1,12 +1,31 @@
 "use client";
 import Link from "next/link";
+import React from "react";
 
-export default function Home() {
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { TrendingUp } from "lucide-react";
+
+const HomePage = () => {
   return (
     /*     <div className="flex min-h-screen flex-col items-center justify-between p-24">
      */
     <div className="w-full md:container flex max-md:flex-col justify-between items-center my-auto">
-      <div className="container py-24 max-md:py-4 flex flex-col gap-4 justify-center my-auto bg-gray-100 dark:bg-transparent">
+      <div className="container py-24 max-md:py-4 flex flex-col gap-4 justify-center my-auto  dark:bg-transparent">
         <div className="flex justify-center text-teal-700 text-xl font-bold">
           <strong className="text-9xl max-md:text-7xl">E</strong>
           <div className="leading-10 flex flex-col items-start justify-center">
@@ -36,29 +55,14 @@ export default function Home() {
         </p>
       </div>
       <div className="w-full max-md:p-2">
-        <ComponentChart />
+        <Conte />
       </div>
     </div>
   );
-}
+};
 
-import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+export default HomePage;
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
@@ -75,47 +79,49 @@ const chartConfig = {
   },
   mobile: {
     label: "Mobile",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig;
 
-export function ComponentChart() {
+/* const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "#2563eb",
+  },
+  mobile: {
+    label: "Mobile",
+    color: "#60a5fa",
+  },
+} satisfies ChartConfig */
+
+const Conte = () => {
   return (
-    <div className="">
-      <Card className="">
-        {/*       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader> */}
-        <CardContent>
-          <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={chartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
-              />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 font-medium leading-none">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-          </div>
-          {/*         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div> */}
-        </CardFooter>
-      </Card>
-    </div>
+    <Card className="border-none bg-gray-100 dark:bg-sky-950">
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dashed" />}
+            />
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col items-center gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+      </CardFooter>
+    </Card>
   );
-}
+};
