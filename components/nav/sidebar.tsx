@@ -372,12 +372,12 @@ const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const chem = pathname?.split("/")[1].split("/")[0];
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState(true);
 
   return (
     <aside className="h-screen">
       {connected && (
-        <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+        <nav className="h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
             <div className="flex flex-col ml-4">
               <div
@@ -410,7 +410,7 @@ const Sidebar = () => {
             {ListItems.map((item) => (
               <div
                 key={item.id}
-                className={`flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
+                className={`hover:text-sky-300 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
                   expended ? " px-3" : "px-0"
                 }`}
               >
