@@ -223,7 +223,7 @@ const ListItems = [
       { id: 3, title: "Floating Rate Bond", link: "/valorisation/sb3" },
       { id: 4, title: "Straight Bond", link: "/valorisation/sb1" },
       { id: 5, title: "Amortized FRN", link: "/valorisation/afr" },
-      { id: 6, title: "Amortized Step up Coupon", link: "/valorisation/asc" },
+      //{ id: 6, title: "Amortized Step up Coupon", link: "/valorisation/asc" },
       { id: 7, title: "Dual Currency Bond", link: "/valorisation/dcb" },
       { id: 8, title: "Commodity Back Bond", link: "/valorisation/cbb" },
       {
@@ -233,8 +233,8 @@ const ListItems = [
       },
       { id: 10, title: "European Option", link: "/valorisation/eo" },
       { id: 11, title: "American Option", link: "/valorisation/ao" },
-      { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
-      { id: 13, title: "Cross Currency Swap", link: "/valorisation/ccs" },
+      //  { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
+      //  { id: 13, title: "Cross Currency Swap", link: "/valorisation/ccs" },
     ],
   },
   {
@@ -344,6 +344,10 @@ const ListItems = [
         title: "Inflation anticipée",
         link: "/banque/infa",
       },
+
+      { id: 3, title: "Interest Rate Swap", link: "/banque/irs" },
+      { id: 4, title: "Cross Currency Swap", link: "/banque/ccs" },
+      { id: 5, title: "Commodity Swap", link: "/banque/comos" },
     ],
   },
   {
