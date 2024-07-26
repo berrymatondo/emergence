@@ -28,6 +28,7 @@ enum CountryList {
 AFGHANISTAN @map("Afghanistan")
 TOGO @map("Togo")
 RD_CONGO @map("RD Congo")
+ALL @map("ALL")
 }
 
 model User {
@@ -37,7 +38,7 @@ model User {
   username String @unique
   status UserStatuses @default(INACTIF)
   role UserRoles @default(AGENT)
-  country CountryList?
+  country CountryList @default(ALL)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

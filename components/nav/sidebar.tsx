@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import avatar from "../../public/rdc.png";
 import Image from "next/image";
 import { RiDashboardLine, RiExchange2Line, RiMore2Line } from "react-icons/ri";
+import { GrUserAdmin } from "react-icons/gr";
 
 import { IoStatsChartOutline } from "react-icons/io5";
 import { BsBank, BsCurrencyExchange } from "react-icons/bs";
@@ -32,7 +33,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { MdExitToApp, MdOutlineDiamond } from "react-icons/md";
+import {
+  MdAdminPanelSettings,
+  MdExitToApp,
+  MdLock,
+  MdLogin,
+  MdLogout,
+  MdOutlineDiamond,
+} from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -71,18 +79,18 @@ export const Valorisation = ({
           className={`flex items-center ${lk == chem ? "text-sky-600" : ""} `}
         >
           {ex ? (
-            <>
+            <div className="ml-1 flex items-center">
               {ic}
               <Button variant="empty" className="font-medium text-md">
                 {st}
               </Button>
-            </>
+            </div>
           ) : (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   {" "}
-                  <Button variant="empty" className="font-medium text-md">
+                  <Button variant="empty" className="font-medium text-md ml-1">
                     {ic}
                   </Button>
                 </TooltipTrigger>
@@ -120,9 +128,19 @@ type SimpleLinkProps = {
   ex?: any;
   tp?: any;
   chem?: any;
+  icon?: any;
+  role?: any;
 };
 
-const SimpleLink = ({ title, link, ex, tp, chem }: SimpleLinkProps) => {
+const SimpleLink = ({
+  title,
+  link,
+  ex,
+  tp,
+  chem,
+  icon,
+  role,
+}: SimpleLinkProps) => {
   const router = useRouter();
 
   //console.log("link", link);
@@ -137,8 +155,13 @@ const SimpleLink = ({ title, link, ex, tp, chem }: SimpleLinkProps) => {
     >
       {ex ? (
         <>
-          <Link href={"/" + link} className="flex gap-4 m-1">
-            <RiDashboardLine size={20} />
+          <Link
+            href={"/" + link}
+            className={`flex gap-4 m-1 ${
+              role == "ADMIN" ? "text-orange-500" : ""
+            }`}
+          >
+            {icon}
             <p className="font-medium text-md">{title}</p>{" "}
           </Link>
           {/*           <RiDashboardLine size={20} />
@@ -155,7 +178,7 @@ const SimpleLink = ({ title, link, ex, tp, chem }: SimpleLinkProps) => {
           <Tooltip>
             <TooltipTrigger>
               <Link href={"/" + link} className="flex gap-4 m-1 pl-4">
-                <RiDashboardLine size={20} />
+                {icon}
                 <p className="font-medium text-md">{title}</p>{" "}
               </Link>
               {/*               <Button
@@ -183,12 +206,14 @@ const ListItems = [
     icon: <RiDashboardLine size={20} />,
     tooltip: "Overview",
     title: "Overview",
+    role: "AGENT",
   },
 
   {
     id: 2,
     link: "valorisation",
     icon: <IoStatsChartOutline size={20} />,
+    role: "AGENT",
     tooltip: "Valorisation",
     subtitle: "Valorisation",
     subdesc: "Utiliser les pricers pour évaluer uniquement les obligations.",
@@ -216,6 +241,7 @@ const ListItems = [
     id: "3",
     link: "anadette",
     icon: <GiPayMoney size={20} />,
+    role: "AGENT",
     tooltip: "Analyse de la dette",
     subtitle: "Analyse de la dette",
     subdesc:
@@ -240,6 +266,7 @@ const ListItems = [
     id: "4",
     link: "anadev",
     icon: <BsCurrencyExchange size={20} />,
+    role: "AGENT",
     tooltip: "Analyse de devise",
     subtitle: "Analyse de devise",
     subdesc:
@@ -268,6 +295,7 @@ const ListItems = [
     id: "5",
     link: "anamp",
     icon: <MdOutlineDiamond size={20} />,
+    role: "AGENT",
     tooltip: "Analyse des matières premières",
     subtitle: "Analyse des matières premières",
     subdesc:
@@ -301,6 +329,7 @@ const ListItems = [
     id: "6",
     link: "banque",
     icon: <BsBank size={20} />,
+    role: "AGENT",
     tooltip: "Banque Centrale",
     subtitle: "Banque Centrale",
     subdesc: "Comparer les taux directeurs et calculer l'inflation anticipée.",
@@ -321,6 +350,7 @@ const ListItems = [
     id: "7",
     link: "marche",
     icon: <RiExchange2Line size={20} />,
+    role: "AGENT",
     tooltip: "Marché",
     subtitle: "Marché",
     subdesc: "Se tenir informé des dernières actualités des marchés.",
@@ -348,6 +378,7 @@ const ListItems = [
     id: "8",
     link: "industrie",
     icon: <LiaIndustrySolid size={20} />,
+    role: "AGENT",
     tooltip: "Industrie",
     subtitle: "Industrie",
     subdesc: "Suivre le marché de l'industrie",
@@ -365,18 +396,39 @@ const ListItems = [
       { id: 3, title: "Energie", link: "/industrie/ener" },
     ],
   },
+  /*   {
+    id: 9,
+    link: "admin",
+    icon: <MdLock size={20} />,
+    tooltip: "Espace Admin",
+    title: "Espace Admin",
+  }, */
+  {
+    id: 10,
+    link: "admin",
+    role: "ADMIN",
+    icon: <MdLock size={20} />,
+    tooltip: "Espace admin",
+    title: "Espace Admin",
+  },
 ];
 
-const Sidebar = () => {
+type SidebarProps = {
+  userSession: any;
+};
+
+const Sidebar = ({ userSession }: SidebarProps) => {
   const [expended, setExpended] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
   const chem = pathname?.split("/")[1].split("/")[0];
   const [connected, setConnected] = useState(true);
 
+  //console.log("USER", userSession?.user);
+
   return (
     <aside className="h-screen">
-      {connected && (
+      {userSession?.user && (
         <nav className="h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
             <div className="flex flex-col ml-4">
@@ -386,7 +438,7 @@ const Sidebar = () => {
                 }`}
                 onClick={() => router.replace("/")}
               >
-                <GiSuspensionBridge size={40} className="text-teal-900" />{" "}
+                <GiSuspensionBridge size={40} className="text-sky-600" />{" "}
                 <div className=" flex text-teal-700 text-xl font-semibold">
                   <strong className="text-4xl">E</strong>
                   <div className="leading-4 flex flex-col items-start justify-center">
@@ -417,7 +469,11 @@ const Sidebar = () => {
                 <div
                   className={` flex items-center gap-2 overflow-hidden transition-all ${
                     expended ? "w-68" : "w-10"
-                  } `}
+                  } ${
+                    userSession?.user?.role != "ADMIN" && item.role == "ADMIN"
+                      ? " hidden"
+                      : ""
+                  }`}
                 >
                   {item.subtitle ? (
                     <Valorisation
@@ -438,6 +494,8 @@ const Sidebar = () => {
                       ex={expended}
                       tp={item.tooltip}
                       chem={chem}
+                      icon={item.icon}
+                      role={item.role}
                     />
                   )}
                 </div>
@@ -446,15 +504,21 @@ const Sidebar = () => {
           </ul>
           <div className="border-t flex p-3">
             <div className="overflow-hidden relative  w-10 h-10 rounded-full">
-              <Image
-                alt="bcg"
-                src={avatar}
-                placeholder="blur"
-                quality={100}
-                fill
-                sizes="100vw"
-                className="object-cover z-10 rounded-lg"
-              />
+              {userSession?.user.role == "AGENT" ? (
+                <Image
+                  alt="bcg"
+                  src={avatar}
+                  placeholder="blur"
+                  quality={100}
+                  fill
+                  sizes="100vw"
+                  className="object-cover z-10 rounded-lg"
+                />
+              ) : (
+                <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-white">
+                  AD
+                </div>
+              )}
             </div>
 
             <div
@@ -463,10 +527,25 @@ const Sidebar = () => {
               }`}
             >
               <div className="leading-4">
-                <h4 className="font-semibold">RD Congo</h4>
-                <span className="text-xs text-gray-600">rdcongo@gmail.com</span>
+                <h4 className="font-semibold">{userSession?.user?.name}</h4>
+                <span className="text-xs text-gray-600 dark:text-gray-400">
+                  {userSession?.user?.email}
+                </span>
               </div>
-              <MdExitToApp className="text-red-600" size={30} />
+
+              {(!userSession || !userSession.user) && (
+                <MdLogin
+                  className="md:hidden text-teal-600"
+                  onClick={() => router.push("/auth/login")}
+                  size={30}
+                />
+              )}
+              {userSession && userSession.user && (
+                <Link href="/redirout">
+                  {" "}
+                  <MdLogout className="text-red-600" size={30} />
+                </Link>
+              )}
             </div>
           </div>
         </nav>

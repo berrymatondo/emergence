@@ -3,17 +3,24 @@ import "./globals.css";
 import Sidebar from "@/components/nav/sidebar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import Header from "@/components/nav/header";
+import { Toaster } from "@/components/ui/sonner";
+import Providers from "@/components/providers";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "Emergence",
   description: "Outil d'optimisation de l'activité des marchés financiers",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
+  //if (session && session.user) console.log("USER", session.user);
+
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className="flex">
@@ -23,11 +30,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Sidebar />
-          <div className="md:container w-full flex flex-col items-center">
-            <Header />
-            {children}
-          </div>
+          <Providers>
+            <Sidebar userSession={session} />
+            <div className="md:container w-full flex flex-col items-center">
+              <Header />
+              {children}
+            </div>
+            <Toaster richColors />
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
