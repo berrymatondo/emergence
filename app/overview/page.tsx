@@ -1,4 +1,12 @@
-import Link from "next/link";
+import OverView from "@/components/overview/overV";
+import React from "react";
+
+const OverviewPage = () => {
+  return <OverView country="RD Congo" />;
+};
+
+export default OverviewPage;
+/* import Link from "next/link";
 import React from "react";
 
 const OverviewPage = async () => {
@@ -25,3 +33,4 @@ const OverviewPage = async () => {
 };
 
 export default OverviewPage;
+ */

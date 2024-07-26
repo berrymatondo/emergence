@@ -466,7 +466,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
             {ListItems.map((item) => (
               <div
                 key={item.id}
-                className={`hover:text-sky-300 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
+                className={`text-gray-600 hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
                   expended ? " px-3" : "px-0"
                 }`}
               >
@@ -519,7 +519,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
                   className="object-cover z-10 rounded-lg"
                 />
               ) : (
-                <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-white">
+                <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
                   AD
                 </div>
               )}
