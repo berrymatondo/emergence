@@ -49,12 +49,14 @@ type OverViewProps = {
   country: string;
   overs: any;
   yieldcurve: any;
+  fxrs: any;
 };
 
 export default function OverView({
   country,
   overs,
   yieldcurve,
+  fxrs,
 }: OverViewProps) {
   return (
     <Card className="border-none max-md:my-4 my-auto w-full m-0">
@@ -332,7 +334,182 @@ export default function OverView({
                 </ChartContainer>
               </CardContent>
             </Card>
-            <Card className="lg:max-w-md" x-chunk="charts-01-chunk-0">
+            <Card
+              className="flex flex-col lg:max-w-md"
+              x-chunk="charts-01-chunk-1"
+            >
+              <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+                <div>
+                  <CardDescription className="text-orange-400">
+                    -USDCDF-
+                  </CardDescription>
+                  {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+                    62
+                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
+                      bpm
+                    </span>
+                  </CardTitle> */}
+                </div>
+                {/*                 <div>
+                  <CardDescription className="text-green-400">
+                    -USDEUR-
+                  </CardDescription>
+
+                </div> */}
+              </CardHeader>
+              <CardContent className="flex flex-1 items-center">
+                <ChartContainer
+                  config={{
+                    usdcdf: {
+                      label: "USDCDF",
+                      color: "hsl(var(--chart-3))",
+                    } /* ,
+                    usdeur: {
+                      label: "USDEUR",
+                      color: "hsl(var(--chart-2))",
+                    }, */,
+                  }}
+                  className="w-full"
+                >
+                  <LineChart
+                    accessibilityLayer
+                    margin={{
+                      left: 14,
+                      right: 14,
+                      top: 10,
+                    }}
+                    data={fxrs.data}
+                    /*                     data={[
+                      {
+                        date: "1Y",
+                        resting: 93.7,
+                        africa: 79.2,
+                      },
+                      {
+                        date: "2Y",
+                        resting: 98.4,
+                        africa: 104.4,
+                      },
+                      {
+                        date: "3Y",
+                        resting: 89.5,
+                        africa: 106.2,
+                      },
+                      {
+                        date: "4Y",
+                        resting: 92.2,
+                        africa: 111.1,
+                      },
+                      {
+                        date: "5Y",
+                        resting: 83,
+                        africa: 115.1,
+                      },
+                      {
+                        date: "7Y",
+                        resting: 82.6,
+                        africa: 119.0,
+                      },
+                      {
+                        date: "8Y",
+                        resting: 80.1,
+                        africa: 120.6,
+                      },
+                      {
+                        date: "10Y",
+                        resting: 103.8,
+                        africa: 120.4,
+                      },
+                      {
+                        date: "15Y",
+                        resting: 107.1,
+                        africa: 129.2,
+                      },
+                      {
+                        date: "20Y",
+                        resting: 153.8,
+                        africa: 130.7,
+                      },
+                      {
+                        date: "30Y",
+                        resting: 152.1,
+                        africa: 130.1,
+                      },
+                    ]} */
+                  >
+                    <CartesianGrid
+                      strokeDasharray="4 4"
+                      vertical={false}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeOpacity={0.5}
+                    />
+                    <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      /*                       tickFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          weekday: "short",
+                        });
+                      }} */
+                    />
+                    <Line
+                      dataKey="usdcdf"
+                      type="natural"
+                      fill="var(--color-usdcdf)"
+                      stroke="var(--color-usdcdf)"
+                      strokeWidth={2}
+                      dot={{
+                        fill: "var(--color-usdcdf)",
+                      }}
+                      activeDot={{
+                        /*                         fill: "var(--color-usdcdf)",
+                        stroke: "var(--color-usdcdf)", */
+                        r: 4,
+                      }}
+                    >
+                      <LabelList
+                        position="top"
+                        offset={12}
+                        className="fill-foreground"
+                        fontSize={12}
+                      />
+                    </Line>
+                    {/*                     <Line
+                      dataKey="usdeur"
+                      type="natural"
+                      fill="var(--color-usdeur)"
+                      stroke="var(--color-usdeur)"
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{
+                        fill: "var(--color-usdeur)",
+                        stroke: "var(--color-usdeur)",
+                        r: 4,
+                      }}
+                    /> */}
+                    <ChartTooltip
+                      content={
+                        <ChartTooltipContent
+                          indicator="line"
+                          labelFormatter={(value) => {
+                            return new Date(value).toLocaleDateString("en-US", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            });
+                          }}
+                        />
+                      }
+                      cursor={false}
+                    />
+                  </LineChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+            {/*             <Card className="lg:max-w-md" x-chunk="charts-01-chunk-0">
               <CardHeader className="space-y-0 pb-2">
                 <CardDescription>Today</CardDescription>
                 <CardTitle className="text-4xl tabular-nums">
@@ -458,7 +635,7 @@ export default function OverView({
                   more steps to reach your goal.
                 </CardDescription>
               </CardFooter>
-            </Card>
+            </Card> */}
           </div>
           <div className="grid w-full flex-1 gap-6 lg:max-w-[20rem]">
             <Card className="max-w-xs" x-chunk="charts-01-chunk-3">

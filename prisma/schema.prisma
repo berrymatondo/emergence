@@ -82,3 +82,16 @@ model YieldCurve{
 
   @@map("yieldcurve")
 }
+
+
+model FXRates{
+  id Int @id @default(autoincrement())
+  date String @unique
+  usdcdf Float @default(0)
+  usdeur Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("fxrates")
+}

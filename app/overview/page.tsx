@@ -1,4 +1,5 @@
 import OverView from "@/components/overview/overV";
+import { getAllFXR } from "@/lib/_fxratesActions";
 import { getAllOverview } from "@/lib/_overviewActions";
 import { getAllYC } from "@/lib/_ycAction";
 import React from "react";
@@ -6,9 +7,17 @@ import React from "react";
 const OverviewPage = async () => {
   const overs = await getAllOverview();
   const yieldcurve = await getAllYC();
-  //console.log("OVERVIEW", overs);
+  const fxrs = await getAllFXR();
+  console.log("OVERVIEW", fxrs);
 
-  return <OverView country="RD Congo" overs={overs} yieldcurve={yieldcurve} />;
+  return (
+    <OverView
+      country="RD Congo"
+      overs={overs}
+      yieldcurve={yieldcurve}
+      fxrs={fxrs}
+    />
+  );
 };
 
 export default OverviewPage;

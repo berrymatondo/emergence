@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "fxrates" (
+    "id" SERIAL NOT NULL,
+    "date" TEXT NOT NULL,
+    "usdcdf" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "usdeur" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "fxrates_pkey" PRIMARY KEY ("id")
+);
