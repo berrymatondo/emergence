@@ -36,25 +36,12 @@ import { Separator } from "@/components/ui/separator";
 
 type OverViewProps = {
   country: string;
+  overs: any;
 };
 
-const rdcData = [
-  { id: 1, key: "Capital City", value: "Kinshasa" },
-  { id: 2, key: "Political Regime", value: "Semi-Presidential Republic" },
-  { id: 3, key: "President", value: "Félix-Antoine Tshisekedi" },
-  { id: 4, key: "Prime Minister", value: "Judith Suminwa Tuluka" },
-  { id: 5, key: "Finance Minister", value: "Nicolas Kazadi" },
-  { id: 6, key: "Governor, BCC", value: "Malangu Kabedi Mbuyi" },
-  { id: 7, key: "Currency", value: "Congolese Franc (CDF)" },
-  { id: 8, key: "Economic Growth Rate", value: "0,061" },
-  { id: 9, key: "Debt to GDP", value: "0,144" },
-  { id: 10, key: "Interest Rate", value: "0,25" },
-  { id: 11, key: "Interbanking Rate", value: "0,07" },
-  { id: 12, key: "Credit Rating", value: "B / (S & P)" },
-];
-export default function OverView({ country }: OverViewProps) {
+export default function OverView({ country, overs }: OverViewProps) {
   return (
-    <Card className="border-none max-md:my-4 my-auto w-full">
+    <Card className="border-none max-md:my-4 my-auto w-full m-0">
       <CardHeader>
         <CardTitle className="text-2xl">{"General Overview"}</CardTitle>
         {/*         <CardDescription className=" ">
@@ -70,8 +57,8 @@ export default function OverView({ country }: OverViewProps) {
                   {country}
                 </CardTitle>
                 <CardDescription>
-                  {rdcData.map((data) => (
-                    <div
+                  {overs?.data?.map((data: any) => (
+                    <span
                       key={data.id}
                       className="flex justify-between items-baseline gap-1 text-3xl font-bold tabular-nums leading-none"
                     >
@@ -81,7 +68,7 @@ export default function OverView({ country }: OverViewProps) {
                       <span className="text-sm   font-normal text-black dark:text-white">
                         {data.value}
                       </span>
-                    </div>
+                    </span>
                   ))}
                 </CardDescription>
               </CardHeader>
@@ -156,6 +143,172 @@ export default function OverView({ country }: OverViewProps) {
                       hide
                     />
                   </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+            <Card
+              className="flex flex-col lg:max-w-md"
+              x-chunk="charts-01-chunk-1"
+            >
+              <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+                <div>
+                  <CardDescription>Resting HR</CardDescription>
+                  <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+                    62
+                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
+                      bpm
+                    </span>
+                  </CardTitle>
+                </div>
+                <div>
+                  <CardDescription>Variability</CardDescription>
+                  <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+                    35
+                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
+                      ms
+                    </span>
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="flex flex-1 items-center">
+                <ChartContainer
+                  config={{
+                    resting: {
+                      label: "Resting",
+                      color: "hsl(var(--chart-3))",
+                    },
+                    africa: {
+                      label: "Africa",
+                      color: "hsl(var(--chart-2))",
+                    },
+                  }}
+                  className="w-full"
+                >
+                  <LineChart
+                    accessibilityLayer
+                    margin={{
+                      left: 14,
+                      right: 14,
+                      top: 10,
+                    }}
+                    data={[
+                      {
+                        date: "1Y",
+                        resting: 93.7,
+                        africa: 79.2,
+                      },
+                      {
+                        date: "2Y",
+                        resting: 98.4,
+                        africa: 104.4,
+                      },
+                      {
+                        date: "3Y",
+                        resting: 89.5,
+                        africa: 106.2,
+                      },
+                      {
+                        date: "4Y",
+                        resting: 92.2,
+                        africa: 111.1,
+                      },
+                      {
+                        date: "5Y",
+                        resting: 83,
+                        africa: 115.1,
+                      },
+                      {
+                        date: "7Y",
+                        resting: 82.6,
+                        africa: 190.0,
+                      },
+                      {
+                        date: "8Y",
+                        resting: 80.1,
+                        africa: 120.6,
+                      },
+                      {
+                        date: "10Y",
+                        resting: 103.8,
+                        africa: 120.4,
+                      },
+                      {
+                        date: "15Y",
+                        resting: 107.1,
+                        africa: 129.2,
+                      },
+                      {
+                        date: "20Y",
+                        resting: 153.8,
+                        africa: 130.7,
+                      },
+                      {
+                        date: "30Y",
+                        resting: 152.1,
+                        africa: 130.1,
+                      },
+                    ]}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="4 4"
+                      vertical={false}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeOpacity={0.5}
+                    />
+                    <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      tickFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          weekday: "short",
+                        });
+                      }}
+                    />
+                    <Line
+                      dataKey="resting"
+                      type="natural"
+                      fill="var(--color-resting)"
+                      stroke="var(--color-resting)"
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{
+                        fill: "var(--color-resting)",
+                        stroke: "var(--color-resting)",
+                        r: 4,
+                      }}
+                    />
+                    <Line
+                      dataKey="africa"
+                      type="natural"
+                      fill="var(--color-africa)"
+                      stroke="var(--color-africa)"
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{
+                        fill: "var(--color-africa)",
+                        stroke: "var(--color-africa)",
+                        r: 4,
+                      }}
+                    />
+                    <ChartTooltip
+                      content={
+                        <ChartTooltipContent
+                          indicator="line"
+                          labelFormatter={(value) => {
+                            return new Date(value).toLocaleDateString("en-US", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            });
+                          }}
+                        />
+                      }
+                      cursor={false}
+                    />
+                  </LineChart>
                 </ChartContainer>
               </CardContent>
             </Card>
@@ -285,128 +438,6 @@ export default function OverView({ country }: OverViewProps) {
                   more steps to reach your goal.
                 </CardDescription>
               </CardFooter>
-            </Card>
-            <Card
-              className="flex flex-col lg:max-w-md"
-              x-chunk="charts-01-chunk-1"
-            >
-              <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-                <div>
-                  <CardDescription>Resting HR</CardDescription>
-                  <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    62
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      bpm
-                    </span>
-                  </CardTitle>
-                </div>
-                <div>
-                  <CardDescription>Variability</CardDescription>
-                  <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    35
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      ms
-                    </span>
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-1 items-center">
-                <ChartContainer
-                  config={{
-                    resting: {
-                      label: "Resting",
-                      color: "hsl(var(--chart-1))",
-                    },
-                  }}
-                  className="w-full"
-                >
-                  <LineChart
-                    accessibilityLayer
-                    margin={{
-                      left: 14,
-                      right: 14,
-                      top: 10,
-                    }}
-                    data={[
-                      {
-                        date: "2024-01-01",
-                        resting: 62,
-                      },
-                      {
-                        date: "2024-01-02",
-                        resting: 72,
-                      },
-                      {
-                        date: "2024-01-03",
-                        resting: 35,
-                      },
-                      {
-                        date: "2024-01-04",
-                        resting: 62,
-                      },
-                      {
-                        date: "2024-01-05",
-                        resting: 52,
-                      },
-                      {
-                        date: "2024-01-06",
-                        resting: 62,
-                      },
-                      {
-                        date: "2024-01-07",
-                        resting: 70,
-                      },
-                    ]}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="4 4"
-                      vertical={false}
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeOpacity={0.5}
-                    />
-                    <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-                    <XAxis
-                      dataKey="date"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                      tickFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          weekday: "short",
-                        });
-                      }}
-                    />
-                    <Line
-                      dataKey="resting"
-                      type="natural"
-                      fill="var(--color-resting)"
-                      stroke="var(--color-resting)"
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{
-                        fill: "var(--color-resting)",
-                        stroke: "var(--color-resting)",
-                        r: 4,
-                      }}
-                    />
-                    <ChartTooltip
-                      content={
-                        <ChartTooltipContent
-                          indicator="line"
-                          labelFormatter={(value) => {
-                            return new Date(value).toLocaleDateString("en-US", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            });
-                          }}
-                        />
-                      }
-                      cursor={false}
-                    />
-                  </LineChart>
-                </ChartContainer>
-              </CardContent>
             </Card>
           </div>
           <div className="grid w-full flex-1 gap-6 lg:max-w-[20rem]">

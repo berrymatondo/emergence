@@ -5,7 +5,7 @@ CREATE TYPE "UserStatuses" AS ENUM ('ACTIF', 'INACTIF');
 CREATE TYPE "UserRoles" AS ENUM ('AGENT', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "CountryList" AS ENUM ('Afghanistan', 'Togo', 'RD Congo');
+CREATE TYPE "CountryList" AS ENUM ('Afghanistan', 'Togo', 'RD Congo','ALL');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -15,12 +15,13 @@ CREATE TABLE "users" (
     "username" TEXT NOT NULL,
     "status" "UserStatuses" NOT NULL DEFAULT 'INACTIF',
     "role" "UserRoles" NOT NULL DEFAULT 'AGENT',
-    "country" "CountryList",
+    "country" "CountryList" NOT NULL DEFAULT 'ALL',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
+
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");

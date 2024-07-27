@@ -5,8 +5,8 @@
 
 */
 -- AlterEnum
-ALTER TYPE "CountryList" ADD VALUE 'ALL';
+--ALTER TYPE "CountryList" ADD VALUE 'ALL';
 
 -- AlterTable
-ALTER TABLE "users" ALTER COLUMN "country" SET NOT NULL,
-ALTER COLUMN "country" SET DEFAULT 'ALL';
+--ALTER TABLE "users" ALTER COLUMN "country" SET NOT NULL,
+--ALTER COLUMN "country" SET DEFAULT 'ALL';

@@ -1,8 +1,12 @@
 import OverView from "@/components/overview/overV";
+import { getAllOverview } from "@/lib/_overviewActions";
 import React from "react";
 
-const OverviewPage = () => {
-  return <OverView country="RD Congo" />;
+const OverviewPage = async () => {
+  const overs = await getAllOverview();
+  //console.log("OVERVIEW", overs);
+
+  return <OverView country="RD Congo" overs={overs} />;
 };
 
 export default OverviewPage;
