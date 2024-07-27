@@ -152,33 +152,37 @@ export default function OverView({ country, overs }: OverViewProps) {
             >
               <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
                 <div>
-                  <CardDescription>Resting HR</CardDescription>
-                  <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+                  <CardDescription className="text-orange-400">
+                    DRC Yield Curve
+                  </CardDescription>
+                  {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     62
                     <span className="text-sm font-normal tracking-normal text-muted-foreground">
                       bpm
                     </span>
-                  </CardTitle>
+                  </CardTitle> */}
                 </div>
                 <div>
-                  <CardDescription>Variability</CardDescription>
-                  <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+                  <CardDescription className="text-green-400">
+                    AVG African Yield Curve
+                  </CardDescription>
+                  {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     35
                     <span className="text-sm font-normal tracking-normal text-muted-foreground">
                       ms
                     </span>
-                  </CardTitle>
+                  </CardTitle> */}
                 </div>
               </CardHeader>
               <CardContent className="flex flex-1 items-center">
                 <ChartContainer
                   config={{
                     resting: {
-                      label: "Resting",
+                      label: "DRC Yield Curve",
                       color: "hsl(var(--chart-3))",
                     },
                     africa: {
-                      label: "Africa",
+                      label: "AVG African Yield Curve",
                       color: "hsl(var(--chart-2))",
                     },
                   }}
@@ -220,7 +224,7 @@ export default function OverView({ country, overs }: OverViewProps) {
                       {
                         date: "7Y",
                         resting: 82.6,
-                        africa: 190.0,
+                        africa: 119.0,
                       },
                       {
                         date: "8Y",
@@ -261,11 +265,11 @@ export default function OverView({ country, overs }: OverViewProps) {
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
-                      tickFormatter={(value) => {
+                      /*                       tickFormatter={(value) => {
                         return new Date(value).toLocaleDateString("en-US", {
                           weekday: "short",
                         });
-                      }}
+                      }} */
                     />
                     <Line
                       dataKey="resting"
