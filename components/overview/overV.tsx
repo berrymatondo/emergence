@@ -34,12 +34,28 @@ import {
 } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 type OverViewProps = {
   country: string;
   overs: any;
+  yieldcurve: any;
 };
 
-export default function OverView({ country, overs }: OverViewProps) {
+export default function OverView({
+  country,
+  overs,
+  yieldcurve,
+}: OverViewProps) {
   return (
     <Card className="border-none max-md:my-4 my-auto w-full m-0">
       <CardHeader>
@@ -49,8 +65,8 @@ export default function OverView({ country, overs }: OverViewProps) {
         </CardDescription> */}
       </CardHeader>
       <CardContent className="grid">
-        <div className="chart-wrapper mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-6 p-6 sm:flex-row sm:p-8">
-          <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
+        <div className="chart-wrapper mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-8 max-sm:p-6 sm:flex-row">
+          <div className="grid w-full gap-6 sm:grid-cols-3 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
             <Card className="lg:max-w-md" x-chunk="charts-01-chunk-3">
               <CardHeader className="p-4 pb-0">
                 <CardTitle className="text-sky-600 dark:text-yellow-300">
@@ -60,7 +76,7 @@ export default function OverView({ country, overs }: OverViewProps) {
                   {overs?.data?.map((data: any) => (
                     <span
                       key={data.id}
-                      className="flex justify-between items-baseline gap-1 text-3xl font-bold tabular-nums leading-none"
+                      className="mb-1 flex justify-between items-baseline gap-1 text-3xl font-bold tabular-nums leading-none"
                     >
                       <span className="text-sm font-normal text-muted-foreground">
                         {data.key}
@@ -445,6 +461,113 @@ export default function OverView({ country, overs }: OverViewProps) {
             </Card>
           </div>
           <div className="grid w-full flex-1 gap-6 lg:max-w-[20rem]">
+            <Card className="max-w-xs" x-chunk="charts-01-chunk-3">
+              <CardHeader className="p-4 pb-0">
+                <CardTitle>Fixed Income Market</CardTitle>
+                <CardDescription>Data from last tenor.</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
+                <Table>
+                  <TableCaption>A list last recent tenor values .</TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[100px]">Tenor</TableHead>
+                      <TableHead>Yield</TableHead>
+                      <TableHead className="text-right">Change</TableHead>
+                    </TableRow>
+                  </TableHeader>
+
+                  <TableBody>
+                    {yieldcurve?.data?.map((yc: any) => (
+                      <TableRow key={yc.id}>
+                        <TableCell className="font-medium text-xs">
+                          {yc.tenor}Y
+                        </TableCell>
+                        <TableCell className="text-xs">{yc.yield}%</TableCell>
+                        <TableCell
+                          className={`text-right text-xs ${
+                            yc.change < 0 ? "text-red-600" : ""
+                          }`}
+                        >
+                          {yc.change}%
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                {/*                <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
+                  12.5
+                  <span className="text-sm font-normal text-muted-foreground">
+                    miles/day
+                  </span>
+                </div> */}
+                {/*                 <ChartContainer
+                  config={{
+                    steps: {
+                      label: "Steps",
+                      color: "hsl(var(--chart-1))",
+                    },
+                  }}
+                  className="ml-auto w-[72px]"
+                >
+                  <BarChart
+                    accessibilityLayer
+                    margin={{
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                    }}
+                    data={[
+                      {
+                        date: "2024-01-01",
+                        steps: 2000,
+                      },
+                      {
+                        date: "2024-01-02",
+                        steps: 2100,
+                      },
+                      {
+                        date: "2024-01-03",
+                        steps: 2200,
+                      },
+                      {
+                        date: "2024-01-04",
+                        steps: 1300,
+                      },
+                      {
+                        date: "2024-01-05",
+                        steps: 1400,
+                      },
+                      {
+                        date: "2024-01-06",
+                        steps: 2500,
+                      },
+                      {
+                        date: "2024-01-07",
+                        steps: 1600,
+                      },
+                    ]}
+                  >
+                    <Bar
+                      dataKey="steps"
+                      fill="var(--color-steps)"
+                      radius={2}
+                      fillOpacity={0.2}
+                      activeIndex={6}
+                      activeBar={<Rectangle fillOpacity={0.8} />}
+                    />
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={4}
+                      hide
+                    />
+                  </BarChart>
+                </ChartContainer> */}
+              </CardContent>
+            </Card>
             <Card className="max-w-xs" x-chunk="charts-01-chunk-2">
               <CardHeader>
                 <CardTitle>Progress</CardTitle>
@@ -567,7 +690,7 @@ export default function OverView({ country, overs }: OverViewProps) {
                 </div>
               </CardContent>
             </Card>
-            <Card className="max-w-xs" x-chunk="charts-01-chunk-3">
+            {/*             <Card className="max-w-xs" x-chunk="charts-01-chunk-3">
               <CardHeader className="p-4 pb-0">
                 <CardTitle>Walking Distance</CardTitle>
                 <CardDescription>
@@ -648,7 +771,7 @@ export default function OverView({ country, overs }: OverViewProps) {
                   </BarChart>
                 </ChartContainer>
               </CardContent>
-            </Card>
+            </Card> */}
             <Card className="max-w-xs" x-chunk="charts-01-chunk-4">
               <CardContent className="flex gap-4 p-4 pb-2">
                 <ChartContainer

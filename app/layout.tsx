@@ -32,7 +32,7 @@ export default async function RootLayout({
         >
           <Providers>
             <Sidebar userSession={session} />
-            <div className="md:container w-full flex flex-col items-center">
+            <div className=" w-full flex flex-col items-center">
               <Header />
               {children}
             </div>

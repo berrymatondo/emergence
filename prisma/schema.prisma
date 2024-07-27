@@ -31,6 +31,11 @@ RD_CONGO @map("RD Congo")
 ALL @map("ALL")
 }
 
+enum DataTypeList {
+  L
+  H
+}
+
 model User {
   id Int @id @default(autoincrement())
   email String @unique
@@ -59,3 +64,21 @@ model Overview {
 
 }
 
+
+model YieldCurve{
+  id Int @id @default(autoincrement())
+  tenor Int
+  yield Float
+  change Float @default(0)
+  date String
+  country Boolean
+  type DataTypeList @default(H)
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenor, date, country])
+
+  @@map("yieldcurve")
+}
