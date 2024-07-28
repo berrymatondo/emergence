@@ -76,9 +76,9 @@ export default function OverView({
   const tempo = overs.data.find((item: any) =>
     item.key.includes("Growth")
   ).value;
-  /*   const tempoPour = parseFloat(tempo.replace(/,/g, ""));
-  console.log("Pu", tempoPour);
- */
+  const tempoPour = parseFloat(tempo.replace(/,/g, ""));
+  console.log("Pu", tempoPour / 10);
+
   return (
     <Card className="border-none max-md:my-4 my-auto w-full m-0">
       <CardHeader>
@@ -114,7 +114,7 @@ export default function OverView({
               </CardHeader>
               <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
                 <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                  {tempo}%
+                  {tempoPour / 10}%
                   <span className="text-sm font-normal text-muted-foreground">
                     {"Economic Growth Rate"}
                   </span>
@@ -485,7 +485,7 @@ export default function OverView({
                     />
                     <Line
                       dataKey="usdcdf"
-                      type="natural"
+                      type="linear"
                       fill="var(--color-usdcdf)"
                       stroke="var(--color-usdcdf)"
                       strokeWidth={2}
@@ -497,6 +497,7 @@ export default function OverView({
                         stroke: "var(--color-usdcdf)", */
                         r: 4,
                       }}
+                      dot={false}
                     />
                     {/*                       <LabelList
                         position="top"
