@@ -10,7 +10,7 @@ const OverviewPage = async () => {
   const yieldcurve = await getAllYC();
   const fxrs = await getAllFXR();
   const bccrates = await getAllBCCIntRates();
-  console.log("OVERVIEW", bccrates);
+  //console.log("OVERVIEW", bccrates);
 
   return (
     <OverView

@@ -44,6 +44,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../ui/breadcrumb";
 
 type OverViewProps = {
   country: string;
@@ -78,6 +86,7 @@ export default function OverView({
         {/*         <CardDescription className=" ">
           {"Vue générale de la RD Congo"}
         </CardDescription> */}
+        <CustomBreadcrumb name="General Overview" />
       </CardHeader>
       <CardContent className="grid">
         <div className="chart-wrapper mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-8 max-sm:p-6 sm:flex-row">
@@ -1382,3 +1391,23 @@ export default function OverView({
     </Card>
   );
 }
+
+const CustomBreadcrumb = ({ name }: { name: string }) => {
+  return (
+    <Breadcrumb className=" p-2 ">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/">Home Page</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        {/*         <BreadcrumbItem>
+          <BreadcrumbLink href="/zones">Zones</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator /> */}
+        <BreadcrumbItem>
+          <BreadcrumbPage className="font-semibold">{name}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+};
