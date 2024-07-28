@@ -66,7 +66,7 @@ export const Valorisation = ({
   lk,
   item,
 }: ValorisationProps) => {
-  //console.log("sb", lk);
+  //console.log("sb", st);
   //console.log("sb", chem);
   //console.log("item.link", item.link);
 
@@ -111,7 +111,10 @@ export const Valorisation = ({
         <div className="flex flex-col gap-3 my-8">
           {sl?.map((el: any) => (
             <SheetClose key={el.id} asChild>
-              <Button onClick={() => router.replace(el.link)}>
+              <Button
+                className="dark:text-white bg-sky-700"
+                onClick={() => router.replace(el.link)}
+              >
                 {el.title}
               </Button>
             </SheetClose>
@@ -219,11 +222,11 @@ const ListItems = [
     subdesc: "Utiliser les pricers pour évaluer uniquement les obligations.",
     sublinks: [
       { id: 1, title: "Straight Bond", link: "/valorisation/sb1" },
-      { id: 2, title: "Amortized Simple Bond", link: "/valorisation/sb2" },
-      { id: 3, title: "Floating Rate Bond", link: "/valorisation/sb3" },
-      { id: 4, title: "Straight Bond", link: "/valorisation/sb1" },
+      { id: 2, title: "Amortized Simple Bond", link: "/valorisation/asb" },
+      { id: 3, title: "Floating Rate Bond", link: "/valorisation/frb" },
+      //      { id: 4, title: "Straight Bond", link: "/valorisation/sb1" },
       { id: 5, title: "Amortized FRN", link: "/valorisation/afr" },
-      //{ id: 6, title: "Amortized Step up Coupon", link: "/valorisation/asc" },
+      { id: 6, title: "Step up Coupon", link: "/valorisation/suc" },
       { id: 7, title: "Dual Currency Bond", link: "/valorisation/dcb" },
       { id: 8, title: "Commodity Back Bond", link: "/valorisation/cbb" },
       {
@@ -431,7 +434,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
   //console.log("USER", userSession?.user);
 
   return (
-    <aside className="h-screen">
+    <aside className="min-h-screen ">
       {userSession?.user && (
         <nav className="h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
@@ -462,51 +465,8 @@ const Sidebar = ({ userSession }: SidebarProps) => {
               )}
             </Button>
           </div>
-          <ul className="flex-1 px-3 mt-8">
-            {ListItems.map((item) => (
-              <div
-                key={item.id}
-                className={`text-gray-600 hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
-                  expended ? " px-3" : "px-0"
-                }`}
-              >
-                <div
-                  className={` flex items-center gap-2 overflow-hidden transition-all ${
-                    expended ? "w-68" : "w-10"
-                  } ${
-                    userSession?.user?.role != "ADMIN" && item.role == "ADMIN"
-                      ? " hidden"
-                      : ""
-                  }`}
-                >
-                  {item.subtitle ? (
-                    <Valorisation
-                      st={item.subtitle}
-                      sd={item.subdesc}
-                      sl={item.sublinks}
-                      ic={item.icon}
-                      ex={expended}
-                      tp={item.tooltip}
-                      chem={chem}
-                      lk={item.link}
-                      item={item}
-                    />
-                  ) : (
-                    <SimpleLink
-                      title={item.title}
-                      link={item.link}
-                      ex={expended}
-                      tp={item.tooltip}
-                      chem={chem}
-                      icon={item.icon}
-                      role={item.role}
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </ul>
-          <div className="border-t flex p-3">
+
+          <div className="border-t flex p-3 mb-8">
             <div className="overflow-hidden relative  w-10 h-10 rounded-full">
               {userSession?.user.role == "AGENT" ? (
                 <Image
@@ -552,6 +512,51 @@ const Sidebar = ({ userSession }: SidebarProps) => {
               )}
             </div>
           </div>
+
+          <ul className="flex-1 px-3 mt-8">
+            {ListItems.map((item) => (
+              <div
+                key={item.id}
+                className={`text-gray-600 hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
+                  expended ? " px-3" : "px-0"
+                }`}
+              >
+                <div
+                  className={` flex items-center gap-2 overflow-hidden transition-all ${
+                    expended ? "w-68" : "w-10"
+                  } ${
+                    userSession?.user?.role != "ADMIN" && item.role == "ADMIN"
+                      ? " hidden"
+                      : ""
+                  }`}
+                >
+                  {item.subtitle ? (
+                    <Valorisation
+                      st={item.subtitle}
+                      sd={item.subdesc}
+                      sl={item.sublinks}
+                      ic={item.icon}
+                      ex={expended}
+                      tp={item.tooltip}
+                      chem={chem}
+                      lk={item.link}
+                      item={item}
+                    />
+                  ) : (
+                    <SimpleLink
+                      title={item.title}
+                      link={item.link}
+                      ex={expended}
+                      tp={item.tooltip}
+                      chem={chem}
+                      icon={item.icon}
+                      role={item.role}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </ul>
         </nav>
       )}
     </aside>

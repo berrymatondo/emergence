@@ -953,16 +953,16 @@ export default function OverView({
               <CardContent className="flex gap-4 p-4 pb-2">
                 <ChartContainer
                   config={{
-                    move: {
-                      label: "Move",
+                    cobalt: {
+                      label: "Cobalt",
                       color: "hsl(var(--chart-1))",
                     },
-                    stand: {
-                      label: "Stand",
+                    copper: {
+                      label: "Copper",
                       color: "hsl(var(--chart-2))",
                     },
-                    exercise: {
-                      label: "Exercise",
+                    diamond: {
+                      label: "Diamond",
                       color: "hsl(var(--chart-3))",
                     },
                   }}
@@ -977,22 +977,22 @@ export default function OverView({
                     }}
                     data={[
                       {
-                        activity: "stand",
-                        value: (8 / 12) * 100,
+                        activity: "diamond",
+                        value: 0.18 * 100,
                         label: "8/12 hr",
-                        fill: "var(--color-stand)",
+                        fill: "var(--color-diamond)",
                       },
                       {
-                        activity: "exercise",
-                        value: (46 / 60) * 100,
+                        activity: "copper",
+                        value: 0.13 * 100,
                         label: "46/60 min",
-                        fill: "var(--color-exercise)",
+                        fill: "var(--color-copper)",
                       },
                       {
-                        activity: "move",
-                        value: (245 / 360) * 100,
+                        activity: "Cobalt",
+                        value: 0.6 * 100,
                         label: "245/360 kcal",
-                        fill: "var(--color-move)",
+                        fill: "var(--color-cobalt)",
                       },
                     ]}
                     layout="vertical"
@@ -1023,7 +1023,7 @@ export default function OverView({
               <CardFooter className="flex flex-row border-t p-4">
                 <div className="flex w-full items-center gap-2">
                   <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-xs text-muted-foreground">Move</div>
+                    <div className="text-xs text-muted-foreground">Cobalt</div>
                     <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                       562
                       <span className="text-sm font-normal text-muted-foreground">
@@ -1068,47 +1068,45 @@ export default function OverView({
               <CardContent className="flex gap-4 p-4">
                 <div className="grid items-center gap-2">
                   <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-sm text-muted-foreground">Move</div>
+                    <div className="text-sm text-muted-foreground">Cobalt</div>
                     <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                      562/600
+                      60
                       <span className="text-sm font-normal text-muted-foreground">
-                        kcal
+                        %
                       </span>
                     </div>
                   </div>
                   <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-sm text-muted-foreground">
-                      Exercise
-                    </div>
+                    <div className="text-sm text-muted-foreground">Copper</div>
                     <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                      73/120
+                      13
                       <span className="text-sm font-normal text-muted-foreground">
-                        min
+                        %
                       </span>
                     </div>
                   </div>
                   <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-sm text-muted-foreground">Stand</div>
+                    <div className="text-sm text-muted-foreground">Diamond</div>
                     <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                      8/12
+                      18
                       <span className="text-sm font-normal text-muted-foreground">
-                        hr
+                        %
                       </span>
                     </div>
                   </div>
                 </div>
                 <ChartContainer
                   config={{
-                    move: {
-                      label: "Move",
+                    cobalt: {
+                      label: "Cobalt",
                       color: "hsl(var(--chart-1))",
                     },
-                    exercise: {
-                      label: "Exercise",
+                    copper: {
+                      label: "Copper",
                       color: "hsl(var(--chart-2))",
                     },
-                    stand: {
-                      label: "Stand",
+                    diamond: {
+                      label: "Diamond",
                       color: "hsl(var(--chart-3))",
                     },
                   }}
@@ -1123,19 +1121,19 @@ export default function OverView({
                     }}
                     data={[
                       {
-                        activity: "stand",
-                        value: (8 / 12) * 100,
-                        fill: "var(--color-stand)",
+                        activity: "diamond",
+                        value: 0.18 * 100,
+                        fill: "var(--color-diamond)",
                       },
                       {
-                        activity: "exercise",
-                        value: (46 / 60) * 100,
-                        fill: "var(--color-exercise)",
+                        activity: "copper",
+                        value: 0.13 * 100,
+                        fill: "var(--color-copper)",
                       },
                       {
-                        activity: "move",
-                        value: (245 / 360) * 100,
-                        fill: "var(--color-move)",
+                        activity: "cobalt",
+                        value: 0.6 * 100,
+                        fill: "var(--color-cobalt)",
                       },
                     ]}
                     innerRadius="20%"

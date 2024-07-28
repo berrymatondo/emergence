@@ -23,7 +23,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true} className="flex">
+      <body suppressHydrationWarning={true} className="flex bg-card">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -32,7 +32,7 @@ export default async function RootLayout({
         >
           <Providers>
             <Sidebar userSession={session} />
-            <div className=" w-full flex flex-col items-center">
+            <div className="md:container w-full flex flex-col items-center">
               <Header />
               {children}
             </div>
