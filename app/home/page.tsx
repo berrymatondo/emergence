@@ -1,73 +1,140 @@
 "use client";
-import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { TrendingUp } from "lucide-react";
 import React from "react";
-
+import { GiSuspensionBridge } from "react-icons/gi";
 import {
   Bar,
   BarChart,
   CartesianGrid,
   Line,
   LineChart,
+  Rectangle,
   XAxis,
   YAxis,
 } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { TrendingUp } from "lucide-react";
-
 const HomePage = () => {
   return (
-    /*     <div className="flex min-h-screen flex-col items-center justify-between p-24">
-     */
-    <div className="relative h-full  w-full md:container flex max-md:flex-col justify-start items-center my-auto max-md:gap-8">
-      <div className=" md:container md:py-24 max-md:pt-10 flex flex-col gap-4 justify-center md:my-auto  dark:bg-transparent">
-        <div className="flex justify-center text-teal-700 text-xl font-bold">
-          <strong className="text-9xl max-md:text-7xl">E</strong>
-          <div className="leading-10 flex flex-col items-start justify-center">
-            <span className="pt-1 text-6xl max-md:text-2xl">merging</span>
-            <span className="text-4xl max-md:text-xl md:py-4">
-              <strong>M</strong>arkets
-            </span>
+    <div className="m-2 bg-white/5 h-full w-full rounded-2xl overflow-hidden relative">
+      <div className="absolute flex flex-col ml-4 ">
+        <div
+          className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all`}
+        >
+          <GiSuspensionBridge size={40} className="text-sky-600" />{" "}
+          <div className=" flex text-teal-700 text-xl font-semibold">
+            <strong className="text-4xl">E</strong>
+            <div className="leading-4 flex flex-col items-start justify-center">
+              <span className="pt-1">merging</span>
+              <span className="text-sm">
+                <strong>M</strong>arkets
+              </span>
+            </div>
           </div>
         </div>
-        <p className="text-sm max-md:text-xs text-center">
-          Connecting You To Tomorrow’s Market Leaders
-        </p>
-
-        <p className="text-center my-4">
-          <Link
-            href="/auth/login"
-            className="text-white py-4 px-8 max-md:px-4 max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
-          >
-            Se Connecter
-          </Link>
-        </p>
-        <p className="text-center">
-          <span className="text-xs">{"Vous n'avez pas de compte ?"}</span>
-          <Link href="/auth/register" className="px-2 underline">
-            {"S'inscrire"}
-          </Link>
-        </p>
       </div>
 
-      <div className=" w-full max-md:p-2">
-        <Conte />
+      <div className="flex justify-center items-center w-3/5 h-full rounded-tr-full translate-y-20  bg-gradient-to-br from-card to-sky-400/30">
+        <Card
+          className=" bg-transparent border-none"
+          x-chunk="charts-01-chunk-6"
+        >
+          <CardHeader className="p-4 pb-0 relative">
+            <CardTitle className="text-6xl">Emerging Markets</CardTitle>
+            <CardDescription className="container text-lg py-8 text-yellow-400">
+              {"Boosting DRC's activity on the financial markets"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center  px-28 ">
+            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
+              0.061
+              <span className="text-sm font-normal text-muted-foreground">
+                Economic Growth Rate
+              </span>
+              <strong>
+                <TrendingUp className="h-8 w-8" />
+              </strong>
+            </div>
+            <ChartContainer
+              config={{
+                steps: {
+                  label: "Steps",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+              className="ml-auto w-[72px]"
+            >
+              <BarChart
+                accessibilityLayer
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+                data={[
+                  {
+                    date: "2024-01-01",
+                    steps: 2000,
+                  },
+                  {
+                    date: "2024-01-02",
+                    steps: 2100,
+                  },
+                  {
+                    date: "2024-01-03",
+                    steps: 2200,
+                  },
+                  {
+                    date: "2024-01-04",
+                    steps: 1300,
+                  },
+                  {
+                    date: "2024-01-05",
+                    steps: 1400,
+                  },
+                  {
+                    date: "2024-01-06",
+                    steps: 2500,
+                  },
+                  {
+                    date: "2024-01-07",
+                    steps: 1600,
+                  },
+                ]}
+              >
+                <Bar
+                  dataKey="steps"
+                  fill="var(--color-steps)"
+                  radius={2}
+                  fillOpacity={0.2}
+                  activeIndex={6}
+                  activeBar={<Rectangle fillOpacity={0.8} />}
+                />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={4}
+                  hide
+                />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
       </div>
-
-      <div className="opacity-80 absolute flex justify-center items-center left-1/2 bottom-0 w-1/3  rounded-bl-full">
+      <div className="absolute flex justify-center items-center right-0 top-0 w-3/4 h-full translate-x-60 rounded-bl-full bg-gradient-to-bl from-purple-600/20 to-transparent">
         <Card
           className="bg-transparent/20 flex flex-col w-3/4 border-none -translate-x-40"
           x-chunk="charts-01-chunk-1"
@@ -233,66 +300,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
-
-/* const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig */
-
-const Conte = () => {
-  return (
-    <Card className="border-none bg-gray-100 dark:bg-transparent">
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-center gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-      </CardFooter>
-    </Card>
-  );
-};
