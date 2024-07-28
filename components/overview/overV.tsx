@@ -50,6 +50,7 @@ type OverViewProps = {
   overs: any;
   yieldcurve: any;
   fxrs: any;
+  bccrates: any;
 };
 
 export default function OverView({
@@ -57,7 +58,19 @@ export default function OverView({
   overs,
   yieldcurve,
   fxrs,
+  bccrates,
 }: OverViewProps) {
+  /*   console.log(
+    "xx:",
+    overs.data.find((item: any) => item.key.includes("Growth")).value
+  );
+ */
+  const tempo = overs.data.find((item: any) =>
+    item.key.includes("Growth")
+  ).value;
+  /*   const tempoPour = parseFloat(tempo.replace(/,/g, ""));
+  console.log("Pu", tempoPour);
+ */
   return (
     <Card className="border-none max-md:my-4 my-auto w-full m-0">
       <CardHeader>
@@ -92,9 +105,9 @@ export default function OverView({
               </CardHeader>
               <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
                 <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                  117.31
+                  {tempo}%
                   <span className="text-sm font-normal text-muted-foreground">
-                    {"millions d'habitants"}
+                    {"Economic Growth Rate"}
                   </span>
                 </div>
                 <ChartContainer
@@ -340,8 +353,14 @@ export default function OverView({
             >
               <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
                 <div>
-                  <CardDescription className="text-orange-400">
-                    -USDCDF-
+                  <CardDescription className="flex justify-between items-center text-orange-400">
+                    -USDCDF-{" "}
+                    <span className="text-white">
+                      TODAY:{" "}
+                      <strong>
+                        {fxrs.data[fxrs.data.length - 1].usdcdf.toFixed(1)}
+                      </strong>
+                    </span>
                   </CardDescription>
                   {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     62
@@ -461,22 +480,22 @@ export default function OverView({
                       fill="var(--color-usdcdf)"
                       stroke="var(--color-usdcdf)"
                       strokeWidth={2}
-                      dot={{
+                      /*                       dot={{
                         fill: "var(--color-usdcdf)",
-                      }}
+                      }} */
                       activeDot={{
                         /*                         fill: "var(--color-usdcdf)",
                         stroke: "var(--color-usdcdf)", */
                         r: 4,
                       }}
-                    >
-                      <LabelList
+                    />
+                    {/*                       <LabelList
                         position="top"
                         offset={12}
                         className="fill-foreground"
                         fontSize={12}
                       />
-                    </Line>
+                    </Line> */}
                     {/*                     <Line
                       dataKey="usdeur"
                       type="natural"
@@ -1065,11 +1084,16 @@ export default function OverView({
           </div>
           <div className="grid w-full flex-1 gap-6">
             <Card className="max-w-xs" x-chunk="charts-01-chunk-5">
+              <CardHeader>
+                <CardTitle>
+                  DRC Commodity Production Percentage of World Total{" "}
+                </CardTitle>
+              </CardHeader>
               <CardContent className="flex gap-4 p-4">
                 <div className="grid items-center gap-2">
                   <div className="grid flex-1 auto-rows-min gap-0.5">
                     <div className="text-sm text-muted-foreground">Cobalt</div>
-                    <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                    <div className="text-blue-400 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
                       60
                       <span className="text-sm font-normal text-muted-foreground">
                         %
@@ -1078,7 +1102,7 @@ export default function OverView({
                   </div>
                   <div className="grid flex-1 auto-rows-min gap-0.5">
                     <div className="text-sm text-muted-foreground">Copper</div>
-                    <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                    <div className="text-orange-300 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
                       13
                       <span className="text-sm font-normal text-muted-foreground">
                         %
@@ -1087,7 +1111,7 @@ export default function OverView({
                   </div>
                   <div className="grid flex-1 auto-rows-min gap-0.5">
                     <div className="text-sm text-muted-foreground">Diamond</div>
-                    <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                    <div className="text-teal-300 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
                       18
                       <span className="text-sm font-normal text-muted-foreground">
                         %
@@ -1152,7 +1176,121 @@ export default function OverView({
                 </ChartContainer>
               </CardContent>
             </Card>
-            <Card className="max-w-xs" x-chunk="charts-01-chunk-6">
+            <Card className="max-w-xs" x-chunk="charts-01-chunk-7">
+              <CardHeader className="p-4">
+                <CardTitle>BCC Interest Rates</CardTitle>
+                {/*                <CardDescription>
+                  {
+                    "You're burning an average of 754 calories per day. Good job!"
+                  }
+                </CardDescription> */}
+              </CardHeader>
+              <CardContent className="p-0">
+                <ChartContainer
+                  config={{
+                    time: {
+                      label: "Rate",
+                      color: "hsl(var(--chart-2))",
+                    },
+                  }}
+                >
+                  <AreaChart
+                    accessibilityLayer
+                    data={bccrates.data}
+                    /*                     data={[
+                      {
+                        date: "2024-01-01",
+                        time: 8.5,
+                      },
+                      {
+                        date: "2024-01-02",
+                        time: 7.2,
+                      },
+                      {
+                        date: "2024-01-03",
+                        time: 8.1,
+                      },
+                      {
+                        date: "2024-01-04",
+                        time: 6.2,
+                      },
+                      {
+                        date: "2024-01-05",
+                        time: 5.2,
+                      },
+                      {
+                        date: "2024-01-06",
+                        time: 8.1,
+                      },
+                      {
+                        date: "2024-01-07",
+                        time: 7.0,
+                      },
+                    ]} */
+                    margin={{
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                    }}
+                  >
+                    {/*                     <XAxis dataKey="date" hide />
+                     */}{" "}
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                    />
+                    <YAxis
+                      dataKey="rate"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={4}
+                    />
+                    {/*                     <YAxis domain={["dataMin - 5", "dataMax + 2"]} hide />
+                     */}{" "}
+                    <defs>
+                      <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
+                        <stop
+                          offset="5%"
+                          stopColor="var(--color-time)"
+                          stopOpacity={0.8}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="var(--color-time)"
+                          stopOpacity={0.1}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <Area
+                      dataKey="rate"
+                      type="natural"
+                      fill="url(#fillTime)"
+                      fillOpacity={0.4}
+                      stroke="var(--color-time)"
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                      formatter={(value) => (
+                        <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
+                          Rate
+                          <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                            {value}
+                            <span className="font-normal text-muted-foreground">
+                              %
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </AreaChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+            {/*             <Card className="max-w-xs" x-chunk="charts-01-chunk-6">
               <CardHeader className="p-4 pb-0">
                 <CardTitle>Active Energy</CardTitle>
                 <CardDescription>
@@ -1234,111 +1372,7 @@ export default function OverView({
                   </BarChart>
                 </ChartContainer>
               </CardContent>
-            </Card>
-            <Card className="max-w-xs" x-chunk="charts-01-chunk-7">
-              <CardHeader className="space-y-0 pb-0">
-                <CardDescription>Time in Bed</CardDescription>
-                <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                  8
-                  <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-                    hr
-                  </span>
-                  35
-                  <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-                    min
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ChartContainer
-                  config={{
-                    time: {
-                      label: "Time",
-                      color: "hsl(var(--chart-2))",
-                    },
-                  }}
-                >
-                  <AreaChart
-                    accessibilityLayer
-                    data={[
-                      {
-                        date: "2024-01-01",
-                        time: 8.5,
-                      },
-                      {
-                        date: "2024-01-02",
-                        time: 7.2,
-                      },
-                      {
-                        date: "2024-01-03",
-                        time: 8.1,
-                      },
-                      {
-                        date: "2024-01-04",
-                        time: 6.2,
-                      },
-                      {
-                        date: "2024-01-05",
-                        time: 5.2,
-                      },
-                      {
-                        date: "2024-01-06",
-                        time: 8.1,
-                      },
-                      {
-                        date: "2024-01-07",
-                        time: 7.0,
-                      },
-                    ]}
-                    margin={{
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                    }}
-                  >
-                    <XAxis dataKey="date" hide />
-                    <YAxis domain={["dataMin - 5", "dataMax + 2"]} hide />
-                    <defs>
-                      <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                          offset="5%"
-                          stopColor="var(--color-time)"
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="var(--color-time)"
-                          stopOpacity={0.1}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <Area
-                      dataKey="time"
-                      type="natural"
-                      fill="url(#fillTime)"
-                      fillOpacity={0.4}
-                      stroke="var(--color-time)"
-                    />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent hideLabel />}
-                      formatter={(value) => (
-                        <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                          Time in bed
-                          <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                            {value}
-                            <span className="font-normal text-muted-foreground">
-                              hr
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    />
-                  </AreaChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </CardContent>

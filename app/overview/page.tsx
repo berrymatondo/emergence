@@ -1,4 +1,5 @@
 import OverView from "@/components/overview/overV";
+import { getAllBCCIntRates } from "@/lib/_bccIntRatesActions";
 import { getAllFXR } from "@/lib/_fxratesActions";
 import { getAllOverview } from "@/lib/_overviewActions";
 import { getAllYC } from "@/lib/_ycAction";
@@ -8,7 +9,8 @@ const OverviewPage = async () => {
   const overs = await getAllOverview();
   const yieldcurve = await getAllYC();
   const fxrs = await getAllFXR();
-  console.log("OVERVIEW", fxrs);
+  const bccrates = await getAllBCCIntRates();
+  console.log("OVERVIEW", bccrates);
 
   return (
     <OverView
@@ -16,6 +18,7 @@ const OverviewPage = async () => {
       overs={overs}
       yieldcurve={yieldcurve}
       fxrs={fxrs}
+      bccrates={bccrates}
     />
   );
 };

@@ -95,3 +95,15 @@ model FXRates{
 
   @@map("fxrates")
 }
+
+model BCCIntRates{
+  id Int @id @default(autoincrement())
+  date String @unique
+  rate Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bccintrates")
+}
+
