@@ -77,23 +77,11 @@ const HomePage = () => {
               <CardDescription className="text-orange-400">
                 DRC Yield Curve
               </CardDescription>
-              {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    62
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      bpm
-                    </span>
-                  </CardTitle> */}
             </div>
             <div>
               <CardDescription className="text-green-400">
                 AVG African Yield Curve
               </CardDescription>
-              {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    35
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      ms
-                    </span>
-                  </CardTitle> */}
             </div>
           </CardHeader>
           <CardContent className="flex flex-1 items-center">
@@ -228,6 +216,8 @@ const HomePage = () => {
           </CardContent>
         </Card>
       </div>
+
+      <TrendingUp className="h-4 w-4" />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import ModeToggle from "../toggle";
 
 const Header = () => {
   return (
-    <div className=" w-full flex justify-end pt-4">
+    <div className=" w-full flex justify-end py-4">
       <ModeToggle />
     </div>
   );
