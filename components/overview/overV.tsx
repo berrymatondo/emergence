@@ -52,6 +52,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
+import { Badge } from "../ui/badge";
 
 type OverViewProps = {
   country: string;
@@ -77,7 +78,49 @@ export default function OverView({
     item.key.includes("Growth")
   ).value;
   const tempoPour = parseFloat(tempo.replace(/,/g, ""));
-  console.log("Pu", tempoPour / 10);
+  // console.log("Pu", tempoPour / 10);
+
+  //console.log("Overs", fxrs.data);
+  const tt = [...fxrs.data];
+  let newTab = [];
+  for (let i = 0; i < tt.length; i++) {
+    let tr = {
+      ...fxrs.data[i],
+      dateOut: new Date(fxrs.data[i].date).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+      }),
+    };
+    newTab.push(tr);
+  }
+
+  const yc = [...yieldcurve.data];
+  let newYC = [];
+  for (let i = 0; i < yc.length; i++) {
+    let tr = {
+      date: yc[i].tenor + "Y",
+      rdc: yc[i].yield,
+      africa: yc[i].yield - i,
+      rdcChange: yc[i].change,
+      africaChange: yc[i].change,
+    };
+    newYC.push(tr);
+  }
+
+  // BCC Int
+  const tbcc = [...bccrates.data];
+  let newBCC = [];
+  for (let i = 0; i < tbcc.length; i++) {
+    let tr = {
+      ...bccrates.data[i],
+      dateOut: new Date(bccrates.data[i].date).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+      }),
+    };
+    newBCC.push(tr);
+  }
+  //console.log("newBCC", newBCC);
 
   return (
     <Card className="border-none max-md:my-4 my-auto w-full m-0">
@@ -106,7 +149,11 @@ export default function OverView({
                         {data.key}
                       </span>
                       <span className="text-sm   font-normal text-black dark:text-white">
-                        {data.value}
+                        {data.key.includes("Growth") ||
+                        data.key.includes("GDP") ||
+                        data.key.includes("Rate")
+                          ? parseFloat(data.value.replace(/,/g, "")) / 10 + " %"
+                          : data.value}
                       </span>
                     </span>
                   ))}
@@ -193,7 +240,23 @@ export default function OverView({
               <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
                 <div>
                   <CardDescription className="text-orange-400">
-                    DRC Yield Curve
+                    <p>DRC Yield Curve</p>
+                    <Badge className="bg-orange-500 text-white mt-1 flex items-center">
+                      {newYC[0].rdcChange}
+                    </Badge>
+                    <span
+                      className={`pl-2 ${
+                        newYC[0].rdc < newYC[1].rdc
+                          ? "text-red-500"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {newYC[0].rdc > newYC[1].rdc ? "+" : ""}
+                      {(
+                        ((newYC[0].rdc - newYC[1].rdc) * 100) /
+                        newYC[1].rdc
+                      ).toFixed(2)}
+                    </span>
                   </CardDescription>
                   {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     62
@@ -205,6 +268,22 @@ export default function OverView({
                 <div>
                   <CardDescription className="text-green-400">
                     AVG African Yield Curve
+                    <Badge className="bg-green-600 text-white mt-1">
+                      {newYC[0].africaChange}
+                    </Badge>
+                    <span
+                      className={`pl-2 ${
+                        newYC[0].africa < newYC[1].africa
+                          ? "text-red-500"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {newYC[0].africa > newYC[1].africa ? "+" : ""}
+                      {(
+                        ((newYC[0].africa - newYC[1].africa) * 100) /
+                        newYC[1].rdc
+                      ).toFixed(2)}
+                    </span>
                   </CardDescription>
                   {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     35
@@ -217,7 +296,7 @@ export default function OverView({
               <CardContent className="flex flex-1 items-center">
                 <ChartContainer
                   config={{
-                    resting: {
+                    rdc: {
                       label: "DRC Yield Curve",
                       color: "hsl(var(--chart-3))",
                     },
@@ -235,179 +314,7 @@ export default function OverView({
                       right: 14,
                       top: 10,
                     }}
-                    data={[
-                      {
-                        date: "1Y",
-                        resting: 93.7,
-                        africa: 79.2,
-                      },
-                      {
-                        date: "2Y",
-                        resting: 98.4,
-                        africa: 104.4,
-                      },
-                      {
-                        date: "3Y",
-                        resting: 89.5,
-                        africa: 106.2,
-                      },
-                      {
-                        date: "4Y",
-                        resting: 92.2,
-                        africa: 111.1,
-                      },
-                      {
-                        date: "5Y",
-                        resting: 83,
-                        africa: 115.1,
-                      },
-                      {
-                        date: "7Y",
-                        resting: 82.6,
-                        africa: 119.0,
-                      },
-                      {
-                        date: "8Y",
-                        resting: 80.1,
-                        africa: 120.6,
-                      },
-                      {
-                        date: "10Y",
-                        resting: 103.8,
-                        africa: 120.4,
-                      },
-                      {
-                        date: "15Y",
-                        resting: 107.1,
-                        africa: 129.2,
-                      },
-                      {
-                        date: "20Y",
-                        resting: 153.8,
-                        africa: 130.7,
-                      },
-                      {
-                        date: "30Y",
-                        resting: 152.1,
-                        africa: 130.1,
-                      },
-                    ]}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="4 4"
-                      vertical={false}
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeOpacity={0.5}
-                    />
-                    <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-                    <XAxis
-                      dataKey="date"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                      /*                       tickFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          weekday: "short",
-                        });
-                      }} */
-                    />
-                    <Line
-                      dataKey="resting"
-                      type="natural"
-                      fill="var(--color-resting)"
-                      stroke="var(--color-resting)"
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{
-                        fill: "var(--color-resting)",
-                        stroke: "var(--color-resting)",
-                        r: 4,
-                      }}
-                    />
-                    <Line
-                      dataKey="africa"
-                      type="natural"
-                      fill="var(--color-africa)"
-                      stroke="var(--color-africa)"
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{
-                        fill: "var(--color-africa)",
-                        stroke: "var(--color-africa)",
-                        r: 4,
-                      }}
-                    />
-                    <ChartTooltip
-                      content={
-                        <ChartTooltipContent
-                          indicator="line"
-                          labelFormatter={(value) => {
-                            return new Date(value).toLocaleDateString("en-US", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            });
-                          }}
-                        />
-                      }
-                      cursor={false}
-                    />
-                  </LineChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-            <Card
-              className="flex flex-col lg:max-w-md"
-              x-chunk="charts-01-chunk-1"
-            >
-              <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-                <div>
-                  <CardDescription className="flex justify-between items-center text-orange-400">
-                    -USDCDF-{" "}
-                    <span className="text-white">
-                      TODAY:{" "}
-                      <strong>
-                        {fxrs.data[fxrs.data.length - 1].usdcdf.toFixed(1)}
-                      </strong>
-                    </span>
-                  </CardDescription>
-                  {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    62
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      bpm
-                    </span>
-                  </CardTitle> */}
-                </div>
-                {/*                 <div>
-                  <CardDescription className="text-green-400">
-                    -USDEUR-
-                  </CardDescription>
-
-                </div> */}
-              </CardHeader>
-              <CardContent className="flex flex-1 items-center">
-                <ChartContainer
-                  config={{
-                    usdcdf: {
-                      label: "USDCDF",
-                      color: "hsl(var(--chart-3))",
-                    } /* ,
-                    usdeur: {
-                      label: "USDEUR",
-                      color: "hsl(var(--chart-2))",
-                    }, */,
-                  }}
-                  className="w-full"
-                >
-                  <LineChart
-                    accessibilityLayer
-                    margin={{
-                      left: 14,
-                      right: 14,
-                      top: 10,
-                    }}
-                    data={fxrs.data}
-                    /*                     data={[
+                    /* data={[
                       {
                         date: "1Y",
                         resting: 93.7,
@@ -464,6 +371,7 @@ export default function OverView({
                         africa: 130.1,
                       },
                     ]} */
+                    data={newYC}
                   >
                     <CartesianGrid
                       strokeDasharray="4 4"
@@ -484,11 +392,126 @@ export default function OverView({
                       }} */
                     />
                     <Line
+                      dataKey="rdc"
+                      type="natural"
+                      fill="var(--color-rdc)"
+                      stroke="var(--color-rdc)"
+                      strokeWidth={1}
+                      dot={false}
+                      activeDot={{
+                        fill: "var(--color-rdc)",
+                        stroke: "var(--color-rdc)",
+                        r: 4,
+                      }}
+                    />
+                    <Line
+                      dataKey="africa"
+                      type="natural"
+                      fill="var(--color-africa)"
+                      stroke="var(--color-africa)"
+                      strokeWidth={1}
+                      dot={false}
+                      activeDot={{
+                        fill: "var(--color-africa)",
+                        stroke: "var(--color-africa)",
+                        r: 4,
+                      }}
+                    />
+                    <ChartTooltip
+                      content={
+                        <ChartTooltipContent
+                          indicator="line"
+                          labelFormatter={(value) => {
+                            return new Date(value).toLocaleDateString("en-US", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            });
+                          }}
+                        />
+                      }
+                      cursor={false}
+                    />
+                  </LineChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+            <Card
+              className="flex flex-col lg:max-w-md"
+              x-chunk="charts-01-chunk-1"
+            >
+              <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+                <div>
+                  <div className="flex justify-between items-center text-orange-400">
+                    <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+                    <span className="text-white">
+                      TODAY:{" "}
+                      <strong>
+                        {newTab[newTab.length - 1].usdcdf.toFixed(1)}
+                      </strong>
+                    </span>
+                  </div>
+                  {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+                    62
+                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
+                      bpm
+                    </span>
+                  </CardTitle> */}
+                </div>
+                {/*                 <div>
+                  <CardDescription className="text-green-400">
+                    -USDEUR-
+                  </CardDescription>
+
+                </div> */}
+              </CardHeader>
+              <CardContent className="flex flex-1 items-center">
+                <ChartContainer
+                  config={{
+                    usdcdf: {
+                      label: "USDCDF",
+                      color: "hsl(var(--chart-3))",
+                    } /* ,
+                    usdeur: {
+                      label: "USDEUR",
+                      color: "hsl(var(--chart-2))",
+                    }, */,
+                  }}
+                  className="w-full"
+                >
+                  <LineChart
+                    accessibilityLayer
+                    margin={{
+                      left: 14,
+                      right: 14,
+                      top: 10,
+                    }}
+                    data={newTab}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="4 4"
+                      vertical={false}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeOpacity={0.5}
+                    />
+                    <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                    <XAxis
+                      dataKey="dateOut"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      /*                       tickFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          weekday: "short",
+                        });
+                      }} */
+                    />
+                    <Line
                       dataKey="usdcdf"
                       type="linear"
                       fill="var(--color-usdcdf)"
                       stroke="var(--color-usdcdf)"
-                      strokeWidth={2}
+                      strokeWidth={1}
                       /*                       dot={{
                         fill: "var(--color-usdcdf)",
                       }} */
@@ -692,7 +715,11 @@ export default function OverView({
                         <TableCell className="text-xs">{yc.yield}%</TableCell>
                         <TableCell
                           className={`text-right text-xs ${
-                            yc.change < 0 ? "text-red-600" : ""
+                            yc.change < 0
+                              ? "text-red-600"
+                              : yc.change == 0
+                              ? ""
+                              : "text-green-400"
                           }`}
                         >
                           {yc.change}%
@@ -1206,37 +1233,7 @@ export default function OverView({
                 >
                   <AreaChart
                     accessibilityLayer
-                    data={bccrates.data}
-                    /*                     data={[
-                      {
-                        date: "2024-01-01",
-                        time: 8.5,
-                      },
-                      {
-                        date: "2024-01-02",
-                        time: 7.2,
-                      },
-                      {
-                        date: "2024-01-03",
-                        time: 8.1,
-                      },
-                      {
-                        date: "2024-01-04",
-                        time: 6.2,
-                      },
-                      {
-                        date: "2024-01-05",
-                        time: 5.2,
-                      },
-                      {
-                        date: "2024-01-06",
-                        time: 8.1,
-                      },
-                      {
-                        date: "2024-01-07",
-                        time: 7.0,
-                      },
-                    ]} */
+                    data={newBCC}
                     margin={{
                       left: 0,
                       right: 0,
@@ -1244,10 +1241,8 @@ export default function OverView({
                       bottom: 0,
                     }}
                   >
-                    {/*                     <XAxis dataKey="date" hide />
-                     */}{" "}
                     <XAxis
-                      dataKey="date"
+                      dataKey="dateOut"
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}

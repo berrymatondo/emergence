@@ -1,9 +1,15 @@
 import React from "react";
 import ModeToggle from "../toggle";
+import MobileNav from "./mobileNav";
 
-const Header = () => {
+type HeaderProps = {
+  userSession: any;
+};
+
+const Header = ({ userSession }: HeaderProps) => {
   return (
-    <div className=" w-full flex justify-end py-4">
+    <div className=" w-full flex justify-end max-md:justify-between max-md:items-center max-md:px-2 py-4">
+      <MobileNav userSession={userSession} />
       <ModeToggle />
     </div>
   );

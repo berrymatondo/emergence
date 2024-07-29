@@ -219,7 +219,8 @@ const ListItems = [
     role: "AGENT",
     tooltip: "Valorisation",
     subtitle: "Valorisation",
-    subdesc: "Utiliser les pricers pour évaluer uniquement les obligations.",
+    subdesc:
+      "Utiliser les pricers pour évaluer les obligations et les options.",
     sublinks: [
       { id: 1, title: "Straight Bond", link: "/valorisation/sb1" },
       { id: 2, title: "Amortized Simple Bond", link: "/valorisation/asb" },
@@ -434,7 +435,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
   //console.log("USER", userSession?.user);
 
   return (
-    <aside className="min-h-screen ">
+    <aside className="max-md:hidden min-h-screen ">
       {userSession?.user && (
         <nav className="h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">

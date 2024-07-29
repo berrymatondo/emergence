@@ -33,7 +33,7 @@ export default async function RootLayout({
           <Providers>
             <Sidebar userSession={session} />
             <div className="md:container w-full flex flex-col items-center">
-              <Header />
+              <Header userSession={session} />
               {children}
             </div>
             <Toaster richColors />

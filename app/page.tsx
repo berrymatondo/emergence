@@ -43,8 +43,8 @@ const HomePage = () => {
             </span>
           </div>
         </div>
-        <p className="text-sm max-md:text-xs text-center">
-          Connecting You To Tomorrow’s Market Leaders
+        <p className="text-sm max-md:text-xs text-center text-yellow-400">
+          {"Boosting DRC's activity on the financial markets"}
         </p>
 
         <p className="text-center my-4">
@@ -67,7 +67,7 @@ const HomePage = () => {
         <Conte />
       </div>
 
-      <div className="opacity-80 absolute flex justify-center items-center left-1/2 bottom-0 w-1/3  rounded-bl-full">
+      <div className="max-md:hidden opacity-80 absolute flex justify-center items-center left-1/2 bottom-0 w-1/3  rounded-bl-full">
         <Card
           className="bg-transparent/20 flex flex-col w-3/4 border-none -translate-x-40"
           x-chunk="charts-01-chunk-1"
@@ -217,7 +217,11 @@ const HomePage = () => {
         </Card>
       </div>
 
-      <TrendingUp className="h-4 w-4" />
+      <TrendingUp className="h-4 w-4 max-md:h-36 max-md:w-36 max-md:opacity-20" />
+      <p className="text-xs md:hidden">
+        {" "}
+        {"          Connecting You To Tomorrow’s Market Leaders"}
+      </p>
     </div>
   );
 };
