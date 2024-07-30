@@ -407,7 +407,7 @@ const StraightBond = () => {
             </Form>
           </div>
           {bondPrice > 0 && (
-            <div className="w-1/4 lg:w-1/3 border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
+            <div className="md:w-1/4 lg:w-1/3 border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
               <div className="flex justify-between items-center gap-4">
                 {/*   <CardTitle>Results</CardTitle> */}
                 {!forcedBondPrice && (
