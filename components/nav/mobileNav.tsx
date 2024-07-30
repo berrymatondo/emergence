@@ -356,12 +356,17 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
               <DropdownMenuSub key={lik.id}>
                 <DropdownMenuSubTrigger className="gap-2">
                   {lik.icon}
-                  <span>{lik.link}</span>
+                  <span>{lik.tooltip}</span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {lik.sublinks.map((el: any) => (
-                      <DropdownMenuItem key={el.id}>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          router.push("http://localhost:3000/" + el.link)
+                        }
+                        key={el.id}
+                      >
                         <span>{el.title}</span>
                       </DropdownMenuItem>
                     ))}
@@ -369,9 +374,13 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
                 </DropdownMenuPortal>
               </DropdownMenuSub>
             ) : (
-              <DropdownMenuItem key={lik.id} className="gap-2">
+              <DropdownMenuItem
+                onClick={() => router.push("/" + lik.link)}
+                key={lik.id}
+                className="gap-2"
+              >
                 {lik.icon}
-                {lik.link}
+                {lik.title}
               </DropdownMenuItem>
             )
           )}
