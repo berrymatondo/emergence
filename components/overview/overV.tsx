@@ -241,22 +241,24 @@ export default function OverView({
                 <div>
                   <CardDescription className="text-orange-400">
                     <p>DRC Yield Curve</p>
-                    <Badge className="bg-orange-500 text-white mt-1 flex items-center">
-                      {newYC[0].rdcChange}
-                    </Badge>
-                    <span
-                      className={`pl-2 ${
-                        newYC[0].rdc < newYC[1].rdc
-                          ? "text-red-500"
-                          : "text-green-600"
-                      }`}
-                    >
-                      {newYC[0].rdc > newYC[1].rdc ? "+" : ""}
-                      {(
-                        ((newYC[0].rdc - newYC[1].rdc) * 100) /
-                        newYC[1].rdc
-                      ).toFixed(2)}
-                    </span>
+                    <div>
+                      <Badge className="bg-orange-500 text-white mt-1">
+                        {newYC[0].rdcChange}
+                      </Badge>
+                      <span
+                        className={`pl-2 ${
+                          newYC[0].rdc < newYC[1].rdc
+                            ? "text-red-500"
+                            : "text-green-600"
+                        }`}
+                      >
+                        {newYC[0].rdc > newYC[1].rdc ? "+" : ""}
+                        {(
+                          ((newYC[0].rdc - newYC[1].rdc) * 100) /
+                          newYC[1].rdc
+                        ).toFixed(2)}
+                      </span>
+                    </div>
                   </CardDescription>
                   {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     62
@@ -266,24 +268,26 @@ export default function OverView({
                   </CardTitle> */}
                 </div>
                 <div>
-                  <CardDescription className="text-green-400">
-                    AVG African Yield Curve
-                    <Badge className="bg-green-600 text-white mt-1">
-                      {newYC[0].africaChange}
-                    </Badge>
-                    <span
-                      className={`pl-2 ${
-                        newYC[0].africa < newYC[1].africa
-                          ? "text-red-500"
-                          : "text-green-600"
-                      }`}
-                    >
-                      {newYC[0].africa > newYC[1].africa ? "+" : ""}
-                      {(
-                        ((newYC[0].africa - newYC[1].africa) * 100) /
-                        newYC[1].rdc
-                      ).toFixed(2)}
-                    </span>
+                  <CardDescription className="text-green-400 max-md:flex max-md:flex-col">
+                    <p>AVG Afr. Yield Curve</p>
+                    <div>
+                      <Badge className="bg-green-600 text-white mt-1">
+                        {newYC[0].africaChange}
+                      </Badge>
+                      <span
+                        className={`pl-2 ${
+                          newYC[0].africa < newYC[1].africa
+                            ? "text-red-500"
+                            : "text-green-600"
+                        }`}
+                      >
+                        {newYC[0].africa > newYC[1].africa ? "+" : ""}
+                        {(
+                          ((newYC[0].africa - newYC[1].africa) * 100) /
+                          newYC[1].rdc
+                        ).toFixed(2)}
+                      </span>
+                    </div>
                   </CardDescription>
                   {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
                     35
@@ -444,8 +448,8 @@ export default function OverView({
                 <div>
                   <div className="flex justify-between items-center text-orange-400">
                     <Badge className="bg-orange-500 text-white">USDCDF</Badge>
-                    <span className="text-white">
-                      TODAY:{" "}
+                    <span className="dark:text-white">
+                      today:{" "}
                       <strong>
                         {newTab[newTab.length - 1].usdcdf.toFixed(1)}
                       </strong>

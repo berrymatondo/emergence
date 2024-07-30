@@ -24,6 +24,20 @@ enum UserRoles {
  ADMIN
 }
 
+
+enum CouponBasisList {
+  AA
+  A0
+  A5
+}
+
+enum CurrencyList {
+  EUR
+  USD
+  CDF
+}
+
+
 enum CountryList {
 AFGHANISTAN @map("Afghanistan")
 TOGO @map("Togo")
@@ -35,6 +49,9 @@ enum DataTypeList {
   L
   H
 }
+
+
+
 
 model User {
   id Int @id @default(autoincrement())

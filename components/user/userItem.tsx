@@ -11,7 +11,7 @@ type UserItemProps = {
 };
 
 const UserItem = ({ usr }: UserItemProps) => {
-  console.log("usr: ", usr);
+  //console.log("usr: ", usr);
 
   const router = useRouter();
   return (

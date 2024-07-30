@@ -49,7 +49,7 @@ const LoginForm = () => {
 
   const procesForm = async (values: z.infer<typeof LoginSchema>) => {
     setLoading(true);
-    console.log("Value: ", values);
+    //console.log("Value: ", values);
 
     const result = await loginlogin(values);
 
