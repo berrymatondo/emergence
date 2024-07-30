@@ -362,12 +362,14 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
                   <DropdownMenuSubContent>
                     {lik.sublinks.map((el: any) => (
                       <DropdownMenuItem
-                        onClick={() =>
-                          router.push("http://localhost:3000/" + el.link)
-                        }
+                        /*              onClick={() =>
+                          router.push("/" + el.link)
+                        } */
                         key={el.id}
                       >
-                        <span>{el.title}</span>
+                        <Link href={"/" + el.link}></Link>
+                        {/*                         <span>{el.title}</span>
+                         */}{" "}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>
