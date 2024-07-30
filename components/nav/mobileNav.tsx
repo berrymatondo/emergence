@@ -1,14 +1,20 @@
 "use client";
 import React, { useState } from "react";
-import { MdLogin, MdLogout, MdMenu } from "react-icons/md";
+import {
+  MdLock,
+  MdLogin,
+  MdLogout,
+  MdMenu,
+  MdOutlineDiamond,
+} from "react-icons/md";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
-import { GiSuspensionBridge } from "react-icons/gi";
+import { GiPayMoney, GiSuspensionBridge } from "react-icons/gi";
 import avatar from "../../public/rdc.png";
 import Image from "next/image";
 import Link from "next/link";
 import { IoStatsChartOutline } from "react-icons/io5";
-import { RiDashboardLine } from "react-icons/ri";
+import { RiDashboardLine, RiExchange2Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 
 import {
@@ -91,6 +97,184 @@ const ListItems = [
       //  { id: 13, title: "Cross Currency Swap", link: "/valorisation/ccs" },
     ],
   },
+  {
+    id: "3",
+    link: "anadette",
+    icon: <GiPayMoney size={20} />,
+    role: "AGENT",
+    tooltip: "Analyse de la dette",
+    subtitle: "Analyse de la dette",
+    subdesc:
+      " Estimer la croissance, analyser différents scénarios et distribuer la dette.",
+    sublinks: [
+      {
+        id: 1,
+        title: "Analyse des options de financement",
+        link: "/anadette/anaopfin",
+      },
+      {
+        id: 2,
+        title: "Evaluation d'une option de financement",
+        link: "/anadette/evaopfin",
+      },
+      { id: 3, title: "Soutenabilité de la dette", link: "/anadette/soudet" },
+      { id: 4, title: "Analyse des scénarios", link: "/anadette/anascen" },
+      { id: 5, title: "Distribution de la dette", link: "/anadette/disdet" },
+    ],
+  },
+  {
+    id: "4",
+    link: "anadev",
+    icon: <BsCurrencyExchange size={20} />,
+    role: "AGENT",
+    tooltip: "Analyse de devise",
+    subtitle: "Analyse de devise",
+    subdesc:
+      "Suivre les tendances, oscillations, volatilité, projections et impacts des devises sur la dette.",
+    sublinks: [
+      {
+        id: 1,
+        title: "Analyse de tendance ",
+        link: "/anadev/anatend",
+      },
+      {
+        id: 2,
+        title: "Analyse d'oscillation",
+        link: "/anadev/anaosci",
+      },
+      { id: 3, title: "Analyse de volatilité", link: "/anadev/anavol" },
+      { id: 4, title: "Projection du cours de change", link: "/anadev/projcc" },
+      {
+        id: 5,
+        title: "Taux de change et option de financement",
+        link: "/anadev/tcopfin",
+      },
+    ],
+  },
+  {
+    id: "5",
+    link: "anamp",
+    icon: <MdOutlineDiamond size={20} />,
+    role: "AGENT",
+    tooltip: "Analyse des matières premières",
+    subtitle: "Analyse des matières premières",
+    subdesc:
+      "Examiner les tendances, volatilité, projections et impacts des matières premières sur la dette.",
+    sublinks: [
+      {
+        id: 1,
+        title: "Analyse de tendance ",
+        link: "/anamp/anatend",
+      },
+      {
+        id: 2,
+        title: "Courbe de progression",
+        link: "/anamp/cprog",
+      },
+      { id: 3, title: "Production Mondiale Cuivre", link: "/anamp/pmc" },
+      { id: 4, title: "Production Mondiale Or", link: "/anamp/pmo" },
+      {
+        id: 5,
+        title: "Production Mondiale Argent",
+        link: "/anamp/pma",
+      },
+      {
+        id: 6,
+        title: "Production Mondiale Cobalt et Diamant",
+        link: "/anamp/pmcd",
+      },
+    ],
+  },
+  {
+    id: "6",
+    link: "banque",
+    icon: <BsBank size={20} />,
+    role: "AGENT",
+    tooltip: "Banque Centrale",
+    subtitle: "Banque Centrale",
+    subdesc: "Comparer les taux directeurs et calculer l'inflation anticipée.",
+    sublinks: [
+      {
+        id: 1,
+        title: "Taux directeur",
+        link: "/banque/tdir",
+      },
+      {
+        id: 2,
+        title: "Inflation anticipée",
+        link: "/banque/infa",
+      },
+
+      { id: 3, title: "Interest Rate Swap", link: "/banque/irs" },
+      { id: 4, title: "Cross Currency Swap", link: "/banque/ccs" },
+      { id: 5, title: "Commodity Swap", link: "/banque/comos" },
+    ],
+  },
+  {
+    id: "7",
+    link: "marche",
+    icon: <RiExchange2Line size={20} />,
+    role: "AGENT",
+    tooltip: "Marché",
+    subtitle: "Marché",
+    subdesc: "Se tenir informé des dernières actualités des marchés.",
+    sublinks: [
+      {
+        id: 1,
+        title: "Courbes de rendement mondiales",
+        link: "/marche/crm",
+      },
+      {
+        id: 2,
+        title: "Courbes de rendement africaines",
+        link: "/marche/cra",
+      },
+      { id: 3, title: "Marché africain", link: "/marche/maf" },
+      { id: 4, title: "Marché des actions", link: "/marche/mac" },
+      {
+        id: 5,
+        title: "Aperçu par secteur",
+        link: "/marche/apsec",
+      },
+    ],
+  },
+  {
+    id: "8",
+    link: "industrie",
+    icon: <LiaIndustrySolid size={20} />,
+    role: "AGENT",
+    tooltip: "Industrie",
+    subtitle: "Industrie",
+    subdesc: "Suivre le marché de l'industrie",
+    sublinks: [
+      {
+        id: 1,
+        title: "Ressources Naturelles",
+        link: "/industrie/rn",
+      },
+      {
+        id: 2,
+        title: "Agriculture",
+        link: "/industrie/agri",
+      },
+      { id: 3, title: "Energie", link: "/industrie/ener" },
+    ],
+  },
+  /*   {
+    id: 9,
+    link: "admin",
+    icon: <MdLock size={20} />,
+    tooltip: "Espace Admin",
+    title: "Espace Admin",
+  }, */
+  /*   {
+    id: 10,
+    link: "admin",
+    role: "ADMIN",
+    icon: <MdLock size={20} />,
+    tooltip: "Espace admin",
+    title: "Espace Admin",
+  }, */
 ];
 
 type MobileNavProps = {
@@ -98,35 +282,54 @@ type MobileNavProps = {
 };
 
 const MobileNav = ({ userSession }: MobileNavProps) => {
+  const router = useRouter();
   return (
-    <div className="md:hidden flex">
+    <div className="md:hidden flex items-center gap-4">
       <MobileMenu userSession={userSession} />
-
-      {/*       <>
-        {" "}
-        <div className="px-2 pb-2 flex justify-between items-center">
-          <div className="flex flex-col ml-4">
-            <div
-              className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all 
-                `}
-              // onClick={() => router.replace("/")}
-            >
-              <GiSuspensionBridge size={40} className="text-sky-600" />{" "}
-              <div className=" flex text-teal-700 text-xl font-semibold">
-                <strong className="text-4xl">E</strong>
-                <div className="leading-4 flex flex-col items-start justify-center">
-                  <Link href="/">
-                    <span className="pt-1">merging</span>
-                    <span className="text-sm">
-                      <strong>M</strong>arkets
-                    </span>
-                  </Link>
-                </div>
-              </div>
+      <div className=" flex">
+        <div className="overflow-hidden relative  w-8 h-8 rounded-full">
+          {userSession?.user.role == "AGENT" ? (
+            <Image
+              alt="bcg"
+              src={avatar}
+              placeholder="blur"
+              quality={100}
+              fill
+              sizes="100vw"
+              className="object-cover z-10 rounded-lg"
+            />
+          ) : (
+            <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
+              AD
             </div>
-          </div>
+          )}
         </div>
-      </> */}
+
+        <div
+          className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all `}
+        >
+          <div className="leading-4">
+            <h4 className="font-semibold">{userSession?.user?.name}</h4>
+            <span className="text-xs text-gray-600 dark:text-gray-400">
+              {userSession?.user?.email}
+            </span>
+          </div>
+
+          {(!userSession || !userSession.user) && (
+            <MdLogin
+              className="md:hidden text-teal-600"
+              onClick={() => router.push("/auth/login")}
+              size={30}
+            />
+          )}
+          {userSession && userSession.user && (
+            <Link href="/redirout">
+              {" "}
+              <MdLogout className="text-red-600" size={30} />
+            </Link>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
@@ -143,8 +346,69 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
 
   return (
     <div>
-      <MdMenu onClick={() => setExpended(!expended)} size={30} />
-      {expended && <NavigationMenuDemo />}
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <MdMenu size={30} />{" "}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {ListItems.map((lik: any) =>
+            lik?.sublinks ? (
+              <DropdownMenuSub key={lik.id}>
+                <DropdownMenuSubTrigger className="gap-2">
+                  {lik.icon}
+                  <span>{lik.link}</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    {lik.sublinks.map((el: any) => (
+                      <DropdownMenuItem key={el.id}>
+                        <span>{el.title}</span>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            ) : (
+              <DropdownMenuItem key={lik.id} className="gap-2">
+                {lik.icon}
+                {lik.link}
+              </DropdownMenuItem>
+            )
+          )}
+          {/*           <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Billing</DropdownMenuItem>
+          <DropdownMenuItem>Team</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <UserPlus className="mr-2 h-4 w-4" />
+              <span>Invite users</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>
+                  <span>Email</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Message</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <span>More...</span>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub> */}
+          <DropdownMenuLabel className="text-orange-500 flex gap-2">
+            <MdLock size={20} /> <span>Espace Admin</span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => router.push("/admin/users")}>
+            <span>Users</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {/*       <MdMenu onClick={() => setExpended(!expended)} size={30} />
+      {expended && <NavigationMenuDemo />} */}
       {/*       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>
@@ -416,28 +680,11 @@ const components: { title: string; href: string; description: string }[] = [
 export function NavigationMenuDemo() {
   return (
     <NavigationMenu>
-      <NavigationMenuList>
+      <NavigationMenuList className="flex flex-col">
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                    href="/"
-                  >
-                    <div className="mb-2 mt-4 text-lg font-medium">
-                      shadcn/ui
-                    </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed components that you can copy and
-                      paste into your apps. Accessible. Customizable. Open
-                      Source.
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
               <ListItem href="/docs" title="Introduction">
                 Re-usable components built using Radix UI and Tailwind CSS.
               </ListItem>
@@ -477,6 +724,21 @@ export function NavigationMenuDemo() {
 }
 
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { UserPlus } from "lucide-react";
+import { LiaIndustrySolid } from "react-icons/lia";
+import { BsBank, BsCurrencyExchange } from "react-icons/bs";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
