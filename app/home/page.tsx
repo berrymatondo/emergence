@@ -72,13 +72,13 @@ const HomePage = () => {
             href="/auth/login"
             className="text-white py-4 px-8 max-md:px-4 max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
           >
-            Se Connecter
+            Login
           </Link>
         </p>
         <p className="text-center">
-          <span className="text-xs">{"Vous n'avez pas de compte ?"}</span>
+          <span className="text-xs">{"No account yet ?"}</span>
           <Link href="/auth/register" className="px-2 underline">
-            {"S'inscrire"}
+            {"Sign up here"}
           </Link>
         </p>
       </div>
@@ -90,7 +90,7 @@ const HomePage = () => {
           <CardHeader className="p-4 pb-0 relative">
             <CardTitle className="text-6xl">Emerging Markets</CardTitle>
             <CardDescription className="container text-lg py-8 text-yellow-400">
-              {"Boosting DRC's activity on the financial markets"}
+              {"Boosting tour activity on the financial markets"}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center  md:px-28  ">

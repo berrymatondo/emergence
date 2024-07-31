@@ -115,11 +115,9 @@ const LoginForm = () => {
         </p>
         <Card className="max-md:my-4 my-auto w-full max-w-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-center">
-              {"Se Connecter"}
-            </CardTitle>
+            <CardTitle className="text-2xl text-center">{"Login"}</CardTitle>
             <CardDescription className=" text-center">
-              {"Remplir votre nom d'utilisateur ainsi que votre mot de passe."}
+              {"Fill your username and password."}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">

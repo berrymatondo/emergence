@@ -67,7 +67,7 @@ const UsersPage = async ({
       <div className=" py-24 w-full flex flex-col justify-center items-center">
         <p>{"Vous n'êtes pas connecté"}</p>
         <Link href="/auth/login" className="border m-8 p-4 rounded-lg">
-          Se connecter
+          Login
         </Link>
       </div>
     );

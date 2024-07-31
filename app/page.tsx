@@ -44,21 +44,21 @@ const HomePage = () => {
           </div>
         </div>
         <p className="text-sm max-md:text-xs text-center text-yellow-400">
-          {"Boosting DRC's activity on the financial markets"}
+          {"Boosting your activity on the financial markets"}
         </p>
 
         <p className="text-center my-4">
           <Link
             href="/auth/login"
-            className="text-white py-4 px-8 max-md:px-4 max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
+            className="text-white py-4 px-20 max-md:px-4 max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
           >
-            Se Connecter
+            Login
           </Link>
         </p>
         <p className="text-center">
-          <span className="text-xs">{"Vous n'avez pas de compte ?"}</span>
+          <span className="text-xs">{"No account yet ?"}</span>
           <Link href="/auth/register" className="px-2 underline">
-            {"S'inscrire"}
+            {"Sign up here"}
           </Link>
         </p>
       </div>
