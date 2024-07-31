@@ -46,7 +46,7 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "../ui/menubar";
-import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import { FiChevronsLeft, FiChevronsRight, FiMenu } from "react-icons/fi";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -88,7 +88,7 @@ const ListItems = [
       { id: 8, title: "Commodity Back Bond", link: "/valorisation/cbb" },
       {
         id: 9,
-        title: "Amortized Commodity Back Bond",
+        title: "Am. Commo Back Bond",
         link: "/valorisation/acbb",
       },
       { id: 10, title: "European Option", link: "/valorisation/eo" },
@@ -109,12 +109,12 @@ const ListItems = [
     sublinks: [
       {
         id: 1,
-        title: "Analyse des options de financement",
+        title: "An. des opt de financement",
         link: "/anadette/anaopfin",
       },
       {
         id: 2,
-        title: "Evaluation d'une option de financement",
+        title: "Eva. d'une opt de financement",
         link: "/anadette/evaopfin",
       },
       { id: 3, title: "Soutenabilité de la dette", link: "/anadette/soudet" },
@@ -143,10 +143,10 @@ const ListItems = [
         link: "/anadev/anaosci",
       },
       { id: 3, title: "Analyse de volatilité", link: "/anadev/anavol" },
-      { id: 4, title: "Projection du cours de change", link: "/anadev/projcc" },
+      { id: 4, title: "Proj. du cours de change", link: "/anadev/projcc" },
       {
         id: 5,
-        title: "Taux de change et option de financement",
+        title: "Taux de change et opt de fina",
         link: "/anadev/tcopfin",
       },
     ],
@@ -156,8 +156,8 @@ const ListItems = [
     link: "anamp",
     icon: <MdOutlineDiamond size={20} />,
     role: "AGENT",
-    tooltip: "Analyse des matières premières",
-    subtitle: "Analyse des matières premières",
+    tooltip: "An. des mat. pr.",
+    subtitle: "An. des mat. pr.",
     subdesc:
       "Examiner les tendances, volatilité, projections et impacts des matières premières sur la dette.",
     sublinks: [
@@ -180,7 +180,7 @@ const ListItems = [
       },
       {
         id: 6,
-        title: "Production Mondiale Cobalt et Diamant",
+        title: "Prod Mondiale Cobalt et Diamant",
         link: "/anamp/pmcd",
       },
     ],
@@ -221,12 +221,12 @@ const ListItems = [
     sublinks: [
       {
         id: 1,
-        title: "Courbes de rendement mondiales",
+        title: "Courbes de rend mondiales",
         link: "/marche/crm",
       },
       {
         id: 2,
-        title: "Courbes de rendement africaines",
+        title: "Courbes de rend africaines",
         link: "/marche/cra",
       },
       { id: 3, title: "Marché africain", link: "/marche/maf" },
@@ -284,29 +284,46 @@ type MobileNavProps = {
 const MobileNav = ({ userSession }: MobileNavProps) => {
   const router = useRouter();
   return (
-    <div className="md:hidden flex items-center gap-4">
+    <div className="md:hidden flex items-end gap-4">
       <MobileMenu userSession={userSession} />
-      <div className=" flex">
-        <div className="overflow-hidden relative  w-8 h-8 rounded-full">
-          {userSession?.user.role == "AGENT" ? (
-            <Image
-              alt="bcg"
-              src={avatar}
-              placeholder="blur"
-              quality={100}
-              fill
-              sizes="100vw"
-              className="object-cover z-10 rounded-lg"
-            />
-          ) : (
-            <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
-              AD
+      <div className=" flex flex-col ml-4">
+        <div
+          className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all `}
+          onClick={() => router.replace("/")}
+        >
+          <div className=" flex text-teal-700 text-xl font-semibold">
+            <strong className="text-4xl">E</strong>
+            <div className="leading-4 flex flex-col items-start justify-center">
+              <span className="text-sm">
+                <strong>M</strong>
+              </span>
             </div>
-          )}
+          </div>
         </div>
+      </div>
+      <div className=" flex ">
+        {userSession?.user && (
+          <div className="overflow-hidden relative  w-8 h-8 rounded-full">
+            {userSession?.user.role == "AGENT" ? (
+              <Image
+                alt="bcg"
+                src={avatar}
+                placeholder="blur"
+                quality={100}
+                fill
+                sizes="100vw"
+                className="object-cover z-10 rounded-lg"
+              />
+            ) : (
+              <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
+                AD
+              </div>
+            )}
+          </div>
+        )}
 
         <div
-          className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all `}
+          className={` flex justify-between items-center ml-3 gap-8 overflow-hidden transition-all `}
         >
           <div className="leading-4">
             <h4 className="font-semibold">{userSession?.user?.name}</h4>
@@ -316,11 +333,17 @@ const MobileNav = ({ userSession }: MobileNavProps) => {
           </div>
 
           {(!userSession || !userSession.user) && (
-            <MdLogin
+            /* <MdLogin
               className="md:hidden text-teal-600"
               onClick={() => router.push("/auth/login")}
               size={30}
-            />
+            /> */
+            <Badge
+              onClick={() => router.push("/auth/login")}
+              className="bg-green-600 text-white"
+            >
+              Connexion
+            </Badge>
           )}
           {userSession && userSession.user && (
             <Link href="/redirout">
@@ -345,10 +368,10 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="">
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <MdMenu size={30} />{" "}
+          <FiMenu className="flex pt-1 mt-2" size={35} />{" "}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {ListItems.map((lik: any) =>
@@ -362,14 +385,10 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
                   <DropdownMenuSubContent>
                     {lik.sublinks.map((el: any) => (
                       <DropdownMenuItem
-                        /*              onClick={() =>
-                          router.push("/" + el.link)
-                        } */
+                        onClick={() => router.push(el.link)}
                         key={el.id}
                       >
-                        <Link href={"/" + el.link}></Link>
-                        {/*                         <span>{el.title}</span>
-                         */}{" "}
+                        <span>{el.title}</span>
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>
@@ -750,6 +769,7 @@ import {
 import { UserPlus } from "lucide-react";
 import { LiaIndustrySolid } from "react-icons/lia";
 import { BsBank, BsCurrencyExchange } from "react-icons/bs";
+import { Badge } from "../ui/badge";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
