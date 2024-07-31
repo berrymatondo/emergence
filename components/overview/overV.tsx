@@ -53,6 +53,8 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { Badge } from "../ui/badge";
+import { TbTriangleFilled, TbTriangleInvertedFilled } from "react-icons/tb";
+import GeneralLayout from "../generalLayout";
 
 type OverViewProps = {
   country: string;
@@ -123,49 +125,571 @@ export default function OverView({
   //console.log("newBCC", newBCC);
 
   return (
-    <Card className=" p-0 border-none max-md:my-4 my-auto w-full m-0">
-      <CardHeader className=" p-2">
-        <CardTitle className="text-2xl px-1">{"General Overview"}</CardTitle>
-        {/*         <CardDescription className=" ">
-          {"Vue générale de la RD Congo"}
-        </CardDescription> */}
-        <CustomBreadcrumb name="General Overview" />
-      </CardHeader>
-      <CardContent className="grid p-0 ">
-        <div className="  mx-auto flex w-full flex-col flex-wrap items-start justify-center gap-2 max-sm:p-6 sm:flex-row">
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 w-1/5 max-md:w-full"
-            x-chunk="charts-01-chunk-3"
-          >
-            <CardHeader className="p-4 pb-0">
-              <CardTitle className="text-sky-600 dark:text-yellow-300">
-                {country}
-              </CardTitle>
-              <CardDescription>
-                {overs?.data?.map((data: any) => (
-                  <span
-                    key={data.id}
-                    className="mb-1 flex justify-between items-baseline gap-1 text-3xl font-bold tabular-nums leading-none"
-                  >
-                    <span className="text-sm font-normal text-muted-foreground">
-                      {data.key}
-                    </span>
-                    <span className="text-sm   font-normal text-black dark:text-white">
-                      {data.key.includes("Growth") ||
-                      data.key.includes("GDP") ||
-                      data.key.includes("Rate")
-                        ? parseFloat(data.value.replace(/,/g, "")) / 10 + " %"
-                        : data.value}
-                    </span>
+    <GeneralLayout
+      title={"General Overview"}
+      bred={<CustomBreadcrumb name="General Overview" />}
+    >
+      <div className="gap-2 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
+          x-chunk="charts-01-chunk-3"
+        >
+          <CardHeader className="p-4 pb-0">
+            <CardTitle className="text-sky-600 dark:text-yellow-300">
+              {country}
+            </CardTitle>
+            <CardDescription>
+              {overs?.data?.map((data: any) => (
+                <span
+                  key={data.id}
+                  className="mb-1 flex justify-between items-baseline gap-1 text-3xl font-bold tabular-nums leading-none"
+                >
+                  <span className="text-sm font-normal text-muted-foreground">
+                    {data.key}
                   </span>
+                  <span className="text-sm   font-normal text-black dark:text-white">
+                    {data.key.includes("Growth") ||
+                    data.key.includes("GDP") ||
+                    data.key.includes("Rate")
+                      ? parseFloat(data.value.replace(/,/g, "")) / 10 + " %"
+                      : data.value}
+                  </span>
+                </span>
+              ))}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
+            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
+              {tempoPour / 10}%
+              <span className="text-sm font-normal text-muted-foreground">
+                {"Economic Growth Rate"}
+              </span>
+            </div>
+            <ChartContainer
+              config={{
+                steps: {
+                  label: "Steps",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+              className="ml-auto w-[72px]"
+            >
+              <BarChart
+                accessibilityLayer
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+                data={[
+                  {
+                    date: "2024-01-01",
+                    steps: 2000,
+                  },
+                  {
+                    date: "2024-01-02",
+                    steps: 2100,
+                  },
+                  {
+                    date: "2024-01-03",
+                    steps: 2200,
+                  },
+                  {
+                    date: "2024-01-04",
+                    steps: 1300,
+                  },
+                  {
+                    date: "2024-01-05",
+                    steps: 1400,
+                  },
+                  {
+                    date: "2024-01-06",
+                    steps: 2500,
+                  },
+                  {
+                    date: "2024-01-07",
+                    steps: 1600,
+                  },
+                ]}
+              >
+                <Bar
+                  dataKey="steps"
+                  fill="var(--color-steps)"
+                  radius={2}
+                  fillOpacity={0.2}
+                  activeIndex={6}
+                  activeBar={<Rectangle fillOpacity={0.8} />}
+                />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={4}
+                  hide
+                />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full"
+          x-chunk="charts-01-chunk-1"
+        >
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+            <div>
+              <div className="text-orange-400">
+                <span className="text-xs">DRC Yield Curve</span>
+                <div className="flex items-end">
+                  <Badge className="block bg-orange-500 text-white">
+                    {newYC[0].rdcChange}
+                  </Badge>
+                  <span
+                    className={`pl-2 ${
+                      newYC[0].rdc < newYC[1].rdc
+                        ? "text-red-500"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {newYC[0].rdc > newYC[1].rdc ? "+" : ""}
+                    {(
+                      ((newYC[0].rdc - newYC[1].rdc) * 100) /
+                      newYC[1].rdc
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="text-green-400 max-md:flex max-md:flex-col">
+                <span className="text-xs">AVG Afr. Yield Curve</span>
+                <div className="flex items-end">
+                  <Badge className="bg-green-600 text-white mt-1">
+                    {newYC[0].africaChange}
+                  </Badge>
+                  <span
+                    className={`pl-2 ${
+                      newYC[0].africa < newYC[1].africa
+                        ? "text-red-500"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {newYC[0].africa > newYC[1].africa ? "+" : ""}
+                    {(
+                      ((newYC[0].africa - newYC[1].africa) * 100) /
+                      newYC[1].rdc
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="flex flex-1 items-center">
+            <ChartContainer
+              config={{
+                rdc: {
+                  label: "DRC Yield Curve",
+                  color: "hsl(var(--chart-3))",
+                },
+                africa: {
+                  label: "AVG African Yield Curve",
+                  color: "hsl(var(--chart-2))",
+                },
+              }}
+              className="w-full"
+            >
+              <LineChart
+                accessibilityLayer
+                margin={{
+                  left: 14,
+                  right: 14,
+                  top: 10,
+                }}
+                data={newYC}
+              >
+                <CartesianGrid
+                  strokeDasharray="4 4"
+                  vertical={false}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeOpacity={0.5}
+                />
+                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <Line
+                  dataKey="rdc"
+                  type="natural"
+                  fill="var(--color-rdc)"
+                  stroke="var(--color-rdc)"
+                  strokeWidth={1}
+                  dot={false}
+                  activeDot={{
+                    fill: "var(--color-rdc)",
+                    stroke: "var(--color-rdc)",
+                    r: 4,
+                  }}
+                />
+                <Line
+                  dataKey="africa"
+                  type="natural"
+                  fill="var(--color-africa)"
+                  stroke="var(--color-africa)"
+                  strokeWidth={1}
+                  dot={false}
+                  activeDot={{
+                    fill: "var(--color-africa)",
+                    stroke: "var(--color-africa)",
+                    r: 4,
+                  }}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      indicator="line"
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        });
+                      }}
+                    />
+                  }
+                  cursor={false}
+                />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col  max-md:w-full"
+          x-chunk="charts-01-chunk-1"
+        >
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+            <div>
+              <div className="flex justify-between items-center text-orange-400">
+                <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+                <span className="dark:text-white">
+                  today:{" "}
+                  <strong>{newTab[newTab.length - 1].usdcdf.toFixed(1)}</strong>
+                </span>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="flex flex-1 items-center">
+            <ChartContainer
+              config={{
+                usdcdf: {
+                  label: "USDCDF",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="w-full"
+            >
+              <LineChart
+                accessibilityLayer
+                margin={{
+                  left: 14,
+                  right: 14,
+                  top: 10,
+                }}
+                data={newTab}
+              >
+                <CartesianGrid
+                  strokeDasharray="4 4"
+                  vertical={false}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeOpacity={0.5}
+                />
+                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                <XAxis
+                  dataKey="dateOut"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <Line
+                  dataKey="usdcdf"
+                  type="linear"
+                  fill="var(--color-usdcdf)"
+                  stroke="var(--color-usdcdf)"
+                  strokeWidth={1}
+                  activeDot={{
+                    r: 4,
+                  }}
+                  dot={false}
+                />
+
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      indicator="line"
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        });
+                      }}
+                    />
+                  }
+                  cursor={false}
+                />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
+          x-chunk="charts-01-chunk-5"
+        >
+          <CardHeader>
+            <CardTitle>
+              DRC Commodity Production Percentage of World Total{" "}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex gap-4 p-4">
+            <div className="grid items-center gap-2">
+              <div className="grid flex-1 auto-rows-min gap-0.5">
+                <div className="text-sm text-muted-foreground">Cobalt</div>
+                <div className="text-blue-400 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                  60
+                  <span className="text-sm font-normal text-muted-foreground">
+                    %
+                  </span>
+                </div>
+              </div>
+              <div className="grid flex-1 auto-rows-min gap-0.5">
+                <div className="text-sm text-muted-foreground">Copper</div>
+                <div className="text-orange-300 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                  13
+                  <span className="text-sm font-normal text-muted-foreground">
+                    %
+                  </span>
+                </div>
+              </div>
+              <div className="grid flex-1 auto-rows-min gap-0.5">
+                <div className="text-sm text-muted-foreground">Diamond</div>
+                <div className="text-teal-300 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                  18
+                  <span className="text-sm font-normal text-muted-foreground">
+                    %
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ChartContainer
+              config={{
+                cobalt: {
+                  label: "Cobalt",
+                  color: "hsl(var(--chart-1))",
+                },
+                copper: {
+                  label: "Copper",
+                  color: "hsl(var(--chart-2))",
+                },
+                diamond: {
+                  label: "Diamond",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="mx-auto aspect-square w-full max-w-[80%]"
+            >
+              <RadialBarChart
+                margin={{
+                  left: -10,
+                  right: -10,
+                  top: -10,
+                  bottom: -10,
+                }}
+                data={[
+                  {
+                    activity: "diamond",
+                    value: 0.18 * 100,
+                    fill: "var(--color-diamond)",
+                  },
+                  {
+                    activity: "copper",
+                    value: 0.13 * 100,
+                    fill: "var(--color-copper)",
+                  },
+                  {
+                    activity: "cobalt",
+                    value: 0.6 * 100,
+                    fill: "var(--color-cobalt)",
+                  },
+                ]}
+                innerRadius="20%"
+                barSize={24}
+                startAngle={90}
+                endAngle={450}
+              >
+                <PolarAngleAxis
+                  type="number"
+                  domain={[0, 100]}
+                  dataKey="value"
+                  tick={false}
+                />
+                <RadialBar dataKey="value" background cornerRadius={5} />
+              </RadialBarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
+          x-chunk="charts-01-chunk-3"
+        >
+          <CardHeader className="p-4 pb-0">
+            <CardTitle>Fixed Income Market</CardTitle>
+            <CardDescription>Data from last tenor.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Tenor</TableHead>
+                  <TableHead>Yield</TableHead>
+                  <TableHead className="">Change</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {yieldcurve?.data?.map((yc: any) => (
+                  <TableRow key={yc.id}>
+                    <TableCell className="font-medium text-xs">
+                      {yc.tenor}Y
+                    </TableCell>
+                    <TableCell className="text-xs">{yc.yield}%</TableCell>
+                    <TableCell
+                      className={`text-right text-xs ${
+                        yc.change < 0
+                          ? "text-red-600"
+                          : yc.change == 0
+                          ? ""
+                          : "text-green-400"
+                      }`}
+                    >
+                      {yc.change < 0 ? (
+                        <div className="flex items-center gap-1">
+                          <TbTriangleInvertedFilled />
+                          {yc.change}%
+                        </div>
+                      ) : yc.change == 0 ? (
+                        <div className="pl-4 flex items-center gap-1">
+                          {yc.change}%
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1">
+                          <TbTriangleFilled />+{yc.change}%
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-              <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                {tempoPour / 10}%
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
+          x-chunk="charts-01-chunk-7"
+        >
+          <CardHeader className="p-4">
+            <CardTitle>BCC Interest Rates</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ChartContainer
+              config={{
+                time: {
+                  label: "Rate",
+                  color: "hsl(var(--chart-2))",
+                },
+              }}
+            >
+              <AreaChart
+                accessibilityLayer
+                data={newBCC}
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              >
+                <XAxis
+                  dataKey="dateOut"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <YAxis
+                  dataKey="rate"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={4}
+                />
+
+                <defs>
+                  <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-time)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-time)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="rate"
+                  type="natural"
+                  fill="url(#fillTime)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-time)"
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                  formatter={(value) => (
+                    <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
+                      Rate
+                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                        {value}
+                        <span className="font-normal text-muted-foreground">
+                          %
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
+          x-chunk="charts-01-chunk-2"
+        >
+          <CardHeader>
+            <CardTitle>Progress</CardTitle>
+            <CardDescription>
+              {"You're average more steps a day this year than last year."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <div className="grid auto-rows-min gap-2">
+              <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                12,453
                 <span className="text-sm font-normal text-muted-foreground">
-                  {"Economic Growth Rate"}
+                  steps/day
                 </span>
               </div>
               <ChartContainer
@@ -175,916 +699,206 @@ export default function OverView({
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="ml-auto w-[72px]"
+                className="aspect-auto h-[32px] w-full"
               >
                 <BarChart
                   accessibilityLayer
+                  layout="vertical"
                   margin={{
                     left: 0,
-                    right: 0,
                     top: 0,
+                    right: 0,
                     bottom: 0,
                   }}
                   data={[
                     {
-                      date: "2024-01-01",
-                      steps: 2000,
-                    },
-                    {
-                      date: "2024-01-02",
-                      steps: 2100,
-                    },
-                    {
-                      date: "2024-01-03",
-                      steps: 2200,
-                    },
-                    {
-                      date: "2024-01-04",
-                      steps: 1300,
-                    },
-                    {
-                      date: "2024-01-05",
-                      steps: 1400,
-                    },
-                    {
-                      date: "2024-01-06",
-                      steps: 2500,
-                    },
-                    {
-                      date: "2024-01-07",
-                      steps: 1600,
+                      date: "2024",
+                      steps: 12435,
                     },
                   ]}
                 >
                   <Bar
                     dataKey="steps"
                     fill="var(--color-steps)"
-                    radius={2}
-                    fillOpacity={0.2}
-                    activeIndex={6}
-                    activeBar={<Rectangle fillOpacity={0.8} />}
-                  />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={4}
-                    hide
-                  />
-                </BarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col w-1/4 max-md:w-full"
-            x-chunk="charts-01-chunk-1"
-          >
-            <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-              <div>
-                <CardDescription className="text-orange-400">
-                  <p>DRC Yield Curve</p>
-                  <div>
-                    <Badge className="bg-orange-500 text-white mt-1">
-                      {newYC[0].rdcChange}
-                    </Badge>
-                    <span
-                      className={`pl-2 ${
-                        newYC[0].rdc < newYC[1].rdc
-                          ? "text-red-500"
-                          : "text-green-600"
-                      }`}
-                    >
-                      {newYC[0].rdc > newYC[1].rdc ? "+" : ""}
-                      {(
-                        ((newYC[0].rdc - newYC[1].rdc) * 100) /
-                        newYC[1].rdc
-                      ).toFixed(2)}
-                    </span>
-                  </div>
-                </CardDescription>
-                {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    62
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      bpm
-                    </span>
-                  </CardTitle> */}
-              </div>
-              <div>
-                <CardDescription className="text-green-400 max-md:flex max-md:flex-col">
-                  <p>AVG Afr. Yield Curve</p>
-                  <div>
-                    <Badge className="bg-green-600 text-white mt-1">
-                      {newYC[0].africaChange}
-                    </Badge>
-                    <span
-                      className={`pl-2 ${
-                        newYC[0].africa < newYC[1].africa
-                          ? "text-red-500"
-                          : "text-green-600"
-                      }`}
-                    >
-                      {newYC[0].africa > newYC[1].africa ? "+" : ""}
-                      {(
-                        ((newYC[0].africa - newYC[1].africa) * 100) /
-                        newYC[1].rdc
-                      ).toFixed(2)}
-                    </span>
-                  </div>
-                </CardDescription>
-                {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    35
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      ms
-                    </span>
-                  </CardTitle> */}
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-1 items-center">
-              <ChartContainer
-                config={{
-                  rdc: {
-                    label: "DRC Yield Curve",
-                    color: "hsl(var(--chart-3))",
-                  },
-                  africa: {
-                    label: "AVG African Yield Curve",
-                    color: "hsl(var(--chart-2))",
-                  },
-                }}
-                className="w-full"
-              >
-                <LineChart
-                  accessibilityLayer
-                  margin={{
-                    left: 14,
-                    right: 14,
-                    top: 10,
-                  }}
-                  /* data={[
-                      {
-                        date: "1Y",
-                        resting: 93.7,
-                        africa: 79.2,
-                      },
-                      {
-                        date: "2Y",
-                        resting: 98.4,
-                        africa: 104.4,
-                      },
-                      {
-                        date: "3Y",
-                        resting: 89.5,
-                        africa: 106.2,
-                      },
-                      {
-                        date: "4Y",
-                        resting: 92.2,
-                        africa: 111.1,
-                      },
-                      {
-                        date: "5Y",
-                        resting: 83,
-                        africa: 115.1,
-                      },
-                      {
-                        date: "7Y",
-                        resting: 82.6,
-                        africa: 119.0,
-                      },
-                      {
-                        date: "8Y",
-                        resting: 80.1,
-                        africa: 120.6,
-                      },
-                      {
-                        date: "10Y",
-                        resting: 103.8,
-                        africa: 120.4,
-                      },
-                      {
-                        date: "15Y",
-                        resting: 107.1,
-                        africa: 129.2,
-                      },
-                      {
-                        date: "20Y",
-                        resting: 153.8,
-                        africa: 130.7,
-                      },
-                      {
-                        date: "30Y",
-                        resting: 152.1,
-                        africa: 130.1,
-                      },
-                    ]} */
-                  data={newYC}
-                >
-                  <CartesianGrid
-                    strokeDasharray="4 4"
-                    vertical={false}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeOpacity={0.5}
-                  />
-                  <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    /*                       tickFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          weekday: "short",
-                        });
-                      }} */
-                  />
-                  <Line
-                    dataKey="rdc"
-                    type="natural"
-                    fill="var(--color-rdc)"
-                    stroke="var(--color-rdc)"
-                    strokeWidth={1}
-                    dot={false}
-                    activeDot={{
-                      fill: "var(--color-rdc)",
-                      stroke: "var(--color-rdc)",
-                      r: 4,
-                    }}
-                  />
-                  <Line
-                    dataKey="africa"
-                    type="natural"
-                    fill="var(--color-africa)"
-                    stroke="var(--color-africa)"
-                    strokeWidth={1}
-                    dot={false}
-                    activeDot={{
-                      fill: "var(--color-africa)",
-                      stroke: "var(--color-africa)",
-                      r: 4,
-                    }}
-                  />
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        indicator="line"
-                        labelFormatter={(value) => {
-                          return new Date(value).toLocaleDateString("en-US", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          });
-                        }}
-                      />
-                    }
-                    cursor={false}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col w-1/4 max-md:w-full"
-            x-chunk="charts-01-chunk-1"
-          >
-            <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-              <div>
-                <div className="flex justify-between items-center text-orange-400">
-                  <Badge className="bg-orange-500 text-white">USDCDF</Badge>
-                  <span className="dark:text-white">
-                    today:{" "}
-                    <strong>
-                      {newTab[newTab.length - 1].usdcdf.toFixed(1)}
-                    </strong>
-                  </span>
-                </div>
-                {/*                   <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                    62
-                    <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                      bpm
-                    </span>
-                  </CardTitle> */}
-              </div>
-              {/*                 <div>
-                  <CardDescription className="text-green-400">
-                    -USDEUR-
-                  </CardDescription>
-
-                </div> */}
-            </CardHeader>
-            <CardContent className="flex flex-1 items-center">
-              <ChartContainer
-                config={{
-                  usdcdf: {
-                    label: "USDCDF",
-                    color: "hsl(var(--chart-3))",
-                  } /* ,
-                    usdeur: {
-                      label: "USDEUR",
-                      color: "hsl(var(--chart-2))",
-                    }, */,
-                }}
-                className="w-full"
-              >
-                <LineChart
-                  accessibilityLayer
-                  margin={{
-                    left: 14,
-                    right: 14,
-                    top: 10,
-                  }}
-                  data={newTab}
-                >
-                  <CartesianGrid
-                    strokeDasharray="4 4"
-                    vertical={false}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeOpacity={0.5}
-                  />
-                  <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-                  <XAxis
-                    dataKey="dateOut"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    /*                       tickFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          weekday: "short",
-                        });
-                      }} */
-                  />
-                  <Line
-                    dataKey="usdcdf"
-                    type="linear"
-                    fill="var(--color-usdcdf)"
-                    stroke="var(--color-usdcdf)"
-                    strokeWidth={1}
-                    /*                       dot={{
-                        fill: "var(--color-usdcdf)",
-                      }} */
-                    activeDot={{
-                      /*                         fill: "var(--color-usdcdf)",
-                        stroke: "var(--color-usdcdf)", */
-                      r: 4,
-                    }}
-                    dot={false}
-                  />
-                  {/*                       <LabelList
-                        position="top"
-                        offset={12}
-                        className="fill-foreground"
-                        fontSize={12}
-                      />
-                    </Line> */}
-                  {/*                     <Line
-                      dataKey="usdeur"
-                      type="natural"
-                      fill="var(--color-usdeur)"
-                      stroke="var(--color-usdeur)"
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{
-                        fill: "var(--color-usdeur)",
-                        stroke: "var(--color-usdeur)",
-                        r: 4,
-                      }}
-                    /> */}
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        indicator="line"
-                        labelFormatter={(value) => {
-                          return new Date(value).toLocaleDateString("en-US", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          });
-                        }}
-                      />
-                    }
-                    cursor={false}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 w-1/4 max-md:w-full"
-            x-chunk="charts-01-chunk-5"
-          >
-            <CardHeader>
-              <CardTitle>
-                DRC Commodity Production Percentage of World Total{" "}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex gap-4 p-4">
-              <div className="grid items-center gap-2">
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-sm text-muted-foreground">Cobalt</div>
-                  <div className="text-blue-400 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                    60
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-sm text-muted-foreground">Copper</div>
-                  <div className="text-orange-300 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                    13
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-sm text-muted-foreground">Diamond</div>
-                  <div className="text-teal-300 flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                    18
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <ChartContainer
-                config={{
-                  cobalt: {
-                    label: "Cobalt",
-                    color: "hsl(var(--chart-1))",
-                  },
-                  copper: {
-                    label: "Copper",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  diamond: {
-                    label: "Diamond",
-                    color: "hsl(var(--chart-3))",
-                  },
-                }}
-                className="mx-auto aspect-square w-full max-w-[80%]"
-              >
-                <RadialBarChart
-                  margin={{
-                    left: -10,
-                    right: -10,
-                    top: -10,
-                    bottom: -10,
-                  }}
-                  data={[
-                    {
-                      activity: "diamond",
-                      value: 0.18 * 100,
-                      fill: "var(--color-diamond)",
-                    },
-                    {
-                      activity: "copper",
-                      value: 0.13 * 100,
-                      fill: "var(--color-copper)",
-                    },
-                    {
-                      activity: "cobalt",
-                      value: 0.6 * 100,
-                      fill: "var(--color-cobalt)",
-                    },
-                  ]}
-                  innerRadius="20%"
-                  barSize={24}
-                  startAngle={90}
-                  endAngle={450}
-                >
-                  <PolarAngleAxis
-                    type="number"
-                    domain={[0, 100]}
-                    dataKey="value"
-                    tick={false}
-                  />
-                  <RadialBar dataKey="value" background cornerRadius={5} />
-                </RadialBarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 w-1/5 max-md:w-full"
-            x-chunk="charts-01-chunk-3"
-          >
-            <CardHeader className="p-4 pb-0">
-              <CardTitle>Fixed Income Market</CardTitle>
-              <CardDescription>Data from last tenor.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-              <Table>
-                <TableCaption>A list last recent tenor values .</TableCaption>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Tenor</TableHead>
-                    <TableHead>Yield</TableHead>
-                    <TableHead className="text-right">Change</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                  {yieldcurve?.data?.map((yc: any) => (
-                    <TableRow key={yc.id}>
-                      <TableCell className="font-medium text-xs">
-                        {yc.tenor}Y
-                      </TableCell>
-                      <TableCell className="text-xs">{yc.yield}%</TableCell>
-                      <TableCell
-                        className={`text-right text-xs ${
-                          yc.change < 0
-                            ? "text-red-600"
-                            : yc.change == 0
-                            ? ""
-                            : "text-green-400"
-                        }`}
-                      >
-                        {yc.change}%
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {/*                <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                  12.5
-                  <span className="text-sm font-normal text-muted-foreground">
-                    miles/day
-                  </span>
-                </div> */}
-              {/*                 <ChartContainer
-                  config={{
-                    steps: {
-                      label: "Steps",
-                      color: "hsl(var(--chart-1))",
-                    },
-                  }}
-                  className="ml-auto w-[72px]"
-                >
-                  <BarChart
-                    accessibilityLayer
-                    margin={{
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                    }}
-                    data={[
-                      {
-                        date: "2024-01-01",
-                        steps: 2000,
-                      },
-                      {
-                        date: "2024-01-02",
-                        steps: 2100,
-                      },
-                      {
-                        date: "2024-01-03",
-                        steps: 2200,
-                      },
-                      {
-                        date: "2024-01-04",
-                        steps: 1300,
-                      },
-                      {
-                        date: "2024-01-05",
-                        steps: 1400,
-                      },
-                      {
-                        date: "2024-01-06",
-                        steps: 2500,
-                      },
-                      {
-                        date: "2024-01-07",
-                        steps: 1600,
-                      },
-                    ]}
+                    radius={4}
+                    barSize={32}
                   >
-                    <Bar
-                      dataKey="steps"
-                      fill="var(--color-steps)"
-                      radius={2}
-                      fillOpacity={0.2}
-                      activeIndex={6}
-                      activeBar={<Rectangle fillOpacity={0.8} />}
-                    />
-                    <XAxis
-                      dataKey="date"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={4}
-                      hide
-                    />
-                  </BarChart>
-                </ChartContainer> */}
-            </CardContent>
-          </Card>
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 w-1/4 max-md:w-full"
-            x-chunk="charts-01-chunk-2"
-          >
-            <CardHeader>
-              <CardTitle>Progress</CardTitle>
-              <CardDescription>
-                {"You're average more steps a day this year than last year."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="grid auto-rows-min gap-2">
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                  12,453
-                  <span className="text-sm font-normal text-muted-foreground">
-                    steps/day
-                  </span>
-                </div>
-                <ChartContainer
-                  config={{
-                    steps: {
-                      label: "Steps",
-                      color: "hsl(var(--chart-1))",
-                    },
-                  }}
-                  className="aspect-auto h-[32px] w-full"
-                >
-                  <BarChart
-                    accessibilityLayer
-                    layout="vertical"
-                    margin={{
-                      left: 0,
-                      top: 0,
-                      right: 0,
-                      bottom: 0,
-                    }}
-                    data={[
-                      {
-                        date: "2024",
-                        steps: 12435,
-                      },
-                    ]}
-                  >
-                    <Bar
-                      dataKey="steps"
-                      fill="var(--color-steps)"
-                      radius={4}
-                      barSize={32}
-                    >
-                      <LabelList
-                        position="insideLeft"
-                        dataKey="date"
-                        offset={8}
-                        fontSize={12}
-                        fill="white"
-                      />
-                    </Bar>
-                    <YAxis dataKey="date" type="category" tickCount={1} hide />
-                    <XAxis dataKey="steps" type="number" hide />
-                  </BarChart>
-                </ChartContainer>
-              </div>
-              <div className="grid auto-rows-min gap-2">
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                  10,103
-                  <span className="text-sm font-normal text-muted-foreground">
-                    steps/day
-                  </span>
-                </div>
-                <ChartContainer
-                  config={{
-                    steps: {
-                      label: "Steps",
-                      color: "hsl(var(--muted))",
-                    },
-                  }}
-                  className="aspect-auto h-[32px] w-full"
-                >
-                  <BarChart
-                    accessibilityLayer
-                    layout="vertical"
-                    margin={{
-                      left: 0,
-                      top: 0,
-                      right: 0,
-                      bottom: 0,
-                    }}
-                    data={[
-                      {
-                        date: "2023",
-                        steps: 10103,
-                      },
-                    ]}
-                  >
-                    <Bar
-                      dataKey="steps"
-                      fill="var(--color-steps)"
-                      radius={4}
-                      barSize={32}
-                    >
-                      <LabelList
-                        position="insideLeft"
-                        dataKey="date"
-                        offset={8}
-                        fontSize={12}
-                        fill="hsl(var(--muted-foreground))"
-                      />
-                    </Bar>
-                    <YAxis dataKey="date" type="category" tickCount={1} hide />
-                    <XAxis dataKey="steps" type="number" hide />
-                  </BarChart>
-                </ChartContainer>
-              </div>
-            </CardContent>
-          </Card>
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 w-1/4 max-md:w-full"
-            x-chunk="charts-01-chunk-4"
-          >
-            <CardContent className="flex gap-4 p-4 pb-2">
-              <ChartContainer
-                config={{
-                  cobalt: {
-                    label: "Cobalt",
-                    color: "hsl(var(--chart-1))",
-                  },
-                  copper: {
-                    label: "Copper",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  diamond: {
-                    label: "Diamond",
-                    color: "hsl(var(--chart-3))",
-                  },
-                }}
-                className="h-[140px] w-full"
-              >
-                <BarChart
-                  margin={{
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 10,
-                  }}
-                  data={[
-                    {
-                      activity: "diamond",
-                      value: 0.18 * 100,
-                      label: "8/12 hr",
-                      fill: "var(--color-diamond)",
-                    },
-                    {
-                      activity: "copper",
-                      value: 0.13 * 100,
-                      label: "46/60 min",
-                      fill: "var(--color-copper)",
-                    },
-                    {
-                      activity: "Cobalt",
-                      value: 0.6 * 100,
-                      label: "245/360 kcal",
-                      fill: "var(--color-cobalt)",
-                    },
-                  ]}
-                  layout="vertical"
-                  barSize={32}
-                  barGap={2}
-                >
-                  <XAxis type="number" dataKey="value" hide />
-                  <YAxis
-                    dataKey="activity"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={4}
-                    axisLine={false}
-                    className="capitalize"
-                  />
-                  <Bar dataKey="value" radius={5}>
                     <LabelList
                       position="insideLeft"
-                      dataKey="label"
-                      fill="white"
+                      dataKey="date"
                       offset={8}
                       fontSize={12}
+                      fill="white"
                     />
                   </Bar>
+                  <YAxis dataKey="date" type="category" tickCount={1} hide />
+                  <XAxis dataKey="steps" type="number" hide />
                 </BarChart>
               </ChartContainer>
-            </CardContent>
-            <CardFooter className="flex flex-row border-t p-4">
-              <div className="flex w-full items-center gap-2">
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-xs text-muted-foreground">Cobalt</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    562
-                    <span className="text-sm font-normal text-muted-foreground">
-                      kcal
-                    </span>
-                  </div>
-                </div>
-                <Separator orientation="vertical" className="mx-2 h-10 w-px" />
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-xs text-muted-foreground">Exercise</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    73
-                    <span className="text-sm font-normal text-muted-foreground">
-                      min
-                    </span>
-                  </div>
-                </div>
-                <Separator orientation="vertical" className="mx-2 h-10 w-px" />
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-xs text-muted-foreground">Stand</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    14
-                    <span className="text-sm font-normal text-muted-foreground">
-                      hr
-                    </span>
-                  </div>
-                </div>
+            </div>
+            <div className="grid auto-rows-min gap-2">
+              <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                10,103
+                <span className="text-sm font-normal text-muted-foreground">
+                  steps/day
+                </span>
               </div>
-            </CardFooter>
-          </Card>
-
-          <Card
-            className="border-none bg-gray-500/10 dark:bg-teal-200/10 w-1/4 max-md:w-full"
-            x-chunk="charts-01-chunk-7"
-          >
-            <CardHeader className="p-4">
-              <CardTitle>BCC Interest Rates</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
               <ChartContainer
                 config={{
-                  time: {
-                    label: "Rate",
-                    color: "hsl(var(--chart-2))",
+                  steps: {
+                    label: "Steps",
+                    color: "hsl(var(--muted))",
                   },
                 }}
+                className="aspect-auto h-[32px] w-full"
               >
-                <AreaChart
+                <BarChart
                   accessibilityLayer
-                  data={newBCC}
+                  layout="vertical"
                   margin={{
                     left: 0,
-                    right: 0,
                     top: 0,
+                    right: 0,
                     bottom: 0,
                   }}
+                  data={[
+                    {
+                      date: "2023",
+                      steps: 10103,
+                    },
+                  ]}
                 >
-                  <XAxis
-                    dataKey="dateOut"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                  />
-                  <YAxis
-                    dataKey="rate"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={4}
-                  />
-                  {/*                     <YAxis domain={["dataMin - 5", "dataMax + 2"]} hide />
-                   */}{" "}
-                  <defs>
-                    <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-time)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-time)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <Area
-                    dataKey="rate"
-                    type="natural"
-                    fill="url(#fillTime)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-time)"
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                    formatter={(value) => (
-                      <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                        Rate
-                        <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                          {value}
-                          <span className="font-normal text-muted-foreground">
-                            %
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  />
-                </AreaChart>
+                  <Bar
+                    dataKey="steps"
+                    fill="var(--color-steps)"
+                    radius={4}
+                    barSize={32}
+                  >
+                    <LabelList
+                      position="insideLeft"
+                      dataKey="date"
+                      offset={8}
+                      fontSize={12}
+                      fill="hsl(var(--muted-foreground))"
+                    />
+                  </Bar>
+                  <YAxis dataKey="date" type="category" tickCount={1} hide />
+                  <XAxis dataKey="steps" type="number" hide />
+                </BarChart>
               </ChartContainer>
-            </CardContent>
-          </Card>
-        </div>
-      </CardContent>
-    </Card>
+            </div>
+          </CardContent>
+        </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
+          x-chunk="charts-01-chunk-4"
+        >
+          <CardContent className="flex gap-4 p-4 pb-2">
+            <ChartContainer
+              config={{
+                cobalt: {
+                  label: "Cobalt",
+                  color: "hsl(var(--chart-1))",
+                },
+                copper: {
+                  label: "Copper",
+                  color: "hsl(var(--chart-2))",
+                },
+                diamond: {
+                  label: "Diamond",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="h-[140px] w-full"
+            >
+              <BarChart
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 10,
+                }}
+                data={[
+                  {
+                    activity: "diamond",
+                    value: 0.18 * 100,
+                    label: "8/12 hr",
+                    fill: "var(--color-diamond)",
+                  },
+                  {
+                    activity: "copper",
+                    value: 0.13 * 100,
+                    label: "46/60 min",
+                    fill: "var(--color-copper)",
+                  },
+                  {
+                    activity: "Cobalt",
+                    value: 0.6 * 100,
+                    label: "245/360 kcal",
+                    fill: "var(--color-cobalt)",
+                  },
+                ]}
+                layout="vertical"
+                barSize={32}
+                barGap={2}
+              >
+                <XAxis type="number" dataKey="value" hide />
+                <YAxis
+                  dataKey="activity"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={4}
+                  axisLine={false}
+                  className="capitalize"
+                />
+                <Bar dataKey="value" radius={5}>
+                  <LabelList
+                    position="insideLeft"
+                    dataKey="label"
+                    fill="white"
+                    offset={8}
+                    fontSize={12}
+                  />
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+          <CardFooter className="flex flex-row border-t p-4">
+            <div className="flex w-full items-center gap-2">
+              <div className="grid flex-1 auto-rows-min gap-0.5">
+                <div className="text-xs text-muted-foreground">Cobalt</div>
+                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                  562
+                  <span className="text-sm font-normal text-muted-foreground">
+                    kcal
+                  </span>
+                </div>
+              </div>
+              <Separator orientation="vertical" className="mx-2 h-10 w-px" />
+              <div className="grid flex-1 auto-rows-min gap-0.5">
+                <div className="text-xs text-muted-foreground">Exercise</div>
+                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                  73
+                  <span className="text-sm font-normal text-muted-foreground">
+                    min
+                  </span>
+                </div>
+              </div>
+              <Separator orientation="vertical" className="mx-2 h-10 w-px" />
+              <div className="grid flex-1 auto-rows-min gap-0.5">
+                <div className="text-xs text-muted-foreground">Stand</div>
+                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                  14
+                  <span className="text-sm font-normal text-muted-foreground">
+                    hr
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </GeneralLayout>
   );
 }
 

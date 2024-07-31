@@ -123,7 +123,7 @@ export const computeYieldToMaturity = async (data: Inputs, tmp: number) => {
     Accept: "*/*",
     "Content-Type": "application/json",
   };
-  console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
+  //console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
 
   let bodyContent = JSON.stringify({
     //price: data.price ? +data.price : undefined,
@@ -148,7 +148,7 @@ export const computeYieldToMaturity = async (data: Inputs, tmp: number) => {
     day_count_convention: data.couponBasis,
   });
 
-  console.log("Xcx", bodyContent);
+  //console.log("Xcx", bodyContent);
 
   //BOND PRICE
   try {
@@ -164,7 +164,7 @@ export const computeYieldToMaturity = async (data: Inputs, tmp: number) => {
     //  console.log("response", response);
 
     let dataout = await response.json();
-    console.log("DATA", dataout);
+    //console.log("DATA", dataout);
 
     return {
       success: true,
