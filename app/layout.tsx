@@ -23,7 +23,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true} className="flex bg-card">
+      <body suppressHydrationWarning={true} className="flex bg-card ">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

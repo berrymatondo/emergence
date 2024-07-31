@@ -11,7 +11,7 @@ type GeneralLayoutProps = {
 
 const GeneralLayout = ({ title, bred, children }: GeneralLayoutProps) => {
   return (
-    <Card className=" p-0 border-none max-md:my-4 my-auto w-full m-0">
+    <Card className=" p-0 border-none max-md:my-4 pb-10 w-full m-0">
       <CardHeader className=" p-2">
         <CardTitle className="text-2xl px-1">{title}</CardTitle>
         {bred}
