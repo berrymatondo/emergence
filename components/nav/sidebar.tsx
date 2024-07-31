@@ -439,7 +439,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
       {userSession?.user && (
         <nav className="h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
-            <div className="flex flex-col ml-4">
+            {/*             <div className="flex flex-col ml-4">
               <div
                 className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all ${
                   expended ? "w-52" : "w-0"
@@ -457,60 +457,63 @@ const Sidebar = ({ userSession }: SidebarProps) => {
                   </div>
                 </div>
               </div>
-            </div>
-            <Button onClick={() => setExpended(!expended)} variant="empty">
-              {expended ? (
-                <FiChevronsLeft size={30} />
-              ) : (
-                <FiChevronsRight size={30} />
-              )}
-            </Button>
-          </div>
-
-          <div className="border-t flex p-3 mb-8">
-            <div className="overflow-hidden relative  w-10 h-10 rounded-full">
-              {userSession?.user.role == "AGENT" ? (
-                <Image
-                  alt="bcg"
-                  src={avatar}
-                  placeholder="blur"
-                  quality={100}
-                  fill
-                  sizes="100vw"
-                  className="object-cover z-10 rounded-lg"
-                />
-              ) : (
-                <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
-                  AD
-                </div>
-              )}
-            </div>
-
-            <div
-              className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all ${
-                expended ? "w-52" : "w-0"
-              }`}
-            >
-              <div className="leading-4">
-                <h4 className="font-semibold">{userSession?.user?.name}</h4>
-                <span className="text-xs text-gray-600 dark:text-gray-400">
-                  {userSession?.user?.email}
-                </span>
+            </div> */}
+            <div className="flex p-3 mb-8">
+              <div className="overflow-hidden relative  w-10 h-10 rounded-full">
+                {userSession?.user.role == "AGENT" ? (
+                  <Image
+                    alt="bcg"
+                    src={avatar}
+                    placeholder="blur"
+                    quality={100}
+                    fill
+                    sizes="100vw"
+                    className="object-cover z-10 rounded-lg"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
+                    AD
+                  </div>
+                )}
               </div>
 
-              {(!userSession || !userSession.user) && (
-                <MdLogin
-                  className="md:hidden text-teal-600"
-                  onClick={() => router.push("/auth/login")}
-                  size={30}
-                />
-              )}
-              {userSession && userSession.user && (
-                <Link href="/redirout">
-                  {" "}
-                  <MdLogout className="text-red-600" size={30} />
-                </Link>
-              )}
+              <div
+                className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all ${
+                  expended ? "w-52" : "w-0"
+                }`}
+              >
+                <div className="leading-4">
+                  <h4 className="font-semibold">{userSession?.user?.name}</h4>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                    {userSession?.user?.email}
+                  </span>
+                </div>
+
+                {(!userSession || !userSession.user) && (
+                  <MdLogin
+                    className="md:hidden text-teal-600"
+                    onClick={() => router.push("/auth/login")}
+                    size={30}
+                  />
+                )}
+                {userSession && userSession.user && (
+                  <Link href="/redirout">
+                    {" "}
+                    <MdLogout className="text-red-600" size={30} />
+                  </Link>
+                )}
+              </div>
+              <Button
+                className="ml-2 p-0"
+                onClick={() => setExpended(!expended)}
+                variant="empty"
+              >
+                {expended ? (
+                  <FiChevronsLeft size={30} />
+                ) : (
+                  <FiChevronsRight size={30} />
+                )}
+              </Button>
             </div>
           </div>
 

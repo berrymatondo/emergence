@@ -5,6 +5,13 @@ import { getAllOverview } from "@/lib/_overviewActions";
 import { getAllYC } from "@/lib/_ycAction";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "DRC General Overview",
+  description: "Democratic republic of Cong DRC general overview page",
+};
+
 const OverviewPage = async () => {
   const overs = await getAllOverview();
   const yieldcurve = await getAllYC();
