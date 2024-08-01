@@ -55,6 +55,8 @@ import {
 import { Badge } from "../ui/badge";
 import { TbTriangleFilled, TbTriangleInvertedFilled } from "react-icons/tb";
 import GeneralLayout from "../generalLayout";
+import Image from "next/image";
+import avatar from "../../public/rdc.png";
 
 type OverViewProps = {
   country: string;
@@ -135,7 +137,18 @@ export default function OverView({
           x-chunk="charts-01-chunk-3"
         >
           <CardHeader className="p-4 pb-0">
-            <CardTitle className="text-sky-600 dark:text-yellow-300">
+            <CardTitle className="flex items-center  gap-2 text-sky-600 dark:text-white">
+              <div className="overflow-hidden relative  w-10 h-10 rounded-full">
+                <Image
+                  alt="bcg"
+                  src={avatar}
+                  placeholder="blur"
+                  quality={100}
+                  fill
+                  sizes="100vw"
+                  className="object-cover z-10 rounded-lg"
+                />
+              </div>
               {country}
             </CardTitle>
             <CardDescription>
