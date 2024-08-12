@@ -84,3 +84,18 @@ export const SBSchema = z.object({
     .min(1, { message: "Le mot de pass est obligatoire" }),
   notional: z.string().min(1, { message: "Le mot de pass est obligatoire" }), */
 });
+
+export const ASBSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  amortizationStartDate: z.string().optional(),
+  amortizationFrequency: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+});
