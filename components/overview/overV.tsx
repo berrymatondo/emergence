@@ -98,6 +98,8 @@ export default function OverView({
     newTab.push(tr);
   }
 
+  //console.log("tab", newTab);
+
   const yc = [...yieldcurve.data];
   let newYC = [];
   for (let i = 0; i < yc.length; i++) {
