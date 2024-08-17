@@ -611,7 +611,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                           )}
                           {curveType === "inc" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <p className="font-semibold">Inout Curve</p>
+                              <p className="font-semibold">Input Curve</p>
                               <InputCurve />
                             </div>
                           )}
