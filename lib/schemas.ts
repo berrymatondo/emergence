@@ -67,6 +67,7 @@ export const SBSchema = z.object({
   forcedBondPrice: z.boolean().default(false),
   curveType: z.enum(["zcc", "yic", "inc"]),
   curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
   /*   bondMaturityDate: z.string().min(1, {
     message: "Le nom d'utilisateur est obligatoire",
   }),
@@ -102,4 +103,5 @@ export const ASBSchema = z.object({
   forcedBondPrice: z.boolean().default(false),
   curveType: z.enum(["zcc", "yic", "inc"]),
   curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
 });
