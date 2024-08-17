@@ -593,30 +593,30 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                     </div>
                     <div className="w-full">
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
-                        <div className="md:flex max-md:grid max-md:grid-cols-2 max-md:gap-2 md:justify-between">
-                          <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30">
+                        <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
+                          <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                             Discount Curve
                           </div>
                           {curveType === "zcc" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                            <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
                               <p className="font-semibold">ZC Curve</p>
                               <ZCCurve zccurve={yieldcurve} />
                             </div>
                           )}
                           {curveType === "yic" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                            <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-1/3">
                               <p className="font-semibold">Yield Curve</p>
                               <YieldCurve yieldcurve={yieldcurve} />
                             </div>
                           )}
                           {curveType === "inc" && (
-                            <div className=" border rounded-xl p-4 bg-card ">
+                            <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
                               <p className="font-semibold">Inout Curve</p>
                               <InputCurve />
                             </div>
                           )}
                           {curveType !== "yic" && (
-                            <div className=" border rounded-xl p-4 bg-card ">
+                            <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
                               <p className="font-semibold">Credit Spread</p>
                               <CreditSpread />
                             </div>
