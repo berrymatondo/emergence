@@ -1036,7 +1036,7 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
         <TableRow>
           <TableHead className="text-left mx-0 pl-0 pr-2">Tenor</TableHead>
 
-          <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
+          <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -1059,7 +1059,7 @@ const CreditSpread = () => {
         <TableRow>
           <TableHead className="text-left mx-0 px-0">Tenor</TableHead>
 
-          <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
+          <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
