@@ -582,8 +582,9 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                             Discount Curve
                           </div>
                           {curveType === "zcc" && (
-                            <div className=" border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30">
-                              ZCC
+                            <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                              <p className="font-semibold">ZC Curve</p>
+                              <ZCCurve zccurve={yieldcurve} />
                             </div>
                           )}
                           {curveType === "yic" && (
@@ -1223,17 +1224,43 @@ const YieldCurve = ({ yieldcurve }: YieldCurveProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Tenor</TableHead>
+          <TableHead className="text-left mx-0">Tenor</TableHead>
 
-          <TableHead className="text-right">Yield</TableHead>
+          <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {yieldcurve?.map((yc: any) => (
           <TableRow key={yc.id}>
-            <TableCell className="font-medium">{yc.tenor}</TableCell>
+            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
 
-            <TableCell className="text-right">{yc.yield}</TableCell>
+            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+type ZCCurveProps = {
+  zccurve: any;
+};
+const ZCCurve = ({ zccurve }: ZCCurveProps) => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-left mx-0">Tenor</TableHead>
+
+          <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {zccurve?.map((yc: any) => (
+          <TableRow key={yc.id}>
+            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+
+            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
           </TableRow>
         ))}
       </TableBody>
