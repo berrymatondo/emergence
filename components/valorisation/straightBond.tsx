@@ -534,13 +534,13 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                   </div>
 
                   <div className="w-full">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between max-md:gap-4">
                       <FormField
                         control={form.control}
                         name="curveType"
                         render={({ field }) => {
                           return (
-                            <FormItem className="w-1/3">
+                            <FormItem className="w-1/3  max-md:w-1/2">
                               <FormLabel className="w-1/2">
                                 {"Curve Type"}
                               </FormLabel>
@@ -574,8 +574,8 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                         name="liquidityPremium"
                         render={({ field }) => {
                           return (
-                            <FormItem className="w-1/3">
-                              <FormLabel className="w-1/2">
+                            <FormItem className="w-1/3  max-md:w-1/2">
+                              <FormLabel className="w-1/2 ">
                                 {"Liquidity premium (%) "}
                               </FormLabel>
                               <FormControl>
@@ -610,12 +610,13 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                             </div>
                           )}
                           {curveType === "inc" && (
-                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30">
-                              INC
+                            <div className=" border rounded-xl p-4 bg-card ">
+                              <p className="font-semibold">Inout Curve</p>
+                              <InputCurve />
                             </div>
                           )}
                           {curveType !== "yic" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                            <div className=" border rounded-xl p-4 bg-card ">
                               <p className="font-semibold">Credit Spread</p>
                               <CreditSpread />
                             </div>
@@ -1007,7 +1008,7 @@ const YieldCurve = ({ yieldcurve }: YieldCurveProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-left mx-0">Tenor</TableHead>
+          <TableHead className="text-left mx-0 px-0">Tenor</TableHead>
 
           <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
         </TableRow>
@@ -1033,7 +1034,7 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-left mx-0">Tenor</TableHead>
+          <TableHead className="text-left mx-0 pl-0 pr-2">Tenor</TableHead>
 
           <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
         </TableRow>
@@ -1056,7 +1057,30 @@ const CreditSpread = () => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-left mx-0">Tenor</TableHead>
+          <TableHead className="text-left mx-0 px-0">Tenor</TableHead>
+
+          <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {creditSpread?.map((yc: any) => (
+          <TableRow key={yc.id}>
+            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+
+            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+const InputCurve = () => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-left mx-0 px-0">Tenor</TableHead>
 
           <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
         </TableRow>
