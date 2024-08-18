@@ -69,21 +69,38 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { MdAdd, MdDelete, MdOutlineRemoveCircleOutline } from "react-icons/md";
 
 const creditSpread = [
-  { id: 1, tenor: 0, yield: 0.0 },
-  { id: 2, tenor: 0.5, yield: 0.0 },
-  { id: 3, tenor: 1.0, yield: 0.0 },
-  { id: 4, tenor: 2.0, yield: 0.0 },
-  { id: 5, tenor: 3.0, yield: 0.0 },
-  { id: 6, tenor: 4.0, yield: 0.0 },
-  { id: 7, tenor: 5.0, yield: 0.0 },
-  { id: 8, tenor: 7.0, yield: 0.0 },
-  { id: 9, tenor: 10.0, yield: 0.0 },
-  { id: 10, tenor: 15.0, yield: 0.0 },
-  { id: 11, tenor: 20.0, yield: 0.0 },
-  { id: 12, tenor: 30.0, yield: 0.0 },
+  { id: 1, tenor: 0, rate: 0.0 },
+  { id: 2, tenor: 0.5, rate: 0.0 },
+  { id: 3, tenor: 1.0, rate: 0.0 },
+  { id: 4, tenor: 2.0, rate: 0.0 },
+  { id: 5, tenor: 3.0, rate: 0.0 },
+  { id: 6, tenor: 4.0, rate: 0.0 },
+  { id: 7, tenor: 5.0, rate: 0.0 },
+  { id: 8, tenor: 7.0, rate: 0.0 },
+  { id: 9, tenor: 10.0, rate: 0.0 },
+  { id: 10, tenor: 15.0, rate: 0.0 },
+  { id: 11, tenor: 20.0, rate: 0.0 },
+  { id: 12, tenor: 30.0, rate: 0.0 },
 ];
+
+const initialInputCurve = [
+  { id: 1, tenor: 0, rate: 0.0 },
+  { id: 2, tenor: 0.5, rate: 0.0 },
+  { id: 3, tenor: 1.0, rate: 0.0 },
+  { id: 4, tenor: 2.0, rate: 0.0 },
+  { id: 5, tenor: 3.0, rate: 0.0 },
+  { id: 6, tenor: 4.0, rate: 0.0 },
+  { id: 7, tenor: 5.0, rate: 0.0 },
+  { id: 8, tenor: 7.0, rate: 0.0 },
+  { id: 9, tenor: 10.0, rate: 0.0 },
+  { id: 10, tenor: 15.0, rate: 0.0 },
+  { id: 11, tenor: 20.0, rate: 0.0 },
+  { id: 12, tenor: 30.0, rate: 0.0 },
+];
+
 const newTab = [
   { date: "2024-04-02", usdcdf: 2780, usdeur: 0.931, dateOut: "Apr 2" },
   { date: "2024-04-03", usdcdf: 2780, usdeur: 0.929, dateOut: "Apr 3" },
@@ -622,7 +639,8 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                           )}
                           {curveType === "inc" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <p className="font-semibold">Input Curve</p>
+                              {/*                               <p className="font-semibold">Input Curve</p>
+                               */}{" "}
                               <InputCurve />
                             </div>
                           )}
@@ -1100,25 +1118,56 @@ const CreditSpread = () => {
 };
 
 const InputCurve = () => {
+  const [inputCurve, setInputCurve] = useState(initialInputCurve);
+  console.log("ICIC ", inputCurve);
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-left mx-0 px-0">Tenor</TableHead>
-
-          <TableHead className="text-right  mx-0 px-0">Yield</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {creditSpread?.map((yc: any) => (
-          <TableRow key={yc.id}>
-            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
-
-            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+    <div>
+      <div className="flex items-center justify-between">
+        <p className="font-semibold">Input Curve</p>
+        <AddInputCurve inputCurve={inputCurve} openDialog={false} />
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-left mx-0 px-0">
+              <p className="flex justify-between">
+                <span>Tenor</span>
+                <span> Rate</span>
+              </p>
+            </TableHead>
+            {/*             <TableHead className="text-right  mx-0 px-0"></TableHead>
+             */}{" "}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {inputCurve?.map((ic: any) => (
+            <TableRow key={ic.id}>
+              {/*             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+               */}
+              <TableCell className="text-right  mx-0 px-0">
+                {/*               {yc.yield}
+                 */}{" "}
+                <UpdateInputCurve
+                  inputCurve={inputCurve}
+                  ic={ic}
+                  openDialog={false}
+                  setInputCurve={setInputCurve}
+                />
+              </TableCell>
+              {/*               <TableCell className="text-right  mx-0 px-0">
+                <DeleteInputCurve
+                  inputCurve={inputCurve}
+                  setInputCurve={setInputCurve}
+                  ic={ic}
+                  openDialog={false}
+                />
+              </TableCell> */}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
@@ -1135,13 +1184,13 @@ const UpdateCreditSpread = ({
   const [open, setOpen] = useState(openDialog);
 
   const [tenor, setTenor] = useState(cs.tenor);
-  const [rate, setRate] = useState(cs.yield);
+  const [rate, setRate] = useState(cs.rate);
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <div className="flex justify-between">
           <span>{cs?.tenor}</span>
-          <span>{cs?.yield}</span>
+          <span>{cs?.rate}</span>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -1168,7 +1217,7 @@ const UpdateCreditSpread = ({
 
             //Update object's name property.
             creditSpread[objIndex].tenor = tenor;
-            creditSpread[objIndex].yield = rate;
+            creditSpread[objIndex].rate = rate;
 
             creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
             //Log object to console again.
@@ -1215,6 +1264,322 @@ const UpdateCreditSpread = ({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction>Continue</AlertDialogAction>
           </AlertDialogFooter> */}
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+type UpdateInputCurveProps = {
+  inputCurve: any;
+  ic: any;
+  openDialog: boolean;
+  setInputCurve: (el: any) => void;
+};
+const UpdateInputCurve = ({
+  inputCurve,
+  ic,
+  openDialog,
+  setInputCurve,
+}: UpdateInputCurveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(ic.tenor);
+  const [rate, setRate] = useState(ic.rate);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex justify-between">
+          <span>{ic?.tenor}</span>
+          <span>{ic?.rate}</span>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the input curve data.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            const objIndex = inputCurve.findIndex(
+              (obj: any) => obj.id == ic.id
+            );
+
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            inputCurve[objIndex].tenor = tenor;
+            inputCurve[objIndex].rate = rate;
+
+            inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", creditSpread);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  inputCurve = inputCurve
+                    .filter((el: any) => el.id != ic.id)
+                    .sort((a: any, b: any) => a.tenor - b.tenor);
+
+                  //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+                  //Log object to console again.
+                  // console.log("After update: ", creditSpread[objIndex]);
+                  setInputCurve(inputCurve);
+                  console.log("After update: ", inputCurve);
+                  setOpen(!open);
+                }}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </div>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+// Add Input
+
+type AddInputCurveProps = {
+  inputCurve: any;
+
+  openDialog: boolean;
+};
+
+const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(0);
+  const [rate, setRate] = useState(0);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <MdAdd className="bg-sky-600 rounded-full" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the input curve data.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            inputCurve.push({
+              id: inputCurve.length + 1,
+              tenor: tenor,
+              rate: rate,
+            });
+            /*            const objIndex = inputCurve.findIndex(
+              (obj: any) => obj.id == ic.id
+            );
+ */
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            /*        inputCurve[objIndex].tenor = tenor;
+            inputCurve[objIndex].rate = rate; */
+
+            inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", inputCurve);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+          {/*           <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter> */}
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+// Delete Input
+type DeleteInputCurveProps = {
+  inputCurve: any;
+  ic: any;
+  openDialog: boolean;
+  setInputCurve: (el: any) => void;
+};
+const DeleteInputCurve = ({
+  inputCurve,
+  ic,
+  openDialog,
+  setInputCurve,
+}: DeleteInputCurveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(ic.tenor);
+  const [rate, setRate] = useState(ic.rate);
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <MdOutlineRemoveCircleOutline className="text-red-600 ml-4" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will remove the input point from the input curve.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            const objIndex = inputCurve.findIndex(
+              (obj: any) => obj.id == ic.id
+            );
+
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            /*             inputCurve[objIndex].tenor = tenor;
+            inputCurve[objIndex].rate = rate; */
+
+            // console.log("Before update: ", inputCurve);
+            // console.log("IC", ic);
+
+            inputCurve = inputCurve
+              .filter((el: any) => el.id != ic.id)
+              .sort((a: any, b: any) => a.tenor - b.tenor);
+
+            //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            setInputCurve(inputCurve);
+            console.log("After update: ", inputCurve);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </div>
         </form>
       </AlertDialogContent>
     </AlertDialog>
