@@ -58,20 +58,31 @@ import {
   TableRow,
 } from "../ui/table";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 const creditSpread = [
-  { tenor: 0, yield: 0.0 },
-  { tenor: 0.5, yield: 0.0 },
-  { tenor: 1.0, yield: 0.0 },
-  { tenor: 2.0, yield: 0.0 },
-  { tenor: 3.0, yield: 0.0 },
-  { tenor: 4.0, yield: 0.0 },
-  { tenor: 5.0, yield: 0.0 },
-  { tenor: 7.0, yield: 0.0 },
-  { tenor: 10.0, yield: 0.0 },
-  { tenor: 15.0, yield: 0.0 },
-  { tenor: 20.0, yield: 0.0 },
-  { tenor: 30.0, yield: 0.0 },
+  { id: 1, tenor: 0, yield: 0.0 },
+  { id: 2, tenor: 0.5, yield: 0.0 },
+  { id: 3, tenor: 1.0, yield: 0.0 },
+  { id: 4, tenor: 2.0, yield: 0.0 },
+  { id: 5, tenor: 3.0, yield: 0.0 },
+  { id: 6, tenor: 4.0, yield: 0.0 },
+  { id: 7, tenor: 5.0, yield: 0.0 },
+  { id: 8, tenor: 7.0, yield: 0.0 },
+  { id: 9, tenor: 10.0, yield: 0.0 },
+  { id: 10, tenor: 15.0, yield: 0.0 },
+  { id: 11, tenor: 20.0, yield: 0.0 },
+  { id: 12, tenor: 30.0, yield: 0.0 },
 ];
 const newTab = [
   { date: "2024-04-02", usdcdf: 2780, usdeur: 0.931, dateOut: "Apr 2" },
@@ -1057,17 +1068,30 @@ const CreditSpread = () => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-left mx-0 px-0">Tenor</TableHead>
-
-          <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
+          <TableHead className="text-left mx-0 px-0">
+            <p className="flex justify-between">
+              <span>Tenor</span>
+              <span> Rate</span>
+            </p>
+          </TableHead>
+          {/*           <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
+           */}{" "}
         </TableRow>
       </TableHeader>
       <TableBody>
         {creditSpread?.map((yc: any) => (
           <TableRow key={yc.id}>
-            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
-
-            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+            {/*             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+             */}
+            <TableCell className="text-right  mx-0 px-0">
+              {/*               {yc.yield}
+               */}{" "}
+              <UpdateCreditSpread
+                creditSpread={creditSpread}
+                cs={yc}
+                openDialog={false}
+              />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -1095,5 +1119,104 @@ const InputCurve = () => {
         ))}
       </TableBody>
     </Table>
+  );
+};
+
+type UpdateCreditSpreadProps = {
+  creditSpread: any;
+  cs: any;
+  openDialog: boolean;
+};
+const UpdateCreditSpread = ({
+  creditSpread,
+  cs,
+  openDialog,
+}: UpdateCreditSpreadProps) => {
+  const [open, setOpen] = useState(openDialog);
+
+  const [tenor, setTenor] = useState();
+  const [rate, setRate] = useState();
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex justify-between">
+          <span>{cs?.tenor}</span>
+          <span>{cs?.yield}</span>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the credit spread.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            //console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            const objIndex = creditSpread.findIndex(
+              (obj: any) => obj.id == cs.id
+            );
+
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            creditSpread[objIndex].tenor = tenor;
+            creditSpread[objIndex].yield = rate;
+
+            creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", creditSpread);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+          {/*           <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter> */}
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
