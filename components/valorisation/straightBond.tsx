@@ -1134,8 +1134,8 @@ const UpdateCreditSpread = ({
 }: UpdateCreditSpreadProps) => {
   const [open, setOpen] = useState(openDialog);
 
-  const [tenor, setTenor] = useState();
-  const [rate, setRate] = useState();
+  const [tenor, setTenor] = useState(cs.tenor);
+  const [rate, setRate] = useState(cs.yield);
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
@@ -1155,7 +1155,7 @@ const UpdateCreditSpread = ({
           onSubmit={(e) => {
             e.preventDefault();
             // console.log("New Tenor:", tenor);
-            //console.log("New Rate:", rate);
+            // console.log("New Rate:", rate);
             /*             console.log("creditSpread", creditSpread); */
 
             //Find index of specific object using findIndex method.
@@ -1182,7 +1182,7 @@ const UpdateCreditSpread = ({
               <div>
                 <Label>Tenor:</Label>
                 <Input
-                  defaultValue={cs.tenor}
+                  //defaultValue={cs.tenor}
                   value={tenor}
                   type="number"
                   onChange={(e: any) => setTenor(e.target.value)}
@@ -1191,7 +1191,7 @@ const UpdateCreditSpread = ({
               <div>
                 <Label>Rate:</Label>
                 <Input
-                  defaultValue={cs.yield}
+                  //defaultValue={cs.yield}
                   value={rate}
                   type="number"
                   onChange={(e: any) => setRate(e.target.value)}
