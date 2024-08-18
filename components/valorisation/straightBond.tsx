@@ -194,6 +194,15 @@ const newTab = [
   },
 ];
 
+const cashflow = [
+  { id: 1, payDate: "2024-06-30", grossPay: 2, discountedPay: 1.96 },
+  { id: 2, payDate: "2024-12-30", grossPay: 2, discountedPay: 1.92 },
+  { id: 3, payDate: "2025-06-30", grossPay: 2, discountedPay: 1.88 },
+  { id: 4, payDate: "2025-12-30", grossPay: 2, discountedPay: 1.84 },
+  { id: 5, payDate: "2026-06-30", grossPay: 2, discountedPay: 1.8 },
+  { id: 6, payDate: "2026-12-30", grossPay: 2, discountedPay: 1.76 },
+];
+
 type StraightBondProps = {
   yieldcurve: any;
 };
@@ -295,8 +304,8 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
       title="Straight Bond Valuation"
       bred={<CustomBreadcrumb name="Straight Bond Valuation" />}
     >
-      <div className="max-md:px-1 md:flex gap-4 w-full">
-        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-2/3  max-md:w-full border p-4 rounded-xl">
+      <div className="max-md:px-1 md:flex gap-4 w-full ">
+        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-2/3  max-md:w-full  p-4 rounded-xl">
           <div>
             <Form {...form}>
               <form
@@ -667,171 +676,9 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
               </form>
             </Form>
           </div>
-          {/*           <div className="flex justify-between gap-2">
-            {bondPrice > 0 && (
-              <div className="w-1/2 border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
-                <div className="flex justify-between items-center gap-4">
-                  {!forcedBondPrice && (
-                    <div className="grid flex-1 auto-rows-min gap-0.5">
-                      <div className=" text-muted-foreground">Bond Price</div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {forcedBondPrice
-                          ? bondPrice.toFixed(2)
-                          : (bondPrice * 100).toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  )}
 
-                  {show && forcedBondPrice && (
-                    <div className="grid flex-1 auto-rows-min gap-0.5">
-                      <div className="text-red-600 text-muted-foreground">
-                        Forced Bond Price
-                      </div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {forcedBondPrice
-                          ? bondPrice.toFixed(2)
-                          : (bondPrice * 100).toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className=" grid flex-1 auto-rows-min gap-0.5">
-                    <div className=" text-muted-foreground">
-                      Accrued Interest
-                    </div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {(accruedInterest * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center gap-4">
-                  <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                    <div className=" text-muted-foreground">
-                      Yield to Maturity
-                    </div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {(yieldToMaturity * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </div>
-                  <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                    <div className=" text-muted-foreground">Duration</div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {duration ? duration.toFixed(2) : duration}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        Years
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <Card
-              className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full w-1/2 mt-4"
-              x-chunk="charts-01-chunk-7"
-            >
-              <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-                <div className="flex justify-between items-center text-orange-400">
-                  <Badge className="bg-orange-500 text-white">USDCDF</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-1 items-center">
-                <ChartContainer
-                  config={{
-                    usdcdf: {
-                      label: "USDCDF",
-                      color: "hsl(var(--chart-3))",
-                    },
-                  }}
-                  className="w-full"
-                >
-                  <AreaChart
-                    accessibilityLayer
-                    margin={{
-                      left: 14,
-                      right: 14,
-                      top: 10,
-                    }}
-                    data={newTab}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="4 4"
-                      vertical={false}
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeOpacity={0.5}
-                    />
-
-                    <XAxis
-                      dataKey="dateOut"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                    />
-
-                    <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-
-                    <defs>
-                      <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                          offset="5%"
-                          stopColor="var(--color-usdcdf)"
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="var(--color-usdcdf)"
-                          stopOpacity={0.1}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <Area
-                      dataKey="usdcdf"
-                      type="linear"
-                      fill="url(#fillTime)"
-                      stroke="var(--color-usdcdf)"
-                      strokeWidth={1}
-                      activeDot={{
-                        r: 4,
-                      }}
-                      dot={false}
-                      fillOpacity={0.4}
-                    />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent hideLabel />}
-                      formatter={(value) => (
-                        <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                          Rate
-                          <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                            {value}
-                            <span className="font-normal text-muted-foreground">
-                              %
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    />
-                  </AreaChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-          </div> */}
-        </div>
-
-        <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/3 max-md:w-full">
           {bondPrice > 0 && (
-            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30">
+            <div className="border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
               <div className="flex justify-between items-center gap-4">
                 {!forcedBondPrice && (
                   <div className="grid flex-1 auto-rows-min gap-0.5">
@@ -897,13 +744,92 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/3 max-md:w-full">
+          {/*           {bondPrice > 0 && (
+            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30">
+              <div className="flex justify-between items-center gap-4">
+                {!forcedBondPrice && (
+                  <div className="grid flex-1 auto-rows-min gap-0.5">
+                    <div className=" text-muted-foreground">Bond Price</div>
+                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                      {forcedBondPrice
+                        ? bondPrice.toFixed(2)
+                        : (bondPrice * 100).toFixed(2)}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        %
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {show && forcedBondPrice && (
+                  <div className="grid flex-1 auto-rows-min gap-0.5">
+                    <div className="text-red-600 text-muted-foreground">
+                      Forced Bond Price
+                    </div>
+                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                      {forcedBondPrice
+                        ? bondPrice.toFixed(2)
+                        : (bondPrice * 100).toFixed(2)}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        %
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className=" grid flex-1 auto-rows-min gap-0.5">
+                  <div className=" text-muted-foreground">Accrued Interest</div>
+                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                    {(accruedInterest * 100).toFixed(2)}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      %
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center gap-4">
+                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                  <div className=" text-muted-foreground">
+                    Yield to Maturity
+                  </div>
+                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                    {(yieldToMaturity * 100).toFixed(2)}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      %
+                    </span>
+                  </div>
+                </div>
+                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                  <div className=" text-muted-foreground">Duration</div>
+                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                    {duration ? duration.toFixed(2) : duration}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      Years
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )} */}
+          <div>
+            <p className="font-semibold p-2 max-md:mt-4">Cashflows MAP</p>
+            <ScrollArea className="flex h-72 w-full p-2 md:px-4 md:pb-4 rounded-lg bg-gray-500/10 dark:bg-teal-400/10 ">
+              <Cashflow cashflow={cashflow} />
+            </ScrollArea>
+          </div>
+
+          <p className="font-semibold px-2 pt-2 max-md:mt-4">Discount Curve</p>
           <Card
             className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full"
             x-chunk="charts-01-chunk-7"
           >
             <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
               <div className="flex justify-between items-center text-orange-400">
-                <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+                {/*                 <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+                 */}{" "}
               </div>
             </CardHeader>
             <CardContent className="flex flex-1 items-center">
@@ -1119,7 +1045,7 @@ const CreditSpread = () => {
 
 const InputCurve = () => {
   const [inputCurve, setInputCurve] = useState(initialInputCurve);
-  console.log("ICIC ", inputCurve);
+  // console.log("ICIC ", inputCurve);
 
   return (
     <div>
@@ -1583,5 +1509,41 @@ const DeleteInputCurve = ({
         </form>
       </AlertDialogContent>
     </AlertDialog>
+  );
+};
+
+type CashflowProps = {
+  cashflow: any;
+};
+const Cashflow = ({ cashflow }: CashflowProps) => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-left mx-0 pl-0 pr-2">
+            Payment Date
+          </TableHead>
+          <TableHead className="mx-0 pl-0">Gross Payment</TableHead>
+
+          <TableHead className="text-right  mx-0 px-0">
+            Discounted Payment
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {cashflow?.map((yc: any) => (
+          <TableRow key={yc.id}>
+            <TableCell className="font-medium  mx-0 px-0">
+              {yc.payDate.split("-").reverse().join("-")}
+            </TableCell>
+            <TableCell className="  mx-0 px-0">{yc.grossPay}%</TableCell>
+
+            <TableCell className="text-right  mx-0 px-0">
+              {yc.discountedPay}%
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
