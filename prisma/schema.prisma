@@ -81,6 +81,33 @@ model Overview {
 
 }
 
+model Country {
+  id Int @id @default(autoincrement())
+  name String @unique
+  yieldCurves YieldCurve[]
+  continentId Int
+  continent Continent @relation(fields: [continentId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("countries")
+
+}
+
+model Continent {
+  id Int @id @default(autoincrement())
+  name String @unique
+  yieldCurves YieldCurve[]
+  countries Country[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("continents")
+
+}
+
 
 model YieldCurve{
   id Int @id @default(autoincrement())
@@ -88,14 +115,20 @@ model YieldCurve{
   yield Float
   change Float @default(0)
   date String
-  country Boolean
+  //country Boolean
   type DataTypeList @default(H)
+
+  countryId Int?
+  country Country? @relation(fields: [countryId], references: [id])
+
+  continentId Int?
+  continent Continent? @relation(fields: [continentId], references: [id])
 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([tenor, date, country])
+ // @@unique([tenor, date, country])
 
   @@map("yieldcurve")
 }

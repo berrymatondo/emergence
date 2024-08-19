@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const OverviewPage = async () => {
   const overs = await getAllOverview();
-  const yieldcurve = await getAllYC();
+  const yieldcurve = await getAllYC(true, 1);
   const fxrs = await getAllFXR();
   const bccrates = await getAllBCCIntRates();
   //console.log("OVERVIEW", bccrates);

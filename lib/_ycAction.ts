@@ -2,15 +2,29 @@
 import prisma from "./prisma";
 
 // Get all users
-export const getAllYC = async () => {
+export const getAllYC = async (country: boolean, id: number) => {
+  console.log("country", country);
+  console.log("id", id);
+
   try {
-    const ycs = await prisma.yieldCurve.findMany({
-      where: {
-        AND: [{ type: "L" }, { country: true }],
-      },
-    });
+    let ycs;
+    if (country) {
+      ycs = await prisma.yieldCurve.findMany({
+        where: {
+          AND: [{ type: "L" }, { countryId: id }],
+        },
+      });
+    } else {
+      ycs = await prisma.yieldCurve.findMany({
+        where: {
+          AND: [{ type: "L" }, { continentId: id }],
+        },
+      });
+    }
 
     //revalidatePath("/admin/users");
+
+    console.log("ycs: ", ycs);
 
     return {
       success: true,

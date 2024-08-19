@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
   Breadcrumb,
@@ -38,7 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { CountryList, DataTypeList } from "@prisma/client";
+import { Country, CountryList, DataTypeList } from "@prisma/client";
 import { CouponBasisList, CouponFreqList, CurrencyList } from "@/lib/enums";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -70,6 +70,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { MdAdd, MdDelete, MdOutlineRemoveCircleOutline } from "react-icons/md";
+import { getAllYC } from "@/lib/_ycAction";
 
 const creditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -204,16 +205,18 @@ const cashflow = [
 ];
 
 type StraightBondProps = {
-  yieldcurve: any;
+  //  yieldcurve: any;
+  countries: any;
 };
 
-const StraightBond = ({ yieldcurve }: StraightBondProps) => {
+const StraightBond = ({ countries }: StraightBondProps) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);
   const [yieldToMaturity, setYieldToMaturity] = useState(0);
   const [duration, setDuration] = useState(0);
   const [show, setShow] = useState(false);
+  const [yieldcurve, setYieldcurve] = useState<any>();
 
   const form = useForm<z.infer<typeof SBSchema>>({
     resolver: zodResolver(SBSchema),
@@ -236,6 +239,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
       curveType: "zcc",
       curveTypeName: "",
       liquidityPremium: "0.00",
+      defaultCountry: "1",
 
       /*       couponCurrency: "USD",
       couponRate: "",
@@ -248,6 +252,31 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
 
   const forcedBondPrice = form.watch("forcedBondPrice");
   const curveType = form.watch("curveType");
+  const defaultCountry = form.watch("defaultCountry");
+
+  //console.log("defaultCountry: ", defaultCountry);
+
+  useEffect(() => {
+    const fetchYC = async (id: any) => {
+      const resu = await getAllYC(true, +id);
+
+      const data = resu?.data;
+      setYieldcurve(data);
+
+      // console.log("data  ", data);
+      /*       console.log("data ", data);
+
+      console.log(
+        "SORT",
+        data?.historicalDataCommo.sort(
+          (a: any, b: any) => Date.parse(b.date) - Date.parse(a.date)
+        )
+      ); */
+    };
+    fetchYC(defaultCountry);
+  }, [defaultCountry]);
+
+  //  console.log("defaultCountry: ", defaultCountry);
 
   const procesForm = async (values: z.infer<typeof SBSchema>) => {
     //setLoading(true);
@@ -380,6 +409,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                                   {...field}
                                   placeholder="Entrer la valeur"
                                   type="number"
+                                  step="0.01"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -506,6 +536,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                                   {...field}
                                   placeholder="Entrer le montant"
                                   type="number"
+                                  step="0.01"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -556,6 +587,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                                     {...field}
                                     placeholder="Entrer le montant"
                                     type="number"
+                                    step="0.01"
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -571,14 +603,14 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                   </div>
 
                   <div className="w-full">
-                    <div className="flex justify-between max-md:gap-4">
+                    <div className="flex justify-between max-md:gap-4 gap-2">
                       <FormField
                         control={form.control}
                         name="curveType"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-1/2">
-                              <FormLabel className="w-1/2">
+                              <FormLabel className="w-1/3">
                                 {"Curve Type"}
                               </FormLabel>
                               <Select
@@ -606,13 +638,69 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                         }}
                       />
 
+                      {curveType === "yic" && (
+                        <FormField
+                          control={form.control}
+                          name="defaultCountry"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/3  max-md:w-1/2 max-md:hidden">
+                                <FormLabel className="w-1/3">
+                                  {"Yield Country Curve"}
+                                </FormLabel>
+                                {/*                               <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select country" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="zcc">
+                                      ZC Curve
+                                    </SelectItem>
+                                    <SelectItem value="yic">
+                                      Yield Curve
+                                    </SelectItem>
+                                    <SelectItem value="inc">
+                                      Input Curve
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select> */}
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <SelectTrigger id="framework">
+                                    <SelectValue placeholder="Sélectionner un pays" />
+                                  </SelectTrigger>
+                                  <SelectContent position="popper">
+                                    {countries?.map((ctr: Country) => (
+                                      <SelectItem
+                                        key={ctr.id}
+                                        value={ctr.id.toString()}
+                                      >
+                                        {ctr.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      )}
+
                       <FormField
                         control={form.control}
                         name="liquidityPremium"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-1/2">
-                              <FormLabel className="w-1/2 ">
+                              <FormLabel className="w-1/3">
                                 {"Liquidity premium (%) "}
                               </FormLabel>
                               <FormControl>
@@ -620,6 +708,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                                   {...field}
                                   placeholder="Enter the value"
                                   type="number"
+                                  step="0.01"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -627,6 +716,63 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                           );
                         }}
                       />
+                    </div>
+                    <div className="py-4 md:hidden">
+                      {curveType === "yic" && (
+                        <FormField
+                          control={form.control}
+                          name="defaultCountry"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/3  max-md:w-1/2">
+                                <FormLabel className="w-1/3">
+                                  {"Yield Country Curve"}
+                                </FormLabel>
+                                {/*                               <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select country" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="zcc">
+                                      ZC Curve
+                                    </SelectItem>
+                                    <SelectItem value="yic">
+                                      Yield Curve
+                                    </SelectItem>
+                                    <SelectItem value="inc">
+                                      Input Curve
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select> */}
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <SelectTrigger id="framework">
+                                    <SelectValue placeholder="Sélectionner un pays" />
+                                  </SelectTrigger>
+                                  <SelectContent position="popper">
+                                    {countries?.map((ctr: Country) => (
+                                      <SelectItem
+                                        key={ctr.id}
+                                        value={ctr.id.toString()}
+                                      >
+                                        {ctr.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      )}
                     </div>
                     <div className="w-full">
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
@@ -667,7 +813,7 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full hover:bg-sky-800 bg-sky-600 text-white"
+                  className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
                 >
                   {/*                 {loading ? "En cours de connexion ..." : "Se Connecter"}
                    */}{" "}
@@ -815,7 +961,9 @@ const StraightBond = ({ yieldcurve }: StraightBondProps) => {
             </div>
           )} */}
           <div>
-            <p className="font-semibold p-2 max-md:mt-4">Cashflows MAP</p>
+            <p className="font-semibold max-md:p-2 pb-2 max-md:mt-4">
+              Cashflows MAP
+            </p>
             <ScrollArea className="flex h-72 w-full p-2 md:px-4 md:pb-4 rounded-lg bg-gray-500/10 dark:bg-teal-400/10 ">
               <Cashflow cashflow={cashflow} />
             </ScrollArea>
@@ -1160,6 +1308,7 @@ const UpdateCreditSpread = ({
                   //defaultValue={cs.tenor}
                   value={tenor}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setTenor(e.target.value)}
                 />
               </div>
@@ -1169,6 +1318,7 @@ const UpdateCreditSpread = ({
                   //defaultValue={cs.yield}
                   value={rate}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setRate(e.target.value)}
                 />
               </div>
@@ -1260,6 +1410,7 @@ const UpdateInputCurve = ({
                   //defaultValue={cs.tenor}
                   value={tenor}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setTenor(e.target.value)}
                 />
               </div>
@@ -1269,6 +1420,7 @@ const UpdateInputCurve = ({
                   //defaultValue={cs.yield}
                   value={rate}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setRate(e.target.value)}
                 />
               </div>
@@ -1373,6 +1525,7 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
                   //defaultValue={cs.tenor}
                   value={tenor}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setTenor(e.target.value)}
                 />
               </div>
@@ -1382,6 +1535,7 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
                   //defaultValue={cs.yield}
                   value={rate}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setRate(e.target.value)}
                 />
               </div>
@@ -1480,6 +1634,7 @@ const DeleteInputCurve = ({
                   //defaultValue={cs.tenor}
                   value={tenor}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setTenor(e.target.value)}
                 />
               </div>
@@ -1489,6 +1644,7 @@ const DeleteInputCurve = ({
                   //defaultValue={cs.yield}
                   value={rate}
                   type="number"
+                  step="0.01"
                   onChange={(e: any) => setRate(e.target.value)}
                 />
               </div>

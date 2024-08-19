@@ -13,9 +13,11 @@ import {
 } from "./ui/dropdown-menu";
 import { GiSuspensionBridge } from "react-icons/gi";
 import Link from "next/link";
+import { BsMoonFill } from "react-icons/bs";
 
 export default function ModeToggle() {
   const { setTheme } = useTheme();
+  const [light, setLight] = React.useState(false);
 
   return (
     <div className="max-md:text-right md:flex w-full md:justify-between">
@@ -36,7 +38,34 @@ export default function ModeToggle() {
           </Link>
         </div>
       </div>
-      <DropdownMenu>
+      <>
+        {light ? (
+          <Button
+            onClick={() => {
+              setLight(false);
+              setTheme("dark");
+            }}
+            className="border-none"
+            variant="outline"
+            size="icon"
+          >
+            <BsMoonFill className=" h-[1.2rem] w-[1.2rem] " />
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              setLight(true);
+              setTheme("light");
+            }}
+            className="border-none"
+            variant="outline"
+            size="icon"
+          >
+            <Sun className="h-[1.2rem] w-[1.2rem] " />
+          </Button>
+        )}
+      </>
+      {/*       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
             <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -52,7 +81,7 @@ export default function ModeToggle() {
             Dark
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </div>
   );
 }
