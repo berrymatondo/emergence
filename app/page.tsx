@@ -27,6 +27,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { TrendingUp } from "lucide-react";
+import { GiSuspensionBridge } from "react-icons/gi";
 
 const HomePage = () => {
   return (
@@ -216,6 +217,11 @@ const HomePage = () => {
           </CardContent>
         </Card>
       </div>
+
+      <GiSuspensionBridge
+        className="max-md:hidden  text-sky-700 dark:text-sky-500"
+        size={80}
+      />
 
       <TrendingUp className="h-4 w-4 max-md:h-36 max-md:w-36 max-md:opacity-20" />
       <p className="text-xs md:hidden">
