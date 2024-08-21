@@ -4,7 +4,9 @@ import React from "react";
 const ASBPage = async () => {
   return (
     <div>
-      <AmortizedSimpleBond />
+      xxx
+      {/*       <AmortizedSimpleBond />
+       */}{" "}
     </div>
   );
 };

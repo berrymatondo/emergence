@@ -79,8 +79,8 @@ const ListItems = [
       "Utiliser les pricers pour évaluer les obligations et les options.",
     sublinks: [
       { id: 1, title: "Straight Bond", link: "/valorisation/sb1" },
-      { id: 2, title: "Amortized Simple Bond", link: "/valorisation/asb" },
-      { id: 3, title: "Floating Rate Bond", link: "/valorisation/frb" },
+      /*       { id: 2, title: "Amortized Simple Bond", link: "/valorisation/asb" },
+       */ { id: 3, title: "Floating Rate Bond", link: "/valorisation/frb" },
       //      { id: 4, title: "Straight Bond", link: "/valorisation/sb1" },
       { id: 5, title: "Amortized FRN", link: "/valorisation/afr" },
       { id: 6, title: "Step up Coupon", link: "/valorisation/suc" },
