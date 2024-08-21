@@ -3,8 +3,9 @@ import React from "react";
 
 const AdminPage = () => {
   return (
-    <div>
-      <Link href="/admin/users">Utilisateurs</Link>
+    <div className="flex flex-col gap-2">
+      <Link href="/admin/users">Users</Link>
+      <Link href="/admin/countries">Countries</Link>
     </div>
   );
 };

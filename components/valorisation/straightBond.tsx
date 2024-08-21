@@ -43,7 +43,6 @@ import { CouponBasisList, CouponFreqList, CurrencyList } from "@/lib/enums";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import GeneralLayout from "../generalLayout";
-import { Badge } from "../ui/badge";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Separator } from "../ui/separator";
@@ -72,7 +71,7 @@ import {
 import { MdAdd, MdDelete, MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { getAllYC } from "@/lib/_ycAction";
 
-const creditSpread = [
+const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
   { id: 2, tenor: 0.5, rate: 0.0 },
   { id: 3, tenor: 1.0, rate: 0.0 },
@@ -205,7 +204,6 @@ const cashflow = [
 ];
 
 type StraightBondProps = {
-  //  yieldcurve: any;
   countries: any;
 };
 
@@ -240,13 +238,6 @@ const StraightBond = ({ countries }: StraightBondProps) => {
       curveTypeName: "",
       liquidityPremium: "0.00",
       defaultCountry: "1",
-
-      /*       couponCurrency: "USD",
-      couponRate: "",
-      couponFrequency: "",
-      firstCouponDate: "",
-      valuationDate: "",
-      notional: "", */
     },
   });
 
@@ -254,29 +245,14 @@ const StraightBond = ({ countries }: StraightBondProps) => {
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
 
-  //console.log("defaultCountry: ", defaultCountry);
-
   useEffect(() => {
     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
-
       const data = resu?.data;
       setYieldcurve(data);
-
-      // console.log("data  ", data);
-      /*       console.log("data ", data);
-
-      console.log(
-        "SORT",
-        data?.historicalDataCommo.sort(
-          (a: any, b: any) => Date.parse(b.date) - Date.parse(a.date)
-        )
-      ); */
     };
     fetchYC(defaultCountry);
   }, [defaultCountry]);
-
-  //  console.log("defaultCountry: ", defaultCountry);
 
   const procesForm = async (values: z.infer<typeof SBSchema>) => {
     //setLoading(true);
@@ -648,27 +624,7 @@ const StraightBond = ({ countries }: StraightBondProps) => {
                                 <FormLabel className="w-1/3">
                                   {"Yield Country Curve"}
                                 </FormLabel>
-                                {/*                               <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select country" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="zcc">
-                                      ZC Curve
-                                    </SelectItem>
-                                    <SelectItem value="yic">
-                                      Yield Curve
-                                    </SelectItem>
-                                    <SelectItem value="inc">
-                                      Input Curve
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select> */}
+
                                 <Select
                                   onValueChange={field.onChange}
                                   defaultValue={field.value}
@@ -794,14 +750,13 @@ const StraightBond = ({ countries }: StraightBondProps) => {
                           )}
                           {curveType === "inc" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              {/*                               <p className="font-semibold">Input Curve</p>
-                               */}{" "}
                               <InputCurve />
                             </div>
                           )}
                           {curveType !== "yic" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <p className="font-semibold">Credit Spread</p>
+                              {/*                               <p className="font-semibold">Credit Spread</p>
+                               */}{" "}
                               <CreditSpread />
                             </div>
                           )}
@@ -893,73 +848,6 @@ const StraightBond = ({ countries }: StraightBondProps) => {
         </div>
 
         <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/3 max-md:w-full">
-          {/*           {bondPrice > 0 && (
-            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30">
-              <div className="flex justify-between items-center gap-4">
-                {!forcedBondPrice && (
-                  <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className=" text-muted-foreground">Bond Price</div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {forcedBondPrice
-                        ? bondPrice.toFixed(2)
-                        : (bondPrice * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {show && forcedBondPrice && (
-                  <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-red-600 text-muted-foreground">
-                      Forced Bond Price
-                    </div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {forcedBondPrice
-                        ? bondPrice.toFixed(2)
-                        : (bondPrice * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                <div className=" grid flex-1 auto-rows-min gap-0.5">
-                  <div className=" text-muted-foreground">Accrued Interest</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    {(accruedInterest * 100).toFixed(2)}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center gap-4">
-                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                  <div className=" text-muted-foreground">
-                    Yield to Maturity
-                  </div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    {(yieldToMaturity * 100).toFixed(2)}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                  <div className=" text-muted-foreground">Duration</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    {duration ? duration.toFixed(2) : duration}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      Years
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )} */}
           <div>
             <p className="font-semibold max-md:p-2 pb-2 max-md:mt-4">
               Cashflows MAP
@@ -1156,38 +1044,47 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
 };
 
 const CreditSpread = () => {
+  const [creditSpread, setCreditSpread] = useState(initialCreditSpread);
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-left mx-0 px-0">
-            <p className="flex justify-between">
-              <span>Tenor</span>
-              <span> Rate</span>
-            </p>
-          </TableHead>
-          {/*           <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
-           */}{" "}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {creditSpread?.map((yc: any) => (
-          <TableRow key={yc.id}>
-            {/*             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
-             */}
-            <TableCell className="text-right  mx-0 px-0">
-              {/*               {yc.yield}
-               */}{" "}
-              <UpdateCreditSpread
-                creditSpread={creditSpread}
-                cs={yc}
-                openDialog={false}
-              />
-            </TableCell>
+    <div>
+      <div className="flex items-center justify-between">
+        <p className="font-semibold">Credit Spread</p>
+        <AddCreditSpread creditSpread={creditSpread} openDialog={false} />
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-left mx-0 px-0">
+              <p className="flex justify-between">
+                <span>Tenor</span>
+                <span> Rate</span>
+              </p>
+            </TableHead>
+            {/*           <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
+             */}{" "}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {creditSpread?.map((yc: any) => (
+            <TableRow key={yc.id}>
+              {/*             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+               */}
+              <TableCell className="text-right  mx-0 px-0">
+                {/*               {yc.yield}
+                 */}{" "}
+                <UpdateCreditSpread
+                  creditSpread={creditSpread}
+                  cs={yc}
+                  openDialog={false}
+                  setCreditSpread={setCreditSpread}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
@@ -1229,14 +1126,6 @@ const InputCurve = () => {
                   setInputCurve={setInputCurve}
                 />
               </TableCell>
-              {/*               <TableCell className="text-right  mx-0 px-0">
-                <DeleteInputCurve
-                  inputCurve={inputCurve}
-                  setInputCurve={setInputCurve}
-                  ic={ic}
-                  openDialog={false}
-                />
-              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>
@@ -1249,14 +1138,15 @@ type UpdateCreditSpreadProps = {
   creditSpread: any;
   cs: any;
   openDialog: boolean;
+  setCreditSpread: (el: any) => void;
 };
 const UpdateCreditSpread = ({
   creditSpread,
   cs,
   openDialog,
+  setCreditSpread,
 }: UpdateCreditSpreadProps) => {
   const [open, setOpen] = useState(openDialog);
-
   const [tenor, setTenor] = useState(cs.tenor);
   const [rate, setRate] = useState(cs.rate);
   return (
@@ -1324,7 +1214,6 @@ const UpdateCreditSpread = ({
               </div>
             </div>
             <div className="flex justify-between">
-              <Button type="submit">Save</Button>
               <Button
                 type="button"
                 variant="outline"
@@ -1334,6 +1223,25 @@ const UpdateCreditSpread = ({
               >
                 Cancel
               </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  creditSpread = creditSpread
+                    .filter((el: any) => el.id != cs.id)
+                    .sort((a: any, b: any) => a.tenor - b.tenor);
+
+                  //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+                  //Log object to console again.
+                  // console.log("After update: ", creditSpread[objIndex]);
+                  setCreditSpread(creditSpread);
+                  // console.log("After update: ", creditSpread);
+                  setOpen(!open);
+                }}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Save</Button>
             </div>
           </div>
           {/*           <AlertDialogFooter>
@@ -1483,7 +1391,7 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will update the input curve data.
+            This will add a data into the input curve.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <form
@@ -1563,66 +1471,45 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
   );
 };
 
-// Delete Input
-type DeleteInputCurveProps = {
-  inputCurve: any;
-  ic: any;
-  openDialog: boolean;
-  setInputCurve: (el: any) => void;
-};
-const DeleteInputCurve = ({
-  inputCurve,
-  ic,
-  openDialog,
-  setInputCurve,
-}: DeleteInputCurveProps) => {
-  const [open, setOpen] = useState(openDialog);
-  const [tenor, setTenor] = useState(ic.tenor);
-  const [rate, setRate] = useState(ic.rate);
+// Add Credit Spread
+// Add Input
 
+type AddCreditSpreadProps = {
+  creditSpread: any;
+
+  openDialog: boolean;
+};
+
+const AddCreditSpread = ({
+  creditSpread,
+  openDialog,
+}: AddCreditSpreadProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(0);
+  const [rate, setRate] = useState(0);
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <MdOutlineRemoveCircleOutline className="text-red-600 ml-4" />
+        <MdAdd className="bg-sky-600 rounded-full" />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will remove the input point from the input curve.
+            This will add a data into the credit spread curve.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            // console.log("New Tenor:", tenor);
-            // console.log("New Rate:", rate);
-            /*             console.log("creditSpread", creditSpread); */
+            creditSpread.push({
+              id: creditSpread.length + 1,
+              tenor: tenor,
+              rate: rate,
+            });
 
-            //Find index of specific object using findIndex method.
-            const objIndex = inputCurve.findIndex(
-              (obj: any) => obj.id == ic.id
-            );
+            creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
 
-            //Log object to Console.
-            //console.log("Before update: ", creditSpread[objIndex]);
-
-            //Update object's name property.
-            /*             inputCurve[objIndex].tenor = tenor;
-            inputCurve[objIndex].rate = rate; */
-
-            // console.log("Before update: ", inputCurve);
-            // console.log("IC", ic);
-
-            inputCurve = inputCurve
-              .filter((el: any) => el.id != ic.id)
-              .sort((a: any, b: any) => a.tenor - b.tenor);
-
-            //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
-            //Log object to console again.
-            // console.log("After update: ", creditSpread[objIndex]);
-            setInputCurve(inputCurve);
-            console.log("After update: ", inputCurve);
             setOpen(!open);
           }}
         >
@@ -1650,6 +1537,7 @@ const DeleteInputCurve = ({
               </div>
             </div>
             <div className="flex justify-between">
+              <Button type="submit">Save</Button>
               <Button
                 type="button"
                 variant="outline"
@@ -1659,7 +1547,6 @@ const DeleteInputCurve = ({
               >
                 Cancel
               </Button>
-              <Button type="submit">Save</Button>
             </div>
           </div>
         </form>
@@ -1668,6 +1555,7 @@ const DeleteInputCurve = ({
   );
 };
 
+// Cashflows Maps
 type CashflowProps = {
   cashflow: any;
 };

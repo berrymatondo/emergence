@@ -58,7 +58,7 @@ const UsersPage = async ({
     },
   });
 
-  console.log("users: ", users);
+  //console.log("users: ", users);
 
   const session = await auth();
 
