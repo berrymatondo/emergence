@@ -136,7 +136,7 @@ model YieldCurve{
 
 model FXRates{
   id Int @id @default(autoincrement())
-  date String @unique
+  date String 
   usdcdf Float @default(0)
   usdeur Float @default(0)
 
@@ -148,7 +148,7 @@ model FXRates{
 
 model BCCIntRates{
   id Int @id @default(autoincrement())
-  date String @unique
+  date String 
   rate Float @default(0)
 
   createdAt DateTime @default(now())
@@ -157,3 +157,36 @@ model BCCIntRates{
   @@map("bccintrates")
 }
 
+
+
+model ZCRates{
+  id Int @id @default(autoincrement())
+  tenor Int
+  rate Float
+  change Float @default(0)
+  date String
+  type DataTypeList @default(H)
+  currencyId Int
+  currency Currency @relation(fields: [currencyId], references: [id])
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+ // @@unique([tenor, date, country])
+
+  @@map("zcrates")
+}
+
+
+model Currency{
+  id Int @id @default(autoincrement())
+  code String @unique
+  name String
+  zcRates ZCRates[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("currencies")
+}

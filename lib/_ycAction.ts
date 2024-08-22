@@ -1,10 +1,10 @@
 "use server";
 import prisma from "./prisma";
 
-// Get all users
+// Get all yied curve per country
 export const getAllYC = async (country: boolean, id: number) => {
-  console.log("country", country);
-  console.log("id", id);
+  // console.log("country", country);
+  // console.log("id", id);
 
   try {
     let ycs;
@@ -24,11 +24,34 @@ export const getAllYC = async (country: boolean, id: number) => {
 
     //revalidatePath("/admin/users");
 
-    console.log("ycs: ", ycs);
+    //console.log("ycs: ", ycs);
 
     return {
       success: true,
       data: ycs,
+    };
+  } catch (error) {}
+};
+
+// Get all zero coupu per currency
+export const getAllZC = async (id: number) => {
+  // console.log("country", country);
+  // console.log("id", id);
+
+  try {
+    const zcr = await prisma.zCRates.findMany({
+      where: {
+        AND: [{ type: "L" }, { currencyId: id }],
+      },
+    });
+
+    //revalidatePath("/admin/users");
+
+    //console.log("ycs: ", ycs);
+
+    return {
+      success: true,
+      data: zcr,
     };
   } catch (error) {}
 };

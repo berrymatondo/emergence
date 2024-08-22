@@ -437,7 +437,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
   return (
     <aside className="max-md:hidden min-h-screen ">
       {userSession?.user && (
-        <nav className="h-full flex flex-col  border-r shadow-sm">
+        <nav className=" relative h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
             {/*             <div className="flex flex-col ml-4">
               <div
@@ -504,14 +504,14 @@ const Sidebar = ({ userSession }: SidebarProps) => {
                 )}
               </div>
               <Button
-                className="ml-2 p-0"
+                className="p-2 rounded-full absolute -right-5 bg-slate-200 dark:bg-neutral-100 dark:text-card"
                 onClick={() => setExpended(!expended)}
                 variant="empty"
               >
                 {expended ? (
-                  <FiChevronsLeft size={30} />
+                  <FiChevronsLeft size={25} />
                 ) : (
-                  <FiChevronsRight size={30} />
+                  <FiChevronsRight size={25} />
                 )}
               </Button>
             </div>
@@ -560,6 +560,18 @@ const Sidebar = ({ userSession }: SidebarProps) => {
                 </div>
               </div>
             ))}
+
+            {/*             <Button
+              className="p-2 rounded-full absolute -right-5 bg-slate-200 dark:bg-neutral-100 dark:text-card"
+              onClick={() => setExpended(!expended)}
+              variant="empty"
+            >
+              {expended ? (
+                <FiChevronsLeft size={25} />
+              ) : (
+                <FiChevronsRight size={25} />
+              )}
+            </Button> */}
           </ul>
         </nav>
       )}

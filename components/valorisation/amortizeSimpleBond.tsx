@@ -205,9 +205,13 @@ const cashflow = [
 
 type AmortizedSimpleBondProps = {
   countries: any;
+  currencies: any;
 };
 
-const AmortizedSimpleBond = ({ countries }: AmortizedSimpleBondProps) => {
+const AmortizedSimpleBond = ({
+  countries,
+  currencies,
+}: AmortizedSimpleBondProps) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);

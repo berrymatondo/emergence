@@ -6,9 +6,10 @@ import React, { useEffect, useState } from "react";
 
 type ValChoice1Props = {
   countries: any;
+  currencies: any;
 };
 
-const ValChoice1 = ({ countries }: ValChoice1Props) => {
+const ValChoice1 = ({ countries, currencies }: ValChoice1Props) => {
   const [straight, setStraight] = useState(true);
   const [amortized, setAmortized] = useState(false);
 
@@ -52,9 +53,9 @@ const ValChoice1 = ({ countries }: ValChoice1Props) => {
       </div>
 
       {straight ? (
-        <StraightBond countries={countries} />
+        <StraightBond countries={countries} currencies={currencies} />
       ) : (
-        <AmortizedSimpleBond countries={countries} />
+        <AmortizedSimpleBond countries={countries} currencies={currencies} />
       )}
     </>
   );

@@ -38,7 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Country, CountryList, DataTypeList } from "@prisma/client";
+import { Country, CountryList, Currency, DataTypeList } from "@prisma/client";
 import { CouponBasisList, CouponFreqList, CurrencyList } from "@/lib/enums";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -69,7 +69,8 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { MdAdd, MdDelete, MdOutlineRemoveCircleOutline } from "react-icons/md";
-import { getAllYC } from "@/lib/_ycAction";
+import { getAllYC, getAllZC } from "@/lib/_ycAction";
+import { getCurrency } from "@/lib/_otherActions";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -205,9 +206,10 @@ const cashflow = [
 
 type StraightBondProps = {
   countries: any;
+  currencies: any;
 };
 
-const StraightBond = ({ countries }: StraightBondProps) => {
+const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);
@@ -215,6 +217,8 @@ const StraightBond = ({ countries }: StraightBondProps) => {
   const [duration, setDuration] = useState(0);
   const [show, setShow] = useState(false);
   const [yieldcurve, setYieldcurve] = useState<any>();
+  const [zcrates, setZcrates] = useState<any>();
+  const [cur, setCur] = useState<any>();
 
   const form = useForm<z.infer<typeof SBSchema>>({
     resolver: zodResolver(SBSchema),
@@ -223,7 +227,7 @@ const StraightBond = ({ countries }: StraightBondProps) => {
       price: "0",
       //bondMaturityDate: new Date().toISOString().split("T")[0],
       bondMaturityDate: "2030-07-30",
-      couponCurrency: "USD",
+      couponCurrency: "1",
       //couponRate: "0.00",
       couponRate: "0.05",
       couponFrequency: "1",
@@ -244,6 +248,7 @@ const StraightBond = ({ countries }: StraightBondProps) => {
   const forcedBondPrice = form.watch("forcedBondPrice");
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
+  const couponCurrency = form.watch("couponCurrency");
 
   useEffect(() => {
     const fetchYC = async (id: any) => {
@@ -252,7 +257,27 @@ const StraightBond = ({ countries }: StraightBondProps) => {
       setYieldcurve(data);
     };
     fetchYC(defaultCountry);
-  }, [defaultCountry]);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any) => {
+      const resu = await getAllZC(+id);
+      const data = resu?.data;
+
+      //console.log("ZC:", data);
+
+      setZcrates(data);
+    };
+    fetchZC(couponCurrency);
+
+    // Fetch Currency name
+    const fetchCur = async (id: any) => {
+      const resu = await getCurrency(+id);
+      const dat = resu?.data;
+
+      setCur(dat?.code);
+    };
+    fetchCur(couponCurrency);
+  }, [defaultCountry, couponCurrency]);
 
   const procesForm = async (values: z.infer<typeof SBSchema>) => {
     //setLoading(true);
@@ -347,7 +372,7 @@ const StraightBond = ({ countries }: StraightBondProps) => {
                           return (
                             <FormItem className="w-1/2">
                               <FormLabel>Coupon Currency</FormLabel>
-                              <Select
+                              {/*                         <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                               >
@@ -362,6 +387,28 @@ const StraightBond = ({ countries }: StraightBondProps) => {
                                       </SelectItem>
                                     )
                                   )}
+                                </SelectContent>
+                              </Select> */}
+
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <SelectTrigger id="framework">
+                                  <SelectValue placeholder="Sélectionner une devise" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                  {currencies?.map((ctr: Currency) => (
+                                    <SelectItem
+                                      key={ctr.id}
+                                      value={ctr.id.toString()}
+                                    >
+                                      {ctr.code} -{" "}
+                                      <span className="text-xs">
+                                        {ctr.name}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
                                 </SelectContent>
                               </Select>
 
@@ -738,8 +785,10 @@ const StraightBond = ({ countries }: StraightBondProps) => {
                           </div>
                           {curveType === "zcc" && (
                             <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                              <p className="font-semibold">ZC Curve</p>
-                              <ZCCurve zccurve={yieldcurve} />
+                              <p className="font-semibold">
+                                ZC Curve - <span>{cur}</span>
+                              </p>
+                              <ZCCurve zccurve={zcrates} />
                             </div>
                           )}
                           {curveType === "yic" && (
@@ -1035,7 +1084,7 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
 
-            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+            <TableCell className="text-right  mx-0 px-0">{yc.rate}</TableCell>
           </TableRow>
         ))}
       </TableBody>
