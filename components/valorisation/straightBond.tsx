@@ -27,6 +27,7 @@ import {
   computeDuration,
   computeStraightBondPrice,
   computeYieldToMaturity,
+  computeStraight_bond_cash_flow,
 } from "@/lib/_sbActions";
 import { Button } from "../ui/button";
 import {
@@ -195,7 +196,7 @@ const newTab = [
   },
 ];
 
-const cashflow = [
+/* const cashflow = [
   { id: 1, payDate: "2024-06-30", grossPay: 2, discountedPay: 1.96 },
   { id: 2, payDate: "2024-12-30", grossPay: 2, discountedPay: 1.92 },
   { id: 3, payDate: "2025-06-30", grossPay: 2, discountedPay: 1.88 },
@@ -203,7 +204,7 @@ const cashflow = [
   { id: 5, payDate: "2026-06-30", grossPay: 2, discountedPay: 1.8 },
   { id: 6, payDate: "2026-12-30", grossPay: 2, discountedPay: 1.76 },
 ];
-
+ */
 type StraightBondProps = {
   countries: any;
   currencies: any;
@@ -219,6 +220,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [yieldcurve, setYieldcurve] = useState<any>();
   const [zcrates, setZcrates] = useState<any>();
   const [cur, setCur] = useState<any>();
+  const [cashflow, setCashflow] = useState<any>();
 
   const form = useForm<z.infer<typeof SBSchema>>({
     resolver: zodResolver(SBSchema),
@@ -315,10 +317,26 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
         setShow(true);
       }
     }
-    console.log("yieldToMaturity?.data", yieldToMaturity?.data);
+    // console.log("yieldToMaturity?.data", yieldToMaturity?.data);
 
     const duration = await computeDuration(values);
     if (duration?.data) setDuration(duration?.data);
+
+    const cashflowOut = await computeStraight_bond_cash_flow(values);
+    // console.log("cashflowOut?.data", cashflowOut?.data);
+    let cashflowFin = [];
+    for (let i = 0; i < cashflowOut?.data?.cash_flow?.length; i++) {
+      cashflowFin.push({
+        gross: cashflowOut?.data?.cash_flow[i],
+        date: cashflowOut?.data?.date[i],
+        discounted: cashflowOut?.data?.discounted_cash_flow[i],
+      });
+    }
+    setCashflow(cashflowFin);
+
+    // console.log("cashflowFin.data", cashflowFin);
+
+    // if (cashflowOut?.data) setDuration(duration?.data);
 
     /*     if (result?.error) {
       toast.error(result?.error.toString());
@@ -1627,12 +1645,12 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
         {cashflow?.map((yc: any) => (
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">
-              {yc.payDate.split("-").reverse().join("-")}
+              {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="  mx-0 px-0">{yc.grossPay}%</TableCell>
+            <TableCell className="  mx-0 px-0">{yc.gross}%</TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
-              {yc.discountedPay}%
+              {yc.discounted.toFixed(2)}%
             </TableCell>
           </TableRow>
         ))}

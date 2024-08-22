@@ -221,3 +221,52 @@ export const computeDuration = async (data: Inputs) => {
     };
   } catch (error) {}
 };
+
+export const computeStraight_bond_cash_flow = async (data: Inputs) => {
+  //console.log("datax", data);
+
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+  };
+
+  let bodyContent = JSON.stringify({
+    maturity_date: data.bondMaturityDate,
+    payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
+    coupon_rate: data.couponRate ? +data.couponRate : undefined,
+    first_coupon_date: data.firstCouponDate,
+    valuation_date: data.valuationDate,
+    discount_curve: [
+      [0.5, 0.02],
+      [1.0, 0.025],
+      [1.5, 0.03],
+      [2.0, 0.035],
+      [2.5, 0.04],
+    ],
+    day_count_convention: data.couponBasis,
+  });
+
+  //console.log("X", bodyContent);
+
+  //BOND PRICE
+  try {
+    let response = await fetch(
+      "http://213.165.83.130/valuation/straight_bond_cash_flow",
+      {
+        method: "POST",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+
+    //  console.log("response", response);
+
+    let dataout = await response.json();
+    //console.log("DATA", dataout);
+
+    return {
+      success: true,
+      data: dataout,
+    };
+  } catch (error) {}
+};
