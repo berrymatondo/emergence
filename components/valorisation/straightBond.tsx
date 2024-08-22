@@ -28,6 +28,7 @@ import {
   computeStraightBondPrice,
   computeYieldToMaturity,
   computeStraight_bond_cash_flow,
+  computeDiscountCurve,
 } from "@/lib/_sbActions";
 import { Button } from "../ui/button";
 import {
@@ -196,6 +197,24 @@ const newTab = [
   },
 ];
 
+const initialDisc = [
+  { id: 1, tenor: 0, rate: 0 },
+  { id: 2, tenor: 0.5, rate: 0 },
+  { id: 3, tenor: 1, rate: 0 },
+  { id: 4, tenor: 2, rate: 0 },
+  { id: 5, tenor: 3, rate: 0 },
+  { id: 6, tenor: 4, rate: 0 },
+  { id: 7, tenor: 5, rate: 0 },
+  { id: 8, tenor: 6, rate: 0 },
+  { id: 9, tenor: 7, rate: 0 },
+  { id: 11, tenor: 8, rate: 0 },
+  { id: 12, tenor: 9, rate: 0 },
+  { id: 13, tenor: 10, rate: 0 },
+  { id: 14, tenor: 15, rate: 0 },
+  { id: 15, tenor: 20, rate: 0 },
+  { id: 16, tenor: 30, rate: 0 },
+];
+
 /* const cashflow = [
   { id: 1, payDate: "2024-06-30", grossPay: 2, discountedPay: 1.96 },
   { id: 2, payDate: "2024-12-30", grossPay: 2, discountedPay: 1.92 },
@@ -219,8 +238,12 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [show, setShow] = useState(false);
   const [yieldcurve, setYieldcurve] = useState<any>();
   const [zcrates, setZcrates] = useState<any>();
+  const [inputCurve, setInputCurve] = useState(initialInputCurve);
+  const [creditSpread, setCreditSpread] = useState(initialCreditSpread);
+
   const [cur, setCur] = useState<any>();
   const [cashflow, setCashflow] = useState<any>();
+  const [disc, setDisc] = useState<any>(initialDisc);
 
   const form = useForm<z.infer<typeof SBSchema>>({
     resolver: zodResolver(SBSchema),
@@ -231,7 +254,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       bondMaturityDate: "2030-07-30",
       couponCurrency: "1",
       //couponRate: "0.00",
-      couponRate: "0.05",
+      couponRate: "5",
       couponFrequency: "1",
       //firstCouponDate: new Date().toISOString().split("T")[0],
       firstCouponDate: "2023-07-30",
@@ -286,6 +309,23 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     //console.log("Value:", values);
     setShow(false);
 
+    /** START COMPUTE DISCOUNT CURVE */
+
+    const dcurve = await computeDiscountCurve(
+      values,
+      disc,
+      yieldcurve,
+      zcrates,
+      inputCurve,
+      creditSpread,
+      curveType
+    );
+    console.log("DCurve", dcurve);
+
+    if (dcurve?.data) setDisc(dcurve?.data);
+
+    /** END COMPUTE DISCOUNT CURVE */
+
     let tmp;
     const result = await computeStraightBondPrice(values);
     if (result?.data) {
@@ -309,7 +349,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
     const yieldToMaturity = await computeYieldToMaturity(values, tmp);
     //console.log("values.price", values.price);
-    console.log("yieldToMaturity?.data", yieldToMaturity?.data);
+    //console.log("yieldToMaturity?.data", yieldToMaturity?.data);
     if (yieldToMaturity?.data) {
       setYieldToMaturity(yieldToMaturity?.data);
       if (forcedBondPrice) {
@@ -333,6 +373,22 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       });
     }
     setCashflow(cashflowFin);
+
+    // Build Discounted curve
+    //console.log("ici");
+
+    /*     const dcurve = await computeDiscountCurve(
+      values,
+      disc,
+      yieldcurve,
+      zcrates,
+      inputCurve,
+      creditSpread,
+      curveType
+    ); */
+    //console.log("DCurve", dcurve);
+
+    // if (dcurve?.data) setDisc(dcurve?.data);
 
     // console.log("cashflowFin.data", cashflowFin);
 
@@ -799,7 +855,8 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                            Discount Curve
+                            <p className="font-semibold">Discount Curve</p>
+                            <DCurve disc={disc} />
                           </div>
                           {curveType === "zcc" && (
                             <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
@@ -817,14 +874,20 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                           )}
                           {curveType === "inc" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <InputCurve />
+                              <InputCurve
+                                inputCurve={inputCurve}
+                                setInputCurve={setInputCurve}
+                              />
                             </div>
                           )}
                           {curveType !== "yic" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
                               {/*                               <p className="font-semibold">Credit Spread</p>
                                */}{" "}
-                              <CreditSpread />
+                              <CreditSpread
+                                creditSpread={creditSpread}
+                                setCreditSpread={setCreditSpread}
+                              />
                             </div>
                           )}
                         </div>
@@ -952,24 +1015,24 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                     right: 14,
                     top: 10,
                   }}
-                  data={newTab}
+                  data={disc}
                 >
-                  <CartesianGrid
+                  {/*                   <CartesianGrid
                     strokeDasharray="4 4"
                     vertical={false}
                     stroke="hsl(var(--muted-foreground))"
                     strokeOpacity={0.5}
-                  />
+                  /> */}
 
                   <XAxis
-                    dataKey="dateOut"
+                    dataKey="tenor"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
                   />
 
-                  <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-
+                  {/*                   <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                   */}
                   <defs>
                     <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
                       <stop
@@ -985,7 +1048,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                     </linearGradient>
                   </defs>
                   <Area
-                    dataKey="usdcdf"
+                    dataKey="rate"
                     type="linear"
                     fill="url(#fillTime)"
                     stroke="var(--color-usdcdf)"
@@ -1102,7 +1165,7 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
 
-            <TableCell className="text-right  mx-0 px-0">{yc.rate}</TableCell>
+            <TableCell className="text-right  mx-0 px-0">{yc.rate} %</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -1110,9 +1173,11 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
   );
 };
 
-const CreditSpread = () => {
-  const [creditSpread, setCreditSpread] = useState(initialCreditSpread);
-
+type CreditSpreadProps = {
+  creditSpread: any;
+  setCreditSpread: (el: any) => void;
+};
+const CreditSpread = ({ creditSpread, setCreditSpread }: CreditSpreadProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -1155,8 +1220,11 @@ const CreditSpread = () => {
   );
 };
 
-const InputCurve = () => {
-  const [inputCurve, setInputCurve] = useState(initialInputCurve);
+type InputCurveProps = {
+  inputCurve: any;
+  setInputCurve: (el: any) => void;
+};
+const InputCurve = ({ inputCurve, setInputCurve }: InputCurveProps) => {
   // console.log("ICIC ", inputCurve);
 
   return (
@@ -1221,7 +1289,7 @@ const UpdateCreditSpread = ({
       <AlertDialogTrigger asChild>
         <div className="flex justify-between">
           <span>{cs?.tenor}</span>
-          <span>{cs?.rate}</span>
+          <span>{cs?.rate} %</span>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -1647,10 +1715,39 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
             <TableCell className="font-medium  mx-0 px-0">
               {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="  mx-0 px-0">{yc.gross}%</TableCell>
+            <TableCell className="  mx-0 px-0">{yc.gross * 100}%</TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
-              {yc.discounted.toFixed(2)}%
+              {yc.discounted.toFixed(2) * 100}%
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+type DCurveProps = {
+  disc: any;
+};
+
+const DCurve = ({ disc }: DCurveProps) => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-left mx-0 pl-0 pr-2">Tenor</TableHead>
+
+          <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {disc?.map((yc: any) => (
+          <TableRow key={yc.id}>
+            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+
+            <TableCell className="text-right  mx-0 px-0">
+              {yc.rate.toFixed(2)} %
             </TableCell>
           </TableRow>
         ))}
