@@ -302,6 +302,7 @@ export const computeDiscountCurve = async (
 
   let s1 = [];
   let s2 = [];
+  const liquidity = data.liquidityPremium ? +data.liquidityPremium : 0;
   let val2 = 0;
   let val3 = 0;
 
@@ -346,7 +347,7 @@ export const computeDiscountCurve = async (
     // + SPREAD CURVE
     //   console.log("creditSpread:", creditSpread);
 
-    const liquidity = data.liquidityPremium ? +data.liquidityPremium : 0;
+    // const liquidity = data.liquidityPremium ? +data.liquidityPremium : 0;
 
     //    console.log("data.liquidityPremium", liquidity);
 
@@ -398,6 +399,43 @@ export const computeDiscountCurve = async (
         c3.push([inputCurve[i].tenor, inputCurve[i].rate]);
       }
     } */
+  } else {
+    if (curveType == "yic") {
+      let c1 = [];
+
+      for (let i = 0; i < yieldcurve?.length; i++) {
+        c1.push([+yieldcurve[i].tenor, +yieldcurve[i].yield]);
+      }
+
+      for (let j = 0; j < disc?.length; j++) {
+        let bodyContent = JSON.stringify({
+          curve: c1,
+          time: disc[j].tenor,
+        });
+
+        try {
+          let response = await fetch(
+            "http://213.165.83.130/metrics/interpolation_lineaire",
+            {
+              method: "POST",
+              body: bodyContent,
+              headers: headersList,
+            }
+          );
+
+          let dataout = await response.json();
+
+          s2.push({
+            id: disc[j].id,
+            tenor: disc[j].tenor,
+            rate: +dataout + liquidity,
+            rateOut: (+dataout + liquidity) * 100,
+          });
+        } catch (error) {}
+      }
+    } else {
+      console.log("cas 2");
+    }
   }
 
   //console.log("S22", s2);
