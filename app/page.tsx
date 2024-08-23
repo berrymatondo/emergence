@@ -68,7 +68,7 @@ const HomePage = () => {
         <Conte />
       </div>
 
-      <div className="max-md:hidden opacity-80 absolute flex justify-center items-center left-1/2 bottom-0 w-1/3  rounded-bl-full">
+      {/*       <div className="max-md:hidden opacity-80 absolute flex justify-center items-center left-1/2 bottom-0 w-1/3  rounded-bl-full">
         <Card
           className="bg-transparent/20 flex flex-col w-3/4 border-none -translate-x-40"
           x-chunk="charts-01-chunk-1"
@@ -176,11 +176,7 @@ const HomePage = () => {
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  /*                       tickFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          weekday: "short",
-                        });
-                      }} */
+
                 />
                 <Line
                   dataKey="resting"
@@ -216,9 +212,9 @@ const HomePage = () => {
             </ChartContainer>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
-      <GiSuspensionBridge
+      {/*       <GiSuspensionBridge
         className="max-md:hidden  text-sky-700 dark:text-sky-500"
         size={80}
       />
@@ -227,7 +223,7 @@ const HomePage = () => {
       <p className="text-xs md:hidden">
         {" "}
         {"          Connecting You To Tomorrow’s Market Leaders"}
-      </p>
+      </p> */}
     </div>
   );
 };

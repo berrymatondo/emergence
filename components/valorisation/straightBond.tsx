@@ -244,6 +244,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [cur, setCur] = useState<any>();
   const [cashflow, setCashflow] = useState<any>();
   const [disc, setDisc] = useState<any>(initialDisc);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof SBSchema>>({
     resolver: zodResolver(SBSchema),
@@ -305,14 +306,14 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   }, [defaultCountry, couponCurrency]);
 
   const procesForm = async (values: z.infer<typeof SBSchema>) => {
-    //setLoading(true);
+    setLoading(true);
     //console.log("Value:", values);
     setShow(false);
 
     /** START COMPUTE DISCOUNT CURVE */
 
     //console.log("zcc tp ", zcrates);
-    console.log("disci tp ", disc);
+    //console.log("disci tp ", disc);
 
     const dcurve = await computeDiscountCurve(
       values,
@@ -323,14 +324,14 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       creditSpread,
       curveType
     );
-    console.log("DCurve", dcurve);
+    console.log("DCurve", dcurve?.data);
 
     if (dcurve?.data) setDisc(dcurve?.data);
 
     /** END COMPUTE DISCOUNT CURVE */
 
     let tmp;
-    const result = await computeStraightBondPrice(values);
+    const result = await computeStraightBondPrice(values, dcurve?.data);
     if (result?.data) {
       setBondPrice(result?.data);
       setPrice(result?.data);
@@ -339,7 +340,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
     //console.log("PRIX", result?.data);
 
-    const interest = await computeAccruedInterest(values);
+    const interest = await computeAccruedInterest(values, dcurve?.data);
     if (interest?.data) setAccruedInterest(interest?.data);
 
     /*     if (forcedBondPrice) {
@@ -350,7 +351,11 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
     //console.log("TMP", tmp);
 
-    const yieldToMaturity = await computeYieldToMaturity(values, tmp);
+    const yieldToMaturity = await computeYieldToMaturity(
+      values,
+      tmp,
+      dcurve?.data
+    );
     //console.log("values.price", values.price);
     //console.log("yieldToMaturity?.data", yieldToMaturity?.data);
     if (yieldToMaturity?.data) {
@@ -362,10 +367,13 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     }
     // console.log("yieldToMaturity?.data", yieldToMaturity?.data);
 
-    const duration = await computeDuration(values);
+    const duration = await computeDuration(values, dcurve?.data);
     if (duration?.data) setDuration(duration?.data);
 
-    const cashflowOut = await computeStraight_bond_cash_flow(values);
+    const cashflowOut = await computeStraight_bond_cash_flow(
+      values,
+      dcurve?.data
+    );
     // console.log("cashflowOut?.data", cashflowOut?.data);
     let cashflowFin = [];
     for (let i = 0; i < cashflowOut?.data?.cash_flow?.length; i++) {
@@ -403,7 +411,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     // console.log("result registerForm:", result);
     //console.log("result registerForm:", result?.success);
 
-    // setLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -903,9 +911,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                   type="submit"
                   className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
                 >
-                  {/*                 {loading ? "En cours de connexion ..." : "Se Connecter"}
-                   */}{" "}
-                  Compute
+                  {loading ? "Computing ..." : "Compute"}
                 </Button>
               </form>
             </Form>
@@ -1020,18 +1026,35 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                   }}
                   data={disc}
                 >
-                  {/*                   <CartesianGrid
+                  <CartesianGrid
                     strokeDasharray="4 4"
                     vertical={false}
                     stroke="hsl(var(--muted-foreground))"
                     strokeOpacity={0.5}
-                  /> */}
+                  />
 
                   <XAxis
                     dataKey="tenor"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
+                    label={{
+                      value: "Tenor",
+                      angle: 0,
+                      position: "insideTop",
+                    }}
+                  />
+
+                  <YAxis
+                    dataKey="rate"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    label={{
+                      value: "Rate(%)",
+                      angle: -90,
+                      position: "insideLeft",
+                    }}
                   />
 
                   {/*                   <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />

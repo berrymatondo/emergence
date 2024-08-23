@@ -5,11 +5,19 @@ import { z } from "zod";
 // Get all users
 type Inputs = z.infer<typeof SBSchema>;
 
-export const computeStraightBondPrice = async (data: Inputs) => {
+export const computeStraightBondPrice = async (data: Inputs, curve: any) => {
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
   };
+
+  //console.log("curve", curve);
+  let discount_curve = [];
+  for (let i = 0; i < curve.length; i++) {
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+  }
+
+  //console.log("discount_curve", discount_curve);
 
   /*   const maturity_date = "2030-01-01";
   const payment_frequency = 1;
@@ -34,13 +42,14 @@ export const computeStraightBondPrice = async (data: Inputs) => {
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
-    discount_curve: [
+    /*     discount_curve: [
       [0.5, 0.02],
       [1.0, 0.025],
       [1.5, 0.03],
       [2.0, 0.035],
       [2.5, 0.04],
-    ],
+    ], */
+    discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
     notional: data.notional,
   });
@@ -67,7 +76,7 @@ export const computeStraightBondPrice = async (data: Inputs) => {
   } catch (error) {}
 };
 
-export const computeAccruedInterest = async (data: Inputs) => {
+export const computeAccruedInterest = async (data: Inputs, curve: any) => {
   //console.log("datax", data);
 
   let headersList = {
@@ -75,19 +84,18 @@ export const computeAccruedInterest = async (data: Inputs) => {
     "Content-Type": "application/json",
   };
 
+  let discount_curve = [];
+  for (let i = 0; i < curve.length; i++) {
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+  }
+
   let bodyContent = JSON.stringify({
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
-    discount_curve: [
-      [0.5, 0.02],
-      [1.0, 0.025],
-      [1.5, 0.03],
-      [2.0, 0.035],
-      [2.5, 0.04],
-    ],
+    discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
   });
 
@@ -116,13 +124,22 @@ export const computeAccruedInterest = async (data: Inputs) => {
   } catch (error) {}
 };
 
-export const computeYieldToMaturity = async (data: Inputs, tmp: number) => {
+export const computeYieldToMaturity = async (
+  data: Inputs,
+  tmp: number,
+  curve: any
+) => {
   //console.log("datax", data);
 
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
   };
+
+  let discount_curve = [];
+  for (let i = 0; i < curve.length; i++) {
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+  }
   //console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
 
   let bodyContent = JSON.stringify({
@@ -138,13 +155,7 @@ export const computeYieldToMaturity = async (data: Inputs, tmp: number) => {
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
-    discount_curve: [
-      [0.5, 0.02],
-      [1.0, 0.025],
-      [1.5, 0.03],
-      [2.0, 0.035],
-      [2.5, 0.04],
-    ],
+    discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
   });
 
@@ -173,7 +184,7 @@ export const computeYieldToMaturity = async (data: Inputs, tmp: number) => {
   } catch (error) {}
 };
 
-export const computeDuration = async (data: Inputs) => {
+export const computeDuration = async (data: Inputs, curve: any) => {
   //console.log("datax", data);
 
   let headersList = {
@@ -181,19 +192,18 @@ export const computeDuration = async (data: Inputs) => {
     "Content-Type": "application/json",
   };
 
+  let discount_curve = [];
+  for (let i = 0; i < curve.length; i++) {
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+  }
+
   let bodyContent = JSON.stringify({
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
-    discount_curve: [
-      [0.5, 0.02],
-      [1.0, 0.025],
-      [1.5, 0.03],
-      [2.0, 0.035],
-      [2.5, 0.04],
-    ],
+    discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
   });
 
@@ -222,7 +232,10 @@ export const computeDuration = async (data: Inputs) => {
   } catch (error) {}
 };
 
-export const computeStraight_bond_cash_flow = async (data: Inputs) => {
+export const computeStraight_bond_cash_flow = async (
+  data: Inputs,
+  curve: any
+) => {
   //console.log("datax", data);
 
   let headersList = {
@@ -230,19 +243,18 @@ export const computeStraight_bond_cash_flow = async (data: Inputs) => {
     "Content-Type": "application/json",
   };
 
+  let discount_curve = [];
+  for (let i = 0; i < curve.length; i++) {
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+  }
+
   let bodyContent = JSON.stringify({
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
-    discount_curve: [
-      [0.5, 0.02],
-      [1.0, 0.025],
-      [1.5, 0.03],
-      [2.0, 0.035],
-      [2.5, 0.04],
-    ],
+    discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
   });
 
