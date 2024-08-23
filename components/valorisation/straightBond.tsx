@@ -207,12 +207,12 @@ const initialDisc = [
   { id: 7, tenor: 5, rate: 0 },
   { id: 8, tenor: 6, rate: 0 },
   { id: 9, tenor: 7, rate: 0 },
-  { id: 11, tenor: 8, rate: 0 },
-  { id: 12, tenor: 9, rate: 0 },
-  { id: 13, tenor: 10, rate: 0 },
-  { id: 14, tenor: 15, rate: 0 },
-  { id: 15, tenor: 20, rate: 0 },
-  { id: 16, tenor: 30, rate: 0 },
+  { id: 10, tenor: 8, rate: 0 },
+  { id: 11, tenor: 9, rate: 0 },
+  { id: 12, tenor: 10, rate: 0 },
+  { id: 13, tenor: 15, rate: 0 },
+  { id: 14, tenor: 20, rate: 0 },
+  { id: 15, tenor: 30, rate: 0 },
 ];
 
 /* const cashflow = [
@@ -310,6 +310,9 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     setShow(false);
 
     /** START COMPUTE DISCOUNT CURVE */
+
+    //console.log("zcc tp ", zcrates);
+    console.log("disci tp ", disc);
 
     const dcurve = await computeDiscountCurve(
       values,
@@ -855,8 +858,8 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                            <p className="font-semibold">Discount Curve</p>
-                            <DCurve disc={disc} />
+                            {/* <p className="font-semibold">Discount Curve</p> */}
+                            <DCurve disc={disc} setDisc={setDisc} />
                           </div>
                           {curveType === "zcc" && (
                             <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
@@ -1315,8 +1318,8 @@ const UpdateCreditSpread = ({
             //console.log("Before update: ", creditSpread[objIndex]);
 
             //Update object's name property.
-            creditSpread[objIndex].tenor = tenor;
-            creditSpread[objIndex].rate = rate;
+            creditSpread[objIndex].tenor = +tenor;
+            creditSpread[objIndex].rate = +rate;
 
             creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
             //Log object to console again.
@@ -1435,8 +1438,8 @@ const UpdateInputCurve = ({
             //console.log("Before update: ", creditSpread[objIndex]);
 
             //Update object's name property.
-            inputCurve[objIndex].tenor = tenor;
-            inputCurve[objIndex].rate = rate;
+            inputCurve[objIndex].tenor = +tenor;
+            inputCurve[objIndex].rate = +rate;
 
             inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
             //Log object to console again.
@@ -1539,8 +1542,8 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
             //Find index of specific object using findIndex method.
             inputCurve.push({
               id: inputCurve.length + 1,
-              tenor: tenor,
-              rate: rate,
+              tenor: +tenor,
+              rate: +rate,
             });
             /*            const objIndex = inputCurve.findIndex(
               (obj: any) => obj.id == ic.id
@@ -1639,8 +1642,8 @@ const AddCreditSpread = ({
             e.preventDefault();
             creditSpread.push({
               id: creditSpread.length + 1,
-              tenor: tenor,
-              rate: rate,
+              tenor: +tenor,
+              rate: +rate,
             });
 
             creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
@@ -1729,29 +1732,258 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
 
 type DCurveProps = {
   disc: any;
+  setDisc: (el: any) => void;
 };
 
-const DCurve = ({ disc }: DCurveProps) => {
+const DCurve = ({ disc, setDisc }: DCurveProps) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-left mx-0 pl-0 pr-2">Tenor</TableHead>
-
-          <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {disc?.map((yc: any) => (
-          <TableRow key={yc.id}>
-            <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
-
-            <TableCell className="text-right  mx-0 px-0">
-              {yc.rate.toFixed(2)} %
-            </TableCell>
+    <div>
+      <div className="flex items-center justify-between">
+        <p className="font-semibold">Discount Curve</p>
+        <AddDisc disc={disc} openDialog={false} />
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-left mx-0 pl-0 pr-2">
+              {" "}
+              <p className="flex justify-between">
+                <span>Tenor</span>
+                <span> Rate</span>
+              </p>
+            </TableHead>
+            {/*             <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
+             */}{" "}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {disc?.map((yc: any) => (
+            <TableRow key={yc.id}>
+              {/*               <TableCell className="font-medium  mx-0 px-0">
+                {yc.tenor}
+              </TableCell> */}
+
+              <TableCell className="text-right  mx-0 px-0">
+                {/*                 {yc.rate.toFixed(2)} %
+
+ */}
+                <UpdateDCurve
+                  disc={disc}
+                  dc={yc}
+                  openDialog={false}
+                  setDisc={setDisc}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+// ADD ZC
+type AddDiscProps = {
+  disc: any;
+
+  openDialog: boolean;
+};
+
+const AddDisc = ({ disc, openDialog }: AddDiscProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(0);
+  const [rate, setRate] = useState(0);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <MdAdd className="bg-sky-600 rounded-full" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will add a data into the credit spread curve.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            disc.push({
+              id: disc.length + 1,
+              tenor: +tenor,
+              rate: 0,
+            });
+
+            disc.sort((a: any, b: any) => a.tenor - b.tenor);
+
+            //console.log("DISC", disc);
+
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              {/*               <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div> */}
+            </div>
+            <div className="flex justify-between">
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+//Update DCurve
+type UpdateDCurveProps = {
+  disc: any;
+  dc: any;
+  openDialog: boolean;
+  setDisc: (el: any) => void;
+};
+const UpdateDCurve = ({
+  disc,
+  dc,
+  openDialog,
+  setDisc,
+}: //setCreditSpread,
+UpdateDCurveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(dc.tenor);
+  const [rate, setRate] = useState(dc.rate);
+  //console.log("DC: ", dc);
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex justify-between">
+          <span>{dc?.tenor}</span>
+          <span>{dc?.rate.toFixed(2)} %</span>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the credit spread.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            //console.log("disc", disc);
+            //console.log("dc.id", dc.id);
+
+            const objIndex = disc.findIndex((obj: any) => obj.id == dc.id);
+
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            disc[objIndex].tenor = +tenor;
+            disc[objIndex].rate = +rate;
+
+            disc.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", creditSpread);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              {/*               <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div> */}
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  disc = disc
+                    .filter((el: any) => el.id != dc.id)
+                    .sort((a: any, b: any) => a.tenor - b.tenor);
+
+                  //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+                  //Log object to console again.
+                  // console.log("After update: ", creditSpread[objIndex]);
+                  setDisc(disc);
+                  // console.log("After update: ", creditSpread);
+                  setOpen(!open);
+                }}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </div>
+          {/*           <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter> */}
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

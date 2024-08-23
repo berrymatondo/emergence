@@ -281,7 +281,7 @@ export const computeDiscountCurve = async (
   creditSpread: any,
   curveType: any
 ) => {
-  //console.log("datax", data);
+  //console.log("discdisc", disc);
 
   let headersList = {
     Accept: "*/*",
@@ -298,14 +298,20 @@ export const computeDiscountCurve = async (
     let c2 = [];
     // ZC CURVE
     for (let i = 0; i < zcrates?.length; i++) {
-      c1.push([zcrates[i].tenor, zcrates[i].rate]);
+      c1.push([+zcrates[i].tenor, +zcrates[i].rate]);
     }
+
+    //console.log("C1", c1);
+    //console.log("disc", disc);
+    //console.log("disc.lenhtg", disc?.length);
 
     for (let j = 0; j < disc?.length; j++) {
       let bodyContent = JSON.stringify({
         curve: c1,
         time: disc[j].tenor,
       });
+
+      //console.log("content", { curve: c1, time: disc[j].tenor });
 
       try {
         let response = await fetch(
@@ -322,6 +328,8 @@ export const computeDiscountCurve = async (
         s1.push({ tenor: disc[j].tenor, rate: dataout });
       } catch (error) {}
     }
+
+    //console.log("S1", s1);
 
     // + SPREAD CURVE
     //   console.log("creditSpread:", creditSpread);
@@ -355,12 +363,13 @@ export const computeDiscountCurve = async (
         let dataout = await response.json();
 
         s2.push({
+          id: disc[j].id,
           tenor: disc[j].tenor,
           rate: +dataout + s1[j].rate + liquidity,
           rateOut: (+dataout + s1[j].rate + liquidity) * 100,
         });
 
-        // console.log("S2", s2);
+        //console.log("S2", s2);
       } catch (error) {}
     }
     /* 
