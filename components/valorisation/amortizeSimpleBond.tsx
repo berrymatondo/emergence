@@ -266,7 +266,7 @@ const AmortizedSimpleBond = ({
     setShow(false);
 
     let tmp;
-    const result = await computeStraightBondPrice(values);
+    const result = await computeStraightBondPrice(values, []);
     if (result?.data) {
       setBondPrice(result?.data);
       setPrice(result?.data);
@@ -275,7 +275,7 @@ const AmortizedSimpleBond = ({
 
     //console.log("PRIX", result?.data);
 
-    const interest = await computeAccruedInterest(values);
+    const interest = await computeAccruedInterest(values, []);
     if (interest?.data) setAccruedInterest(interest?.data);
 
     /*     if (forcedBondPrice) {
@@ -286,7 +286,7 @@ const AmortizedSimpleBond = ({
 
     //console.log("TMP", tmp);
 
-    const yieldToMaturity = await computeYieldToMaturity(values, tmp);
+    const yieldToMaturity = await computeYieldToMaturity(values, tmp, []);
     //console.log("values.price", values.price);
     console.log("yieldToMaturity?.data", yieldToMaturity?.data);
     if (yieldToMaturity?.data) {
@@ -298,7 +298,7 @@ const AmortizedSimpleBond = ({
     }
     console.log("yieldToMaturity?.data", yieldToMaturity?.data);
 
-    const duration = await computeDuration(values);
+    const duration = await computeDuration(values, []);
     if (duration?.data) setDuration(duration?.data);
 
     /*     if (result?.error) {
