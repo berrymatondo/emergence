@@ -1744,7 +1744,7 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
             <TableCell className="  mx-0 px-0">{yc.gross * 100}%</TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
-              {yc.discounted.toFixed(2) * 100}%
+              {(yc.discounted * 100).toFixed(2)}%
             </TableCell>
           </TableRow>
         ))}
