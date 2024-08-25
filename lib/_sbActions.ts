@@ -5,6 +5,51 @@ import { z } from "zod";
 // Get all users
 type Inputs = z.infer<typeof SBSchema>;
 
+export const computeGeneralStraightBond = async (data: Inputs, curve: any) => {
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+  };
+
+  //console.log("curve", curve);
+  let discount_curve = [];
+  for (let i = 0; i < curve.length; i++) {
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+  }
+
+  let bodyContent = JSON.stringify({
+    maturity_date: data.bondMaturityDate,
+    payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
+    coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
+    first_coupon_date: data.firstCouponDate,
+    valuation_date: data.valuationDate,
+    discount_curve: discount_curve,
+    day_count_convention: data.couponBasis,
+    notional: data.notional,
+  });
+
+  //console.log("X", bodyContent);
+
+  //BOND PRICE
+  try {
+    let response = await fetch(
+      "http://213.165.83.130/valuation/straight_bond_valuation",
+      {
+        method: "POST",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+
+    let data = await response.json();
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error) {}
+};
+
 export const computeStraightBondPrice = async (data: Inputs, curve: any) => {
   let headersList = {
     Accept: "*/*",
@@ -423,33 +468,6 @@ export const computeDiscountCurve = async (
 
         //  console.log("S2", s2);
       } catch (error) {}
-
-      /*       for (let j = 0; j < disc?.length; j++) {
-        let bodyContent = JSON.stringify({
-          curve: c1,
-          time: disc[j].tenor,
-        });
-
-        try {
-          let response = await fetch(
-            "http://213.165.83.130/metrics/interpolation_lineaire",
-            {
-              method: "POST",
-              body: bodyContent,
-              headers: headersList,
-            }
-          );
-
-          let dataout = await response.json();
-
-          s2.push({
-            id: disc[j].id,
-            tenor: disc[j].tenor,
-            rate: +dataout + liquidity,
-            rateOut: (+dataout + liquidity) * 100,
-          });
-        } catch (error) {}
-      } */
     } else {
       // Compute Input curve valuation
       console.log("inputCurve", inputCurve);
@@ -531,44 +549,4 @@ export const computeDiscountCurve = async (
     success: true,
     data: s2,
   };
-
-  /*   let bodyContent = JSON.stringify({
-    maturity_date: data.bondMaturityDate,
-    payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
-    coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
-    first_coupon_date: data.firstCouponDate,
-    valuation_date: data.valuationDate,
-    discount_curve: [
-      [0.5, 0.02],
-      [1.0, 0.025],
-      [1.5, 0.03],
-      [2.0, 0.035],
-      [2.5, 0.04],
-    ],
-    day_count_convention: data.couponBasis,
-  }); */
-
-  //console.log("X", bodyContent);
-
-  //BOND PRICE
-  /*   try {
-    let response = await fetch(
-      "http://213.165.83.130/valuation/straight_bond_cash_flow",
-      {
-        method: "POST",
-        body: bodyContent,
-        headers: headersList,
-      }
-    );
- */
-  //  console.log("response", response);
-
-  // let dataout = await response.json();
-  //console.log("DATA", dataout);
-
-  /*     return {
-      success: true,
-      data: dataout,
-    };
-  } catch (error) {} */
 };

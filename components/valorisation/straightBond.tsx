@@ -29,6 +29,7 @@ import {
   computeYieldToMaturity,
   computeStraight_bond_cash_flow,
   computeDiscountCurve,
+  computeGeneralStraightBond,
 } from "@/lib/_sbActions";
 import { Button } from "../ui/button";
 import {
@@ -241,8 +242,6 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [inputCurve, setInputCurve] = useState(initialInputCurve);
   const [creditSpread, setCreditSpread] = useState<any>(initialCreditSpread);
 
-  console.log("creditSpread", creditSpread);
-
   const [cur, setCur] = useState<any>();
   const [cashflow, setCashflow] = useState<any>();
   const [disc, setDisc] = useState<any>(initialDisc);
@@ -317,7 +316,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     //console.log("zcc tp ", zcrates);
     //console.log("disci tp ", disc);
 
-    console.log("creditSpread", creditSpread);
+    //console.log("creditSpread", creditSpread);
 
     const dcurve = await computeDiscountCurve(
       values,
@@ -334,18 +333,42 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
     /** END COMPUTE DISCOUNT CURVE */
 
+    /** COMPUTE Straigth bond price, cashflow, duration and accrued interest */
+
     let tmp;
+    const global = await computeGeneralStraightBond(values, dcurve?.data);
+    if (global?.data) {
+      //console.log("global", global?.data);
+      setBondPrice(global?.data.price);
+      setPrice(global?.data.price);
+      setAccruedInterest(global?.data.accrued_interest);
+      setDuration(global?.data.duration);
+
+      let cashflowFin = [];
+      for (let i = 0; i < global?.data?.cash_flow?.length; i++) {
+        cashflowFin.push({
+          gross: global?.data?.cash_flow[i],
+          date: global?.data?.date[i],
+          discounted: global?.data?.discounted_cash_flow[i],
+        });
+      }
+      setCashflow(cashflowFin);
+
+      tmp = global?.data.price;
+    }
+
+    /*     let tmp;
     const result = await computeStraightBondPrice(values, dcurve?.data);
     if (result?.data) {
       setBondPrice(result?.data);
       setPrice(result?.data);
       tmp = result?.data;
-    }
+    } */
 
     //console.log("PRIX", result?.data);
 
-    const interest = await computeAccruedInterest(values, dcurve?.data);
-    if (interest?.data) setAccruedInterest(interest?.data);
+    /* const interest = await computeAccruedInterest(values, dcurve?.data);
+    if (interest?.data) setAccruedInterest(interest?.data); */
 
     /*     if (forcedBondPrice) {
       console.log("values.price", values.price);
@@ -371,14 +394,14 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     }
     // console.log("yieldToMaturity?.data", yieldToMaturity?.data);
 
-    const duration = await computeDuration(values, dcurve?.data);
-    if (duration?.data) setDuration(duration?.data);
+    /*  const duration = await computeDuration(values, dcurve?.data);
+    if (duration?.data) setDuration(duration?.data); */
 
-    const cashflowOut = await computeStraight_bond_cash_flow(
+    /*     const cashflowOut = await computeStraight_bond_cash_flow(
       values,
       dcurve?.data
-    );
-    // console.log("cashflowOut?.data", cashflowOut?.data);
+    ); */
+    /*     console.log("cashflowOut?.data", cashflowOut?.data);
     let cashflowFin = [];
     for (let i = 0; i < cashflowOut?.data?.cash_flow?.length; i++) {
       cashflowFin.push({
@@ -387,7 +410,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
         discounted: cashflowOut?.data?.discounted_cash_flow[i],
       });
     }
-    setCashflow(cashflowFin);
+    setCashflow(cashflowFin); */
 
     // Build Discounted curve
     //console.log("ici");
