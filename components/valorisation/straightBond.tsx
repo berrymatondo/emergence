@@ -239,7 +239,9 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [yieldcurve, setYieldcurve] = useState<any>();
   const [zcrates, setZcrates] = useState<any>();
   const [inputCurve, setInputCurve] = useState(initialInputCurve);
-  const [creditSpread, setCreditSpread] = useState(initialCreditSpread);
+  const [creditSpread, setCreditSpread] = useState<any>(initialCreditSpread);
+
+  console.log("creditSpread", creditSpread);
 
   const [cur, setCur] = useState<any>();
   const [cashflow, setCashflow] = useState<any>();
@@ -315,6 +317,8 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     //console.log("zcc tp ", zcrates);
     //console.log("disci tp ", disc);
 
+    console.log("creditSpread", creditSpread);
+
     const dcurve = await computeDiscountCurve(
       values,
       disc,
@@ -324,7 +328,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       creditSpread,
       curveType
     );
-    console.log("DCurve", dcurve?.data);
+    //console.log("DCurve", dcurve?.data);
 
     if (dcurve?.data) setDisc(dcurve?.data);
 
