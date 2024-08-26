@@ -378,15 +378,16 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
     //console.log("TMP", tmp);
 
-    const yieldToMaturity = await computeYieldToMaturity(
+    const yieldToMaturit = await computeYieldToMaturity(
       values,
       tmp,
       dcurve?.data
     );
     //console.log("values.price", values.price);
-    //console.log("yieldToMaturity?.data", yieldToMaturity?.data);
-    if (yieldToMaturity?.data) {
-      setYieldToMaturity(yieldToMaturity?.data);
+
+    //console.log("yieldToMaturity?.data ", yieldToMaturit?.data);
+    if (yieldToMaturit?.data) {
+      setYieldToMaturity(yieldToMaturit?.data);
       if (forcedBondPrice) {
         setBondPrice(values.price ? +values.price : 0);
         setShow(true);

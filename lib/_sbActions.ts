@@ -192,9 +192,9 @@ export const computeYieldToMaturity = async (
 
     price: data.forcedBondPrice
       ? data.price
-        ? +data.price
+        ? +data.price / 100
         : undefined
-      : +tmp * 100,
+      : +tmp,
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
