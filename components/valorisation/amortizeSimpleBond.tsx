@@ -22,15 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ASBSchema } from "@/lib/schemas";
-import {
-  computeAccruedInterest,
-  computeDuration,
-  computeStraightBondPrice,
-  computeYieldToMaturity,
-  computeStraight_bond_cash_flow,
-  computeDiscountCurve,
-  computeGeneralStraightBond,
-} from "@/lib/_sbActions";
+import { computeDiscountCurve } from "@/lib/_sbActions";
 import { Button } from "../ui/button";
 import {
   Select,
@@ -85,7 +77,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { computeGeneralAmortizedBond } from "@/lib/_asbActions";
+import {
+  computeGeneralAmortizedBond,
+  computeAmortizedYieldToMaturity,
+} from "@/lib/_asbActions";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -102,7 +97,7 @@ const initialCreditSpread = [
   { id: 12, tenor: 30.0, rate: 0.0 },
 ];
 
-const initialInputCurve = [
+/* const initialInputCurve = [
   { id: 1, tenor: 0, rate: 0.0 },
   { id: 2, tenor: 0.5, rate: 0.0 },
   { id: 3, tenor: 1.0, rate: 0.0 },
@@ -115,7 +110,8 @@ const initialInputCurve = [
   { id: 10, tenor: 15.0, rate: 0.0 },
   { id: 11, tenor: 20.0, rate: 0.0 },
   { id: 12, tenor: 30.0, rate: 0.0 },
-];
+]; */
+const initialInputCurve: any[] = [];
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -263,6 +259,8 @@ const AmortizedSimpleBond = ({
       amoSchedules
     );
     if (global?.data) {
+      console.log("global?.data", global?.data);
+
       let ttt = values?.price ? +values?.price : 0;
       const prix = values.forcedBondPrice
         ? ttt.toFixed(2)
@@ -302,10 +300,11 @@ const AmortizedSimpleBond = ({
       tmp = global?.data.price;
     }
 
-    const yieldToMaturit = await computeYieldToMaturity(
+    const yieldToMaturit = await computeAmortizedYieldToMaturity(
       values,
       tmp,
-      dcurve?.data
+      dcurve?.data,
+      amoSchedules
     );
     //console.log("values.price", values.price);
 
@@ -1771,7 +1770,9 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
             <TableCell className="font-medium  mx-0 px-0">
               {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="  mx-0 px-0">{yc.gross * 100}%</TableCell>
+            <TableCell className="  mx-0 px-0">
+              {(yc.gross * 100).toFixed(2)}%
+            </TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
               {(yc.discounted * 100).toFixed(2)}%

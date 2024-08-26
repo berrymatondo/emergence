@@ -96,7 +96,7 @@ const initialCreditSpread = [
   { id: 12, tenor: 30.0, rate: 0.0 },
 ];
 
-const initialInputCurve = [
+/* const initialInputCurve = [
   { id: 1, tenor: 0, rate: 0.0 },
   { id: 2, tenor: 0.5, rate: 0.0 },
   { id: 3, tenor: 1.0, rate: 0.0 },
@@ -109,7 +109,9 @@ const initialInputCurve = [
   { id: 10, tenor: 15.0, rate: 0.0 },
   { id: 11, tenor: 20.0, rate: 0.0 },
   { id: 12, tenor: 30.0, rate: 0.0 },
-];
+]; */
+
+const initialInputCurve: any[] = [];
 
 const newTab = [
   { date: "2024-04-02", usdcdf: 2780, usdeur: 0.931, dateOut: "Apr 2" },
@@ -1862,7 +1864,9 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
             <TableCell className="font-medium  mx-0 px-0">
               {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="  mx-0 px-0">{yc.gross * 100}%</TableCell>
+            <TableCell className="  mx-0 px-0">
+              {(yc.gross * 100).toFixed(2)}%
+            </TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
               {(yc.discounted * 100).toFixed(2)}%
