@@ -44,3 +44,15 @@ export const getCurrency = async (id: number) => {
     };
   } catch (error) {}
 };
+
+// Get amortization schedule
+export const getAllAmoSchedule = async () => {
+  try {
+    const ycs = await prisma.amortizationSchedule.findMany({});
+
+    return {
+      success: true,
+      data: ycs,
+    };
+  } catch (error) {}
+};

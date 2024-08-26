@@ -209,7 +209,7 @@ export const computeYieldToMaturity = async (
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/straight_bond_yield_to_maturity",
+      "http://213.165.83.130/valuation/amortized_bond_yield_to_maturity",
       {
         method: "POST",
         body: bodyContent,
@@ -400,7 +400,7 @@ export const computeDiscountCurve = async (
     });
 
     try {
-      console.log("ici");
+      // console.log("ici");
 
       let response2 = await fetch(
         "http://213.165.83.130/metrics/interpolation_lineaire_multiple",

@@ -74,6 +74,12 @@ import {
 import { MdAdd, MdDelete, MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { getAllYC, getAllZC } from "@/lib/_ycAction";
 import { getCurrency } from "@/lib/_otherActions";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -377,7 +383,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
           setNotional(0);
         }
       } else {
-        console.log("values?.notional", values?.notional);
+        // console.log("values?.notional", values?.notional);
         setNotional(0);
       }
 
@@ -527,7 +533,16 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>Currency</FormLabel>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <FormLabel>Currency</FormLabel>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Principal / Coupon Currency</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                               {/*                         <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}

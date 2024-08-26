@@ -1,14 +1,23 @@
 import ValChoice1 from "@/components/valorisation/valChoice1";
-import { getAllCountries, getAllCurrencies } from "@/lib/_otherActions";
+import {
+  getAllAmoSchedule,
+  getAllCountries,
+  getAllCurrencies,
+} from "@/lib/_otherActions";
 import React, { useState } from "react";
 
 const SB1Page = async () => {
   const countries = await getAllCountries();
   const currencies = await getAllCurrencies();
+  const schedules = await getAllAmoSchedule();
 
   return (
     <div className="">
-      <ValChoice1 countries={countries?.data} currencies={currencies?.data} />
+      <ValChoice1
+        countries={countries?.data}
+        currencies={currencies?.data}
+        schedules={schedules?.data}
+      />
     </div>
   );
 };

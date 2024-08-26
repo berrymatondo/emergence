@@ -190,3 +190,16 @@ model Currency{
 
   @@map("currencies")
 }
+
+
+
+model AmortizationSchedule{
+  id Int @id @default(autoincrement())
+  date String
+  rate Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("amortizationschedule")
+}

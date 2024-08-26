@@ -27,6 +27,9 @@ import {
   computeDuration,
   computeStraightBondPrice,
   computeYieldToMaturity,
+  computeStraight_bond_cash_flow,
+  computeDiscountCurve,
+  computeGeneralStraightBond,
 } from "@/lib/_sbActions";
 import { Button } from "../ui/button";
 import {
@@ -38,8 +41,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Country, CountryList, DataTypeList } from "@prisma/client";
-import { CouponBasisList, CouponFreqList, CurrencyList } from "@/lib/enums";
+import { Country, CountryList, Currency, DataTypeList } from "@prisma/client";
+import {
+  AmortizedCouponFreqList,
+  CouponBasisList,
+  CouponFreqList,
+  CurrencyList,
+} from "@/lib/enums";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import GeneralLayout from "../generalLayout";
@@ -69,7 +77,15 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { MdAdd, MdDelete, MdOutlineRemoveCircleOutline } from "react-icons/md";
-import { getAllYC } from "@/lib/_ycAction";
+import { getAllYC, getAllZC } from "@/lib/_ycAction";
+import { getCurrency } from "@/lib/_otherActions";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { computeGeneralAmortizedBond } from "@/lib/_asbActions";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -101,117 +117,35 @@ const initialInputCurve = [
   { id: 12, tenor: 30.0, rate: 0.0 },
 ];
 
-const newTab = [
-  { date: "2024-04-02", usdcdf: 2780, usdeur: 0.931, dateOut: "Apr 2" },
-  { date: "2024-04-03", usdcdf: 2780, usdeur: 0.929, dateOut: "Apr 3" },
-  { date: "2024-04-04", usdcdf: 2780, usdeur: 0.923, dateOut: "Apr 4" },
-  { date: "2024-04-05", usdcdf: 2775, usdeur: 0.923, dateOut: "Apr 5" },
-  { date: "2024-04-08", usdcdf: 2775, usdeur: 0.923, dateOut: "Apr 8" },
-  { date: "2024-04-09", usdcdf: 2760, usdeur: 0.921, dateOut: "Apr 9" },
-  {
-    date: "2024-04-10",
-    usdcdf: 2760,
-    usdeur: 0.921,
-    dateOut: "Apr 10",
-  },
-  {
-    date: "2024-04-11",
-    usdcdf: 2763,
-    usdeur: 0.931,
-    dateOut: "Apr 11",
-  },
-  {
-    date: "2024-04-12",
-    usdcdf: 2763,
-    usdeur: 0.932,
-    dateOut: "Apr 12",
-  },
-  {
-    date: "2024-04-15",
-    usdcdf: 2760,
-    usdeur: 0.939,
-    dateOut: "Apr 15",
-  },
-  {
-    date: "2024-04-16",
-    usdcdf: 2760,
-    usdeur: 0.941,
-    dateOut: "Apr 16",
-  },
-  {
-    date: "2024-04-17",
-    usdcdf: 2760,
-    usdeur: 0.941,
-    dateOut: "Apr 17",
-  },
-  {
-    date: "2024-04-18",
-    usdcdf: 2755,
-    usdeur: 0.937,
-    dateOut: "Apr 18",
-  },
-  {
-    date: "2024-04-19",
-    usdcdf: 2781,
-    usdeur: 0.939,
-    dateOut: "Apr 19",
-  },
-  {
-    date: "2024-04-22",
-    usdcdf: 2781,
-    usdeur: 0.938,
-    dateOut: "Apr 22",
-  },
-  {
-    date: "2024-04-23",
-    usdcdf: 2792,
-    usdeur: 0.932,
-    dateOut: "Apr 23",
-  },
-  {
-    date: "2024-04-24",
-    usdcdf: 2780,
-    usdeur: 0.932,
-    dateOut: "Apr 24",
-  },
-  {
-    date: "2024-04-25",
-    usdcdf: 2780,
-    usdeur: 0.935,
-    dateOut: "Apr 25",
-  },
-  {
-    date: "2024-04-26",
-    usdcdf: 2770,
-    usdeur: 0.934,
-    dateOut: "Apr 26",
-  },
-  {
-    date: "2024-04-27",
-    usdcdf: 2783.379883,
-    usdeur: 0.939,
-    dateOut: "Apr 27",
-  },
+const initialDisc = [
+  { id: 1, tenor: 0, rate: 0 },
+  { id: 2, tenor: 0.5, rate: 0 },
+  { id: 3, tenor: 1, rate: 0 },
+  { id: 4, tenor: 2, rate: 0 },
+  { id: 5, tenor: 3, rate: 0 },
+  { id: 6, tenor: 4, rate: 0 },
+  { id: 7, tenor: 5, rate: 0 },
+  { id: 8, tenor: 6, rate: 0 },
+  { id: 9, tenor: 7, rate: 0 },
+  { id: 10, tenor: 8, rate: 0 },
+  { id: 11, tenor: 9, rate: 0 },
+  { id: 12, tenor: 10, rate: 0 },
+  { id: 13, tenor: 15, rate: 0 },
+  { id: 14, tenor: 20, rate: 0 },
+  { id: 15, tenor: 30, rate: 0 },
 ];
 
-const cashflow = [
-  { id: 1, payDate: "2024-06-30", grossPay: 2, discountedPay: 1.96 },
-  { id: 2, payDate: "2024-12-30", grossPay: 2, discountedPay: 1.92 },
-  { id: 3, payDate: "2025-06-30", grossPay: 2, discountedPay: 1.88 },
-  { id: 4, payDate: "2025-12-30", grossPay: 2, discountedPay: 1.84 },
-  { id: 5, payDate: "2026-06-30", grossPay: 2, discountedPay: 1.8 },
-  { id: 6, payDate: "2026-12-30", grossPay: 2, discountedPay: 1.76 },
-];
-
-type AmortizedSimpleBondProps = {
+type AmortizedSimpleBond = {
   countries: any;
   currencies: any;
+  schedules: any;
 };
 
 const AmortizedSimpleBond = ({
   countries,
   currencies,
-}: AmortizedSimpleBondProps) => {
+  schedules,
+}: AmortizedSimpleBond) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);
@@ -219,6 +153,18 @@ const AmortizedSimpleBond = ({
   const [duration, setDuration] = useState(0);
   const [show, setShow] = useState(false);
   const [yieldcurve, setYieldcurve] = useState<any>();
+  const [zcrates, setZcrates] = useState<any>();
+  const [inputCurve, setInputCurve] = useState(initialInputCurve);
+  const [creditSpread, setCreditSpread] = useState<any>(initialCreditSpread);
+
+  const [cur, setCur] = useState<any>();
+  const [cashflow, setCashflow] = useState<any>();
+  const [disc, setDisc] = useState<any>(initialDisc);
+  const [loading, setLoading] = useState(false);
+  const [notional, setNotional] = useState(0);
+  const [amoSchedules, setAmoSchedules] = useState(schedules);
+
+  //console.log("amoSchedules", amoSchedules);
 
   const form = useForm<z.infer<typeof ASBSchema>>({
     resolver: zodResolver(ASBSchema),
@@ -227,9 +173,9 @@ const AmortizedSimpleBond = ({
       price: "0",
       //bondMaturityDate: new Date().toISOString().split("T")[0],
       bondMaturityDate: "2030-07-30",
-      couponCurrency: "USD",
+      couponCurrency: "1",
       //couponRate: "0.00",
-      couponRate: "0.05",
+      couponRate: "5",
       couponFrequency: "1",
       //firstCouponDate: new Date().toISOString().split("T")[0],
       firstCouponDate: "2023-07-30",
@@ -250,6 +196,7 @@ const AmortizedSimpleBond = ({
   const forcedBondPrice = form.watch("forcedBondPrice");
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
+  const couponCurrency = form.watch("couponCurrency");
 
   useEffect(() => {
     const fetchYC = async (id: any) => {
@@ -258,61 +205,125 @@ const AmortizedSimpleBond = ({
       setYieldcurve(data);
     };
     fetchYC(defaultCountry);
-  }, [defaultCountry]);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any) => {
+      const resu = await getAllZC(+id);
+      const data = resu?.data;
+
+      //console.log("ZC:", data);
+
+      setZcrates(data);
+    };
+    fetchZC(couponCurrency);
+
+    // Fetch Currency name
+    const fetchCur = async (id: any) => {
+      const resu = await getCurrency(+id);
+      const dat = resu?.data;
+
+      setCur(dat?.code);
+    };
+    fetchCur(couponCurrency);
+  }, [defaultCountry, couponCurrency]);
 
   const procesForm = async (values: z.infer<typeof ASBSchema>) => {
-    //setLoading(true);
+    setLoading(true);
     //console.log("Value:", values);
     setShow(false);
 
+    /** START COMPUTE DISCOUNT CURVE */
+
+    //console.log("zcc tp ", zcrates);
+    //console.log("disci tp ", disc);
+
+    //console.log("creditSpread", creditSpread);
+
+    const dcurve = await computeDiscountCurve(
+      values,
+      disc,
+      yieldcurve,
+      zcrates,
+      inputCurve,
+      creditSpread,
+      curveType
+    );
+    //console.log("DCurve", dcurve?.data);
+
+    if (dcurve?.data) setDisc(dcurve?.data);
+
+    /** END COMPUTE DISCOUNT CURVE */
+
+    /** COMPUTE Straigth bond price, cashflow, duration and accrued interest */
+
     let tmp;
-    const result = await computeStraightBondPrice(values, []);
-    if (result?.data) {
-      setBondPrice(result?.data);
-      setPrice(result?.data);
-      tmp = result?.data;
+    const global = await computeGeneralAmortizedBond(
+      values,
+      dcurve?.data,
+      amoSchedules
+    );
+    if (global?.data) {
+      let ttt = values?.price ? +values?.price : 0;
+      const prix = values.forcedBondPrice
+        ? ttt.toFixed(2)
+        : (global?.data.price * 100).toFixed(2);
+
+      setBondPrice(global?.data.price);
+      setPrice(global?.data.price);
+      setAccruedInterest(global?.data.accrued_interest);
+      setDuration(global?.data.duration);
+
+      if (values?.notional) {
+        // console.log("values?.notional", +values?.notional);
+
+        if (+values?.notional > 0) {
+          const tmpVal = (+prix * +values.notional) / 100.0;
+          //    console.log("tmpVal:", tmpVal);
+
+          setNotional(+tmpVal);
+        } else {
+          setNotional(0);
+        }
+      } else {
+        // console.log("values?.notional", values?.notional);
+        setNotional(0);
+      }
+
+      let cashflowFin = [];
+      for (let i = 0; i < global?.data?.cash_flow?.length; i++) {
+        cashflowFin.push({
+          gross: global?.data?.cash_flow[i],
+          date: global?.data?.date[i],
+          discounted: global?.data?.discounted_cash_flow[i],
+        });
+      }
+      setCashflow(cashflowFin);
+
+      tmp = global?.data.price;
     }
 
-    //console.log("PRIX", result?.data);
-
-    const interest = await computeAccruedInterest(values, []);
-    if (interest?.data) setAccruedInterest(interest?.data);
-
-    /*     if (forcedBondPrice) {
-      console.log("values.price", values.price);
-
-      setBondPrice(values.price ? +values.price : 0);
-    } */
-
-    //console.log("TMP", tmp);
-
-    const yieldToMaturity = await computeYieldToMaturity(values, tmp, []);
+    const yieldToMaturit = await computeYieldToMaturity(
+      values,
+      tmp,
+      dcurve?.data
+    );
     //console.log("values.price", values.price);
-    console.log("yieldToMaturity?.data", yieldToMaturity?.data);
-    if (yieldToMaturity?.data) {
-      setYieldToMaturity(yieldToMaturity?.data);
+
+    //console.log("yieldToMaturity?.data ", yieldToMaturit?.data);
+    if (yieldToMaturit?.data) {
+      setYieldToMaturity(yieldToMaturit?.data);
       if (forcedBondPrice) {
         setBondPrice(values.price ? +values.price : 0);
         setShow(true);
       }
     }
-    console.log("yieldToMaturity?.data", yieldToMaturity?.data);
 
-    const duration = await computeDuration(values, []);
-    if (duration?.data) setDuration(duration?.data);
-
-    /*     if (result?.error) {
-      toast.error(result?.error.toString());
-    } */
-    // console.log("result registerForm:", result);
-    //console.log("result registerForm:", result?.success);
-
-    // setLoading(false);
+    setLoading(false);
   };
 
   return (
     <GeneralLayout
-      title="Amortized Bond Valuation"
+      title="Straight Bond Valuation"
       bred={<CustomBreadcrumb name="Straight Bond Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
@@ -352,8 +363,17 @@ const AmortizedSimpleBond = ({
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>Coupon Currency</FormLabel>
-                              <Select
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <FormLabel>Currency</FormLabel>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Principal / Coupon Currency</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              {/*                         <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                               >
@@ -368,6 +388,28 @@ const AmortizedSimpleBond = ({
                                       </SelectItem>
                                     )
                                   )}
+                                </SelectContent>
+                              </Select> */}
+
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <SelectTrigger id="framework">
+                                  <SelectValue placeholder="Sélectionner une devise" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                  {currencies?.map((ctr: Currency) => (
+                                    <SelectItem
+                                      key={ctr.id}
+                                      value={ctr.id.toString()}
+                                    >
+                                      {ctr.code} -{" "}
+                                      <span className="text-xs">
+                                        {ctr.name}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
                                 </SelectContent>
                               </Select>
 
@@ -511,7 +553,7 @@ const AmortizedSimpleBond = ({
                           return (
                             <FormItem className="w-1/2">
                               <FormLabel className="w-1/2">
-                                {"Notional "}
+                                {"Notional"} ({cur})
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -527,7 +569,6 @@ const AmortizedSimpleBond = ({
                         }}
                       />
                     </div>
-
                     <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
@@ -535,7 +576,16 @@ const AmortizedSimpleBond = ({
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>Am. Frequency</FormLabel>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <FormLabel>Am. Frequency</FormLabel>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Amortization Frequency</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                               <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
@@ -544,7 +594,7 @@ const AmortizedSimpleBond = ({
                                   <SelectValue placeholder="Select a frequency" />
                                 </SelectTrigger>
                                 <SelectContent position="popper">
-                                  {Object.values(CouponFreqList)?.map(
+                                  {Object.values(AmortizedCouponFreqList)?.map(
                                     (ur: any) => (
                                       <SelectItem key={ur} value={ur}>
                                         {ur}
@@ -566,7 +616,16 @@ const AmortizedSimpleBond = ({
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>{"Am. Start Date "}</FormLabel>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <FormLabel>{"Am. Start Date "}</FormLabel>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Amortization Start Date</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -616,7 +675,7 @@ const AmortizedSimpleBond = ({
                             return (
                               <FormItem className="w-1/2">
                                 <FormLabel className="w-1/2">
-                                  {"Forced Bond Price"}
+                                  {"Forced Bond Price (%)"}
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -793,13 +852,24 @@ const AmortizedSimpleBond = ({
                     <div className="w-full">
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
-                          <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                            Discount Curve
+                          <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
+                            <AmoSched
+                              amoSchedules={amoSchedules}
+                              setAmoSchedules={setAmoSchedules}
+                            />
                           </div>
+
+                          <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
+                            {/* <p className="font-semibold">Discount Curve</p> */}
+                            <DCurve disc={disc} setDisc={setDisc} />
+                          </div>
+
                           {curveType === "zcc" && (
                             <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                              <p className="font-semibold">ZC Curve</p>
-                              <ZCCurve zccurve={yieldcurve} />
+                              <p className="font-semibold">
+                                ZC Curve - <span>{cur}</span>
+                              </p>
+                              <ZCCurve zccurve={zcrates} />
                             </div>
                           )}
                           {curveType === "yic" && (
@@ -810,14 +880,20 @@ const AmortizedSimpleBond = ({
                           )}
                           {curveType === "inc" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <InputCurve />
+                              <InputCurve
+                                inputCurve={inputCurve}
+                                setInputCurve={setInputCurve}
+                              />
                             </div>
                           )}
                           {curveType !== "yic" && (
                             <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
                               {/*                               <p className="font-semibold">Credit Spread</p>
                                */}{" "}
-                              <CreditSpread />
+                              <CreditSpread
+                                creditSpread={creditSpread}
+                                setCreditSpread={setCreditSpread}
+                              />
                             </div>
                           )}
                         </div>
@@ -830,48 +906,68 @@ const AmortizedSimpleBond = ({
                   type="submit"
                   className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
                 >
-                  {/*                 {loading ? "En cours de connexion ..." : "Se Connecter"}
-                   */}{" "}
-                  Compute
+                  {loading ? "Computing ..." : "Compute"}
                 </Button>
               </form>
             </Form>
           </div>
 
           {bondPrice > 0 && (
-            <div className="border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
-              <div className="flex justify-between items-center gap-4">
+            <div className="md:flex md:items-center md:justify-around border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
+              <div className="flex md:flex-col  justify-between items-center md:items-start gap-4">
                 {!forcedBondPrice && (
-                  <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className=" text-muted-foreground">Bond Price</div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {forcedBondPrice
-                        ? bondPrice.toFixed(2)
-                        : (bondPrice * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
+                  <div className="flex gap-8">
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                      <div className=" text-muted-foreground">Bond Price</div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {forcedBondPrice
+                          ? bondPrice.toFixed(2)
+                          : (bondPrice * 100).toFixed(2)}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          %
+                        </span>
+                      </div>
+                    </div>
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
+                      <div className=" text-muted-foreground">Value</div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {forcedBondPrice ? bondPrice.toFixed(2) : notional}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {cur}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {show && forcedBondPrice && (
-                  <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-red-600 text-muted-foreground">
-                      Forced Bond Price
+                  <div className="flex gap-8">
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                      <div className="text-red-600 text-muted-foreground">
+                        Forced Price
+                      </div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {forcedBondPrice
+                          ? bondPrice.toFixed(2)
+                          : (bondPrice * 100).toFixed(2)}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          %
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {forcedBondPrice
-                        ? bondPrice.toFixed(2)
-                        : (bondPrice * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
+                      <div className=" text-muted-foreground">Value</div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {notional}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {cur} ***
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                <div className=" grid flex-1 auto-rows-min gap-0.5">
+                <div className=" grid flex-1 auto-rows-min gap-0.5 mt-4">
                   <div className=" text-muted-foreground">Accrued Interest</div>
                   <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                     {(accruedInterest * 100).toFixed(2)}
@@ -881,7 +977,7 @@ const AmortizedSimpleBond = ({
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between items-center gap-4">
+              <div className="flex md:flex-col justify-between items-center md:items-start gap-4">
                 <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                   <div className=" text-muted-foreground">
                     Yield to Maturity
@@ -903,6 +999,19 @@ const AmortizedSimpleBond = ({
                   </div>
                 </div>
               </div>
+
+              {/*               <div className="flex md:flex-col justify-between items-center md:items-start gap-4">
+                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 bg-teal-400 dark:bg-teal-800 p-4 rounded-lg">
+                  <div className=" text-muted-foreground">Value</div>
+                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                    {notional.toFixed(2)}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      {cur}
+                    </span>
+                  </div>
+                </div>
+
+              </div> */}
             </div>
           )}
         </div>
@@ -945,7 +1054,7 @@ const AmortizedSimpleBond = ({
                     right: 14,
                     top: 10,
                   }}
-                  data={newTab}
+                  data={disc}
                 >
                   <CartesianGrid
                     strokeDasharray="4 4"
@@ -955,14 +1064,31 @@ const AmortizedSimpleBond = ({
                   />
 
                   <XAxis
-                    dataKey="dateOut"
+                    dataKey="tenor"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
+                    label={{
+                      value: "Tenor",
+                      angle: 0,
+                      position: "insideTop",
+                    }}
                   />
 
-                  <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                  <YAxis
+                    dataKey="rate"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    label={{
+                      value: "Rate(%)",
+                      angle: -90,
+                      position: "insideLeft",
+                    }}
+                  />
 
+                  {/*                   <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                   */}
                   <defs>
                     <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
                       <stop
@@ -978,7 +1104,7 @@ const AmortizedSimpleBond = ({
                     </linearGradient>
                   </defs>
                   <Area
-                    dataKey="usdcdf"
+                    dataKey="rate"
                     type="linear"
                     fill="url(#fillTime)"
                     stroke="var(--color-usdcdf)"
@@ -1095,7 +1221,7 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
 
-            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+            <TableCell className="text-right  mx-0 px-0">{yc.rate} %</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -1103,9 +1229,11 @@ const ZCCurve = ({ zccurve }: ZCCurveProps) => {
   );
 };
 
-const CreditSpread = () => {
-  const [creditSpread, setCreditSpread] = useState(initialCreditSpread);
-
+type CreditSpreadProps = {
+  creditSpread: any;
+  setCreditSpread: (el: any) => void;
+};
+const CreditSpread = ({ creditSpread, setCreditSpread }: CreditSpreadProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -1148,8 +1276,11 @@ const CreditSpread = () => {
   );
 };
 
-const InputCurve = () => {
-  const [inputCurve, setInputCurve] = useState(initialInputCurve);
+type InputCurveProps = {
+  inputCurve: any;
+  setInputCurve: (el: any) => void;
+};
+const InputCurve = ({ inputCurve, setInputCurve }: InputCurveProps) => {
   // console.log("ICIC ", inputCurve);
 
   return (
@@ -1214,7 +1345,7 @@ const UpdateCreditSpread = ({
       <AlertDialogTrigger asChild>
         <div className="flex justify-between">
           <span>{cs?.tenor}</span>
-          <span>{cs?.rate}</span>
+          <span>{cs?.rate} %</span>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -1240,8 +1371,8 @@ const UpdateCreditSpread = ({
             //console.log("Before update: ", creditSpread[objIndex]);
 
             //Update object's name property.
-            creditSpread[objIndex].tenor = tenor;
-            creditSpread[objIndex].rate = rate;
+            creditSpread[objIndex].tenor = +tenor;
+            creditSpread[objIndex].rate = +rate;
 
             creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
             //Log object to console again.
@@ -1360,8 +1491,8 @@ const UpdateInputCurve = ({
             //console.log("Before update: ", creditSpread[objIndex]);
 
             //Update object's name property.
-            inputCurve[objIndex].tenor = tenor;
-            inputCurve[objIndex].rate = rate;
+            inputCurve[objIndex].tenor = +tenor;
+            inputCurve[objIndex].rate = +rate;
 
             inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
             //Log object to console again.
@@ -1464,8 +1595,8 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
             //Find index of specific object using findIndex method.
             inputCurve.push({
               id: inputCurve.length + 1,
-              tenor: tenor,
-              rate: rate,
+              tenor: +tenor,
+              rate: +rate,
             });
             /*            const objIndex = inputCurve.findIndex(
               (obj: any) => obj.id == ic.id
@@ -1564,8 +1695,8 @@ const AddCreditSpread = ({
             e.preventDefault();
             creditSpread.push({
               id: creditSpread.length + 1,
-              tenor: tenor,
-              rate: rate,
+              tenor: +tenor,
+              rate: +rate,
             });
 
             creditSpread.sort((a: any, b: any) => a.tenor - b.tenor);
@@ -1638,16 +1769,547 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
         {cashflow?.map((yc: any) => (
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">
-              {yc.payDate.split("-").reverse().join("-")}
+              {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="  mx-0 px-0">{yc.grossPay}%</TableCell>
+            <TableCell className="  mx-0 px-0">{yc.gross * 100}%</TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
-              {yc.discountedPay}%
+              {(yc.discounted * 100).toFixed(2)}%
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
+  );
+};
+
+type DCurveProps = {
+  disc: any;
+  setDisc: (el: any) => void;
+};
+
+const DCurve = ({ disc, setDisc }: DCurveProps) => {
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <p className="font-semibold">Discount Curve</p>
+        <AddDisc disc={disc} openDialog={false} />
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-left mx-0 pl-0 pr-2">
+              {" "}
+              <p className="flex justify-between">
+                <span>Tenor</span>
+                <span> Rate</span>
+              </p>
+            </TableHead>
+            {/*             <TableHead className="text-right  mx-0 px-0">Rate</TableHead>
+             */}{" "}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {disc?.map((yc: any) => (
+            <TableRow key={yc.id}>
+              {/*               <TableCell className="font-medium  mx-0 px-0">
+                {yc.tenor}
+              </TableCell> */}
+
+              <TableCell className="text-right  mx-0 px-0">
+                {/*                 {yc.rate.toFixed(2)} %
+
+ */}
+                <UpdateDCurve
+                  disc={disc}
+                  dc={yc}
+                  openDialog={false}
+                  setDisc={setDisc}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+// ADD ZC
+type AddDiscProps = {
+  disc: any;
+
+  openDialog: boolean;
+};
+
+const AddDisc = ({ disc, openDialog }: AddDiscProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(0);
+  const [rate, setRate] = useState(0);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <MdAdd className="bg-sky-600 rounded-full" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will add a data into the credit spread curve.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            disc.push({
+              id: disc.length + 1,
+              tenor: +tenor,
+              rate: 0,
+            });
+
+            disc.sort((a: any, b: any) => a.tenor - b.tenor);
+
+            //console.log("DISC", disc);
+
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              {/*               <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div> */}
+            </div>
+            <div className="flex justify-between">
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+//Update DCurve
+type UpdateDCurveProps = {
+  disc: any;
+  dc: any;
+  openDialog: boolean;
+  setDisc: (el: any) => void;
+};
+const UpdateDCurve = ({
+  disc,
+  dc,
+  openDialog,
+  setDisc,
+}: //setCreditSpread,
+UpdateDCurveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(dc.tenor);
+  const [rate, setRate] = useState(dc.rate);
+  //console.log("DC: ", dc);
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex justify-between">
+          <span>{dc?.tenor}</span>
+          <span>{dc?.rate.toFixed(2)} %</span>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the credit spread.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            //console.log("disc", disc);
+            //console.log("dc.id", dc.id);
+
+            const objIndex = disc.findIndex((obj: any) => obj.id == dc.id);
+
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            disc[objIndex].tenor = +tenor;
+            disc[objIndex].rate = +rate;
+
+            disc.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", creditSpread);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              {/*               <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div> */}
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  disc = disc
+                    .filter((el: any) => el.id != dc.id)
+                    .sort((a: any, b: any) => a.tenor - b.tenor);
+
+                  //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+                  //Log object to console again.
+                  // console.log("After update: ", creditSpread[objIndex]);
+                  setDisc(disc);
+                  // console.log("After update: ", creditSpread);
+                  setOpen(!open);
+                }}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </div>
+          {/*           <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter> */}
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+type AmoSchedProps = {
+  amoSchedules: any;
+  setAmoSchedules: (el: any) => void;
+};
+const AmoSched = ({ amoSchedules, setAmoSchedules }: AmoSchedProps) => {
+  // console.log("ICIC ", inputCurve);
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="font-semibold">Am. Schedule</p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Amortization Schedule</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <AddAmoSchedule amoSchedules={amoSchedules} openDialog={false} />
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-left mx-0 px-0">
+              <p className="flex justify-between">
+                <span>Date</span>
+                <span> Rate</span>
+              </p>
+            </TableHead>
+            {/*             <TableHead className="text-right  mx-0 px-0"></TableHead>
+             */}{" "}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {amoSchedules?.map((ic: any) => (
+            <TableRow key={ic.id}>
+              {/*             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+               */}
+              <TableCell className="text-right  mx-0 px-0">
+                {/*               {yc.yield}
+                 */}{" "}
+                <UpdateAmoSchedule
+                  amoSchedules={amoSchedules}
+                  ic={ic}
+                  openDialog={false}
+                  setAmoSchedules={setAmoSchedules}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+type AddAmoScheduleProps = {
+  amoSchedules: any;
+
+  openDialog: boolean;
+};
+
+const AddAmoSchedule = ({ amoSchedules, openDialog }: AddAmoScheduleProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [date, setDate] = useState("");
+  const [rate, setRate] = useState(0);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <MdAdd className="bg-sky-600 rounded-full" />
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will add a data into the input curve.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            amoSchedules.push({
+              id: amoSchedules.length + 1,
+              date: date,
+              rate: +rate,
+            });
+            /*            const objIndex = inputCurve.findIndex(
+              (obj: any) => obj.id == ic.id
+            );
+ */
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            /*        inputCurve[objIndex].tenor = tenor;
+            inputCurve[objIndex].rate = rate; */
+
+            amoSchedules.sort((a: any, b: any) => a.date - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", inputCurve);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Date:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={date}
+                  type="date"
+                  step="0.01"
+                  onChange={(e: any) => setDate(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+          {/*           <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter> */}
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+type UpdateAmoScheduleProps = {
+  amoSchedules: any;
+  ic: any;
+  openDialog: boolean;
+  setAmoSchedules: (el: any) => void;
+};
+const UpdateAmoSchedule = ({
+  amoSchedules,
+  ic,
+  openDialog,
+  setAmoSchedules,
+}: UpdateAmoScheduleProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [date, setDate] = useState(ic.date);
+  const [rate, setRate] = useState(ic.rate);
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex justify-between">
+          <span>{ic?.date}</span>
+          <span>{ic?.rate}</span>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the input curve data.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            const objIndex = amoSchedules.findIndex(
+              (obj: any) => obj.id == ic.id
+            );
+
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
+
+            //Update object's name property.
+            amoSchedules[objIndex].date = date;
+            amoSchedules[objIndex].rate = +rate;
+
+            amoSchedules.sort((a: any, b: any) => a.date - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", creditSpread);
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Date:</Label>
+                <Input
+                  //defaultValue={cs.tenor}
+                  value={date}
+                  type="date"
+                  step="0.01"
+                  onChange={(e: any) => setDate(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  //defaultValue={cs.yield}
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  amoSchedules = amoSchedules
+                    .filter((el: any) => el.id != ic.id)
+                    .sort((a: any, b: any) => a.date - b.date);
+
+                  //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+                  //Log object to console again.
+                  // console.log("After update: ", creditSpread[objIndex]);
+                  setAmoSchedules(amoSchedules);
+                  // console.log("After update: ", inputCurve);
+                  setOpen(!open);
+                }}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </div>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
