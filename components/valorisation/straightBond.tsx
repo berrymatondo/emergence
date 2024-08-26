@@ -246,6 +246,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [cashflow, setCashflow] = useState<any>();
   const [disc, setDisc] = useState<any>(initialDisc);
   const [loading, setLoading] = useState(false);
+  const [notional, setNotional] = useState(0);
 
   const form = useForm<z.infer<typeof SBSchema>>({
     resolver: zodResolver(SBSchema),
@@ -338,11 +339,47 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
     let tmp;
     const global = await computeGeneralStraightBond(values, dcurve?.data);
     if (global?.data) {
-      //console.log("global", global?.data);
+      // console.log("vAL", values);
+      // console.log("GLOBAL", global?.data);
+
+      /*       console.log("price", global?.data.price.toFixed(2));
+      console.log("notional", values.notional);
+      if (values.notional) {
+        console.log("notional", +values?.notional * global?.data.price);
+      } */
+
+      //  console.log("values.forcedBondPrice", values.forcedBondPrice);
+
+      let ttt = values?.price ? +values?.price : 0;
+      const prix = values.forcedBondPrice
+        ? ttt.toFixed(2)
+        : (global?.data.price * 100).toFixed(2);
+      /*       console.log("prix:", prix);
+      if (values.notional) {
+        console.log("NOT:", +prix * +values.notional);
+        console.log("NOT:", (+prix * +values.notional) / 100.0);
+      } */
+
       setBondPrice(global?.data.price);
       setPrice(global?.data.price);
       setAccruedInterest(global?.data.accrued_interest);
       setDuration(global?.data.duration);
+
+      if (values?.notional) {
+        // console.log("values?.notional", +values?.notional);
+
+        if (+values?.notional > 0) {
+          const tmpVal = (+prix * +values.notional) / 100.0;
+          //    console.log("tmpVal:", tmpVal);
+
+          setNotional(+tmpVal);
+        } else {
+          setNotional(0);
+        }
+      } else {
+        console.log("values?.notional", values?.notional);
+        setNotional(0);
+      }
 
       let cashflowFin = [];
       for (let i = 0; i < global?.data?.cash_flow?.length; i++) {
@@ -393,6 +430,12 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
         setShow(true);
       }
     }
+
+    //Notional
+    //console.log("price ", global?.data.price);
+    //console.log("notional ", values.notional);
+
+    //
     // console.log("yieldToMaturity?.data", yieldToMaturity?.data);
 
     /*  const duration = await computeDuration(values, dcurve?.data);
@@ -484,7 +527,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>Coupon Currency</FormLabel>
+                              <FormLabel>Currency</FormLabel>
                               {/*                         <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
@@ -665,7 +708,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                           return (
                             <FormItem className="w-1/2">
                               <FormLabel className="w-1/2">
-                                {"Notional "}
+                                {"Notional"} ({cur})
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -716,7 +759,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                             return (
                               <FormItem className="w-1/2">
                                 <FormLabel className="w-1/2">
-                                  {"Forced Bond Price"}
+                                  {"Forced Bond Price (%)"}
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -946,39 +989,61 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
           </div>
 
           {bondPrice > 0 && (
-            <div className="border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
-              <div className="flex justify-between items-center gap-4">
+            <div className="md:flex md:items-center md:justify-around border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
+              <div className="flex md:flex-col  justify-between items-center md:items-start gap-4">
                 {!forcedBondPrice && (
-                  <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className=" text-muted-foreground">Bond Price</div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {forcedBondPrice
-                        ? bondPrice.toFixed(2)
-                        : (bondPrice * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
+                  <div className="flex gap-8">
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                      <div className=" text-muted-foreground">Bond Price</div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {forcedBondPrice
+                          ? bondPrice.toFixed(2)
+                          : (bondPrice * 100).toFixed(2)}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          %
+                        </span>
+                      </div>
+                    </div>
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
+                      <div className=" text-muted-foreground">Value</div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {forcedBondPrice ? bondPrice.toFixed(2) : notional}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {cur}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {show && forcedBondPrice && (
-                  <div className="grid flex-1 auto-rows-min gap-0.5">
-                    <div className="text-red-600 text-muted-foreground">
-                      Forced Bond Price
+                  <div className="flex gap-8">
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                      <div className="text-red-600 text-muted-foreground">
+                        Forced Price
+                      </div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {forcedBondPrice
+                          ? bondPrice.toFixed(2)
+                          : (bondPrice * 100).toFixed(2)}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          %
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                      {forcedBondPrice
-                        ? bondPrice.toFixed(2)
-                        : (bondPrice * 100).toFixed(2)}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        %
-                      </span>
+                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
+                      <div className=" text-muted-foreground">Value</div>
+                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                        {notional}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {cur} ***
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                <div className=" grid flex-1 auto-rows-min gap-0.5">
+                <div className=" grid flex-1 auto-rows-min gap-0.5 mt-4">
                   <div className=" text-muted-foreground">Accrued Interest</div>
                   <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                     {(accruedInterest * 100).toFixed(2)}
@@ -988,7 +1053,7 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between items-center gap-4">
+              <div className="flex md:flex-col justify-between items-center md:items-start gap-4">
                 <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                   <div className=" text-muted-foreground">
                     Yield to Maturity
@@ -1010,6 +1075,19 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                   </div>
                 </div>
               </div>
+
+              {/*               <div className="flex md:flex-col justify-between items-center md:items-start gap-4">
+                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 bg-teal-400 dark:bg-teal-800 p-4 rounded-lg">
+                  <div className=" text-muted-foreground">Value</div>
+                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                    {notional.toFixed(2)}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      {cur}
+                    </span>
+                  </div>
+                </div>
+
+              </div> */}
             </div>
           )}
         </div>
