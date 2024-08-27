@@ -78,11 +78,11 @@ const ListItems = [
     subdesc:
       "Utiliser les pricers pour évaluer les obligations et les options.",
     sublinks: [
-      { id: 1, title: "Straight/Amortized Bond", link: "/valorisation/simple" },
+      { id: 1, title: "Straight/Amort. Bond", link: "/valorisation/simple" },
       /*       { id: 2, title: "Amortized Simple Bond", link: "/valorisation/asb" },
        */ {
         id: 3,
-        title: "Floating/Amortized Rate Bond",
+        title: "Floating/Amort. Rate Bond",
         link: "/valorisation/frb",
       },
       //      { id: 4, title: "Straight Bond", link: "/valorisation/sb1" },
@@ -91,7 +91,7 @@ const ListItems = [
       { id: 7, title: "Dual Currency Bond", link: "/valorisation/dual" },
       {
         id: 8,
-        title: "Commo/Amortized Back Bond",
+        title: "Commo/Amort. Back Bond",
         link: "/valorisation/commo",
       },
       //  { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
