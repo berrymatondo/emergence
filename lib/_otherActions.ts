@@ -56,3 +56,26 @@ export const getAllAmoSchedule = async () => {
     };
   } catch (error) {}
 };
+
+// Get forward rates
+export const getAllForwardRates = async (id: number) => {
+  // console.log("country", country);
+  // console.log("id", id);
+
+  try {
+    const zcr = await prisma.forwardRate.findMany({
+      where: {
+        AND: [{ type: "L" }, { currencyId: id }],
+      },
+    });
+
+    //revalidatePath("/admin/users");
+
+    //console.log("ycs: ", ycs);
+
+    return {
+      success: true,
+      data: zcr,
+    };
+  } catch (error) {}
+};

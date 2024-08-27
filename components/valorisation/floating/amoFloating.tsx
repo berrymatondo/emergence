@@ -3,14 +3,9 @@ import React from "react";
 type AmoFloatingProps = {
   countries: any;
   currencies: any;
-  schedules: any;
 };
 
-const AmoFloating = ({
-  countries,
-  currencies,
-  schedules,
-}: AmoFloatingProps) => {
+const AmoFloating = ({ countries, currencies }: AmoFloatingProps) => {
   return <div>AmoFloating</div>;
 };
 

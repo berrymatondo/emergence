@@ -7,14 +7,9 @@ import FloatingRateBond from "../floating/floating";
 type FloatingChoiceProps = {
   countries: any;
   currencies: any;
-  schedules: any;
 };
 
-const FloatingChoice = ({
-  countries,
-  currencies,
-  schedules,
-}: FloatingChoiceProps) => {
+const FloatingChoice = ({ countries, currencies }: FloatingChoiceProps) => {
   const [straight, setStraight] = useState(true);
   const [amortized, setAmortized] = useState(false);
 
@@ -60,11 +55,7 @@ const FloatingChoice = ({
       {straight ? (
         <FloatingRateBond countries={countries} currencies={currencies} />
       ) : (
-        <AmoFloating
-          countries={countries}
-          currencies={currencies}
-          schedules={schedules}
-        />
+        <AmoFloating countries={countries} currencies={currencies} />
       )}
     </>
   );

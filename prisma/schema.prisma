@@ -51,8 +51,6 @@ enum DataTypeList {
 }
 
 
-
-
 model User {
   id Int @id @default(autoincrement())
   email String @unique
@@ -184,6 +182,7 @@ model Currency{
   code String @unique
   name String
   zcRates ZCRates[]
+  forwardRates ForwardRate[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -202,4 +201,20 @@ model AmortizationSchedule{
   updatedAt DateTime @updatedAt
 
   @@map("amortizationschedule")
+}
+
+
+model ForwardRate{
+  id Int @id @default(autoincrement())
+  tenor Float
+  rate Float
+  label String
+  type DataTypeList @default(H)
+  currencyId Int
+  currency Currency @relation(fields: [currencyId], references: [id]) 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("forwardrate")
 }
