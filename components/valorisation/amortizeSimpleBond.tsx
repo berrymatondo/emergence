@@ -111,7 +111,7 @@ const initialCreditSpread = [
   { id: 11, tenor: 20.0, rate: 0.0 },
   { id: 12, tenor: 30.0, rate: 0.0 },
 ]; */
-const initialInputCurve: any[] = [];
+const initialInputCurve: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
