@@ -69,6 +69,7 @@ export const SBSchema = z.object({
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
   defaultCountry: z.string().optional(),
+  label: z.string().optional(),
   /*   bondMaturityDate: z.string().min(1, {
     message: "Le nom d'utilisateur est obligatoire",
   }),
@@ -106,4 +107,5 @@ export const ASBSchema = z.object({
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
   defaultCountry: z.string().optional(),
+  label: z.string().optional(),
 });

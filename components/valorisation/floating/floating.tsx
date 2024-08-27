@@ -33,7 +33,12 @@ import {
   SelectValue,
 } from "../../ui/select";
 import { Country, CountryList, Currency, DataTypeList } from "@prisma/client";
-import { CouponBasisList, CouponFreqList, CurrencyList } from "@/lib/enums";
+import {
+  CouponBasisList,
+  CouponFreqList,
+  CurrencyList,
+  LabelList,
+} from "@/lib/enums";
 import { Checkbox } from "../../ui/checkbox";
 import { Label } from "../../ui/label";
 import GeneralLayout from "../../generalLayout";
@@ -159,6 +164,7 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
       curveTypeName: "",
       liquidityPremium: "0.00",
       defaultCountry: "1",
+      label: "1M",
     },
   });
 
@@ -166,6 +172,7 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
+  const label = form.watch("label");
 
   useEffect(() => {
     const fetchYC = async (id: any) => {
@@ -187,15 +194,15 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
     fetchZC(couponCurrency);
 
     // Fetch Forward Rates
-    const fetchFR = async (id: any) => {
-      const resu = await getAllForwardRates(+id);
+    const fetchFR = async (id: any, label: string) => {
+      const resu = await getAllForwardRates(+id, label);
       const data = resu?.data;
 
       //console.log("ZC:", data);
 
       setForwardrates(data);
     };
-    fetchFR(couponCurrency);
+    fetchFR(couponCurrency, label ? label : "1M");
 
     // Fetch Currency name
     const fetchCur = async (id: any) => {
@@ -205,7 +212,7 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
       setCur(dat?.code);
     };
     fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency]);
+  }, [defaultCountry, couponCurrency, label]);
 
   const procesForm = async (values: z.infer<typeof SBSchema>) => {
     setLoading(true);
@@ -637,6 +644,35 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
                         }}
                       />
 
+                      <FormField
+                        control={form.control}
+                        name="label"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/3  max-md:w-1/2 max-md:hidden">
+                              <FormLabel className="w-1/3">{"Label"}</FormLabel>
+
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <SelectTrigger id="framework">
+                                  <SelectValue placeholder="Sélectionner un label" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                  {Object.values(LabelList)?.map((ur: any) => (
+                                    <SelectItem key={ur} value={ur}>
+                                      {ur}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
                       {curveType === "yic" && (
                         <FormField
                           control={form.control}
@@ -645,7 +681,7 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
                             return (
                               <FormItem className="w-1/3  max-md:w-1/2 max-md:hidden">
                                 <FormLabel className="w-1/3">
-                                  {"Yield Country Curve"}
+                                  {"Country"}
                                 </FormLabel>
 
                                 <Select
@@ -680,7 +716,7 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-1/2">
                               <FormLabel className="w-1/3">
-                                {"Liquidity premium (%) "}
+                                {"Liq. premium (%) "}
                               </FormLabel>
                               <FormControl>
                                 <Input

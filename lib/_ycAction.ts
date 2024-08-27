@@ -51,7 +51,7 @@ export const getAllZC = async (id: number) => {
 
     return {
       success: true,
-      data: zcr,
+      data: zcr.sort((a: any, b: any) => a.tenor - b.tenor),
     };
   } catch (error) {}
 };
