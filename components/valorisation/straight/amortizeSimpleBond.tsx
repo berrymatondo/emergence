@@ -334,7 +334,7 @@ const AmortizedSimpleBond = ({
 
   return (
     <GeneralLayout
-      title="Straight Bond Valuation"
+      title="Amortized Bond Valuation"
       bred={<CustomBreadcrumb name="Straight Bond Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">

@@ -27,7 +27,9 @@ const ForwardRate = ({ forwardrates }: ForwardRateProps) => {
             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
             {/*             <TableCell className="  mx-0 px-0">{yc.rate} %</TableCell>
              */}{" "}
-            <TableCell className="text-right  mx-0 px-0">{yc.rate} %</TableCell>
+            <TableCell className="text-right  mx-0 px-0">
+              {(yc.rate * 100).toFixed(2)} %
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
