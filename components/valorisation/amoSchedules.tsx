@@ -20,39 +20,61 @@ import {
   TableRow,
 } from "../ui/table";
 import { useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
-type InputCurveProps = {
-  inputCurve: any;
-  setInputCurve: (el: any) => void;
+type AmoSchedProps = {
+  amoSchedules: any;
+  setAmoSchedules: (el: any) => void;
 };
+const AmoSched = ({ amoSchedules, setAmoSchedules }: AmoSchedProps) => {
+  // console.log("ICIC ", inputCurve);
 
-const InputCurve = ({ inputCurve, setInputCurve }: InputCurveProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="font-semibold">Input Curve</p>
-        <AddInputCurve inputCurve={inputCurve} openDialog={false} />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="font-semibold">Am. Schedule</p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Amortization Schedule</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <AddAmoSchedule amoSchedules={amoSchedules} openDialog={false} />
       </div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="text-left mx-0 px-0">
               <p className="flex justify-between">
-                <span>Tenor</span>
+                <span>Date</span>
                 <span> Rate</span>
               </p>
             </TableHead>
+            {/*             <TableHead className="text-right  mx-0 px-0"></TableHead>
+             */}{" "}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {inputCurve?.map((ic: any) => (
+          {amoSchedules?.map((ic: any) => (
             <TableRow key={ic.id}>
+              {/*             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
+               */}
               <TableCell className="text-right  mx-0 px-0">
-                <UpdateInputCurve
-                  inputCurve={inputCurve}
+                {/*               {yc.yield}
+                 */}{" "}
+                <UpdateAmoSchedule
+                  amoSchedules={amoSchedules}
                   ic={ic}
                   openDialog={false}
-                  setInputCurve={setInputCurve}
+                  setAmoSchedules={setAmoSchedules}
                 />
               </TableCell>
             </TableRow>
@@ -63,19 +85,17 @@ const InputCurve = ({ inputCurve, setInputCurve }: InputCurveProps) => {
   );
 };
 
-export default InputCurve;
+export default AmoSched;
 
-// Add Input
-
-type AddInputCurveProps = {
-  inputCurve: any;
+type AddAmoScheduleProps = {
+  amoSchedules: any;
 
   openDialog: boolean;
 };
 
-const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
+const AddAmoSchedule = ({ amoSchedules, openDialog }: AddAmoScheduleProps) => {
   const [open, setOpen] = useState(openDialog);
-  const [tenor, setTenor] = useState(0);
+  const [date, setDate] = useState("");
   const [rate, setRate] = useState(0);
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -92,31 +112,50 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            inputCurve.push({
-              id: inputCurve.length + 1,
-              tenor: +tenor,
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            amoSchedules.push({
+              id: amoSchedules.length + 1,
+              date: date,
               rate: +rate,
             });
+            /*            const objIndex = inputCurve.findIndex(
+                (obj: any) => obj.id == ic.id
+              );
+   */
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
 
-            inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Update object's name property.
+            /*        inputCurve[objIndex].tenor = tenor;
+              inputCurve[objIndex].rate = rate; */
 
+            amoSchedules.sort((a: any, b: any) => a.date - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", inputCurve);
             setOpen(!open);
           }}
         >
           <div className="flex flex-col gap-4">
             <div className="flex justify-between">
               <div>
-                <Label>Tenor:</Label>
+                <Label>Date:</Label>
                 <Input
-                  value={tenor}
-                  type="number"
+                  //defaultValue={cs.tenor}
+                  value={date}
+                  type="date"
                   step="0.01"
-                  onChange={(e: any) => setTenor(e.target.value)}
+                  onChange={(e: any) => setDate(e.target.value)}
                 />
               </div>
               <div>
                 <Label>Rate:</Label>
                 <Input
+                  //defaultValue={cs.yield}
                   value={rate}
                   type="number"
                   step="0.01"
@@ -137,33 +176,37 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
               </Button>
             </div>
           </div>
+          {/*           <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter> */}
         </form>
       </AlertDialogContent>
     </AlertDialog>
   );
 };
 
-type UpdateInputCurveProps = {
-  inputCurve: any;
+type UpdateAmoScheduleProps = {
+  amoSchedules: any;
   ic: any;
   openDialog: boolean;
-  setInputCurve: (el: any) => void;
+  setAmoSchedules: (el: any) => void;
 };
-const UpdateInputCurve = ({
-  inputCurve,
+const UpdateAmoSchedule = ({
+  amoSchedules,
   ic,
   openDialog,
-  setInputCurve,
-}: UpdateInputCurveProps) => {
+  setAmoSchedules,
+}: UpdateAmoScheduleProps) => {
   const [open, setOpen] = useState(openDialog);
-  const [tenor, setTenor] = useState(ic.tenor);
+  const [date, setDate] = useState(ic.date);
   const [rate, setRate] = useState(ic.rate);
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <div className="flex justify-between">
-          <span>{ic?.tenor}</span>
-          <span>{ic?.rate} %</span>
+          <span>{ic?.date.split("-").reverse().join("-")}</span>
+          <span>{ic?.rate}</span>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -176,32 +219,45 @@ const UpdateInputCurve = ({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            const objIndex = inputCurve.findIndex(
+            // console.log("New Tenor:", tenor);
+            // console.log("New Rate:", rate);
+            /*             console.log("creditSpread", creditSpread); */
+
+            //Find index of specific object using findIndex method.
+            const objIndex = amoSchedules.findIndex(
               (obj: any) => obj.id == ic.id
             );
 
-            inputCurve[objIndex].tenor = +tenor;
-            inputCurve[objIndex].rate = +rate;
+            //Log object to Console.
+            //console.log("Before update: ", creditSpread[objIndex]);
 
-            inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+            //Update object's name property.
+            amoSchedules[objIndex].date = date;
+            amoSchedules[objIndex].rate = +rate;
 
+            amoSchedules.sort((a: any, b: any) => a.date - b.tenor);
+            //Log object to console again.
+            // console.log("After update: ", creditSpread[objIndex]);
+            //console.log("After update: ", creditSpread);
             setOpen(!open);
           }}
         >
           <div className="flex flex-col gap-4">
             <div className="flex justify-between">
               <div>
-                <Label>Tenor:</Label>
+                <Label>Date:</Label>
                 <Input
-                  value={tenor}
-                  type="number"
+                  //defaultValue={cs.tenor}
+                  value={date}
+                  type="date"
                   step="0.01"
-                  onChange={(e: any) => setTenor(e.target.value)}
+                  onChange={(e: any) => setDate(e.target.value)}
                 />
               </div>
               <div>
                 <Label>Rate:</Label>
                 <Input
+                  //defaultValue={cs.yield}
                   value={rate}
                   type="number"
                   step="0.01"
@@ -223,12 +279,15 @@ const UpdateInputCurve = ({
                 variant="destructive"
                 type="button"
                 onClick={() => {
-                  inputCurve = inputCurve
+                  amoSchedules = amoSchedules
                     .filter((el: any) => el.id != ic.id)
-                    .sort((a: any, b: any) => a.tenor - b.tenor);
+                    .sort((a: any, b: any) => a.date - b.date);
 
-                  setInputCurve(inputCurve);
-                  console.log("After update: ", inputCurve);
+                  //inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+                  //Log object to console again.
+                  // console.log("After update: ", creditSpread[objIndex]);
+                  setAmoSchedules(amoSchedules);
+                  // console.log("After update: ", inputCurve);
                   setOpen(!open);
                 }}
               >

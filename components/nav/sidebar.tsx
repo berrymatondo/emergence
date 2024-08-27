@@ -222,21 +222,33 @@ const ListItems = [
     subdesc:
       "Utiliser les pricers pour évaluer les obligations et les options.",
     sublinks: [
-      { id: 1, title: "Straight/Amortized Bond", link: "/valorisation/sb1" },
+      { id: 1, title: "Straight/Amortized Bond", link: "/valorisation/simple" },
       /*       { id: 2, title: "Amortized Simple Bond", link: "/valorisation/asb" },
-       */ { id: 3, title: "Floating Rate Bond", link: "/valorisation/frb" },
+       */ {
+        id: 3,
+        title: "Floating/Amortized Rate Bond",
+        link: "/valorisation/frb",
+      },
       //      { id: 4, title: "Straight Bond", link: "/valorisation/sb1" },
-      { id: 5, title: "Amortized FRN", link: "/valorisation/afr" },
-      { id: 6, title: "Step up Coupon", link: "/valorisation/suc" },
-      { id: 7, title: "Dual Currency Bond", link: "/valorisation/dcb" },
-      { id: 8, title: "Commodity Back Bond", link: "/valorisation/cbb" },
+      //{ id: 5, title: "Amortized FRN", link: "/valorisation/afr" },
+      { id: 6, title: "Step up Coupon", link: "/valorisation/stepup" },
+      { id: 7, title: "Dual Currency Bond", link: "/valorisation/dual" },
       {
+        id: 8,
+        title: "Commo/Amortized Back Bond",
+        link: "/valorisation/commo",
+      },
+      /*       {
         id: 9,
         title: "Amortized Commodity Back Bond",
         link: "/valorisation/acbb",
+      }, */
+      {
+        id: 10,
+        title: "European/American Option",
+        link: "/valorisation/options",
       },
-      { id: 10, title: "European Option", link: "/valorisation/eo" },
-      { id: 11, title: "American Option", link: "/valorisation/ao" },
+      //{ id: 11, title: "American Option", link: "/valorisation/ao" },
       //  { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
       //  { id: 13, title: "Cross Currency Swap", link: "/valorisation/ccs" },
     ],

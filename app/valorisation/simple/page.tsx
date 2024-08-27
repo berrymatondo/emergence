@@ -1,4 +1,4 @@
-import ValChoice1 from "@/components/valorisation/valChoice1";
+import ValChoice1 from "@/components/valorisation/choice/valChoice1";
 import {
   getAllAmoSchedule,
   getAllCountries,

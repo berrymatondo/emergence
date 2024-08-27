@@ -1,16 +1,20 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
-import AmortizedSimpleBond from "@/components/valorisation/amortizeSimpleBond";
-import StraightBond from "@/components/valorisation/straightBond";
 import React, { useEffect, useState } from "react";
+import AmoFloating from "../floating/amoFloating";
+import FloatingRateBond from "../floating/floating";
 
-type ValChoice1Props = {
+type FloatingChoiceProps = {
   countries: any;
   currencies: any;
   schedules: any;
 };
 
-const ValChoice1 = ({ countries, currencies, schedules }: ValChoice1Props) => {
+const FloatingChoice = ({
+  countries,
+  currencies,
+  schedules,
+}: FloatingChoiceProps) => {
   const [straight, setStraight] = useState(true);
   const [amortized, setAmortized] = useState(false);
 
@@ -31,7 +35,7 @@ const ValChoice1 = ({ countries, currencies, schedules }: ValChoice1Props) => {
               !straight ? "text-neutral-400" : ""
             }`}
           >
-            Straight Bond
+            Floating Rate Bond
           </label>
         </div>
         <div className="flex items-center space-x-2">
@@ -48,15 +52,15 @@ const ValChoice1 = ({ countries, currencies, schedules }: ValChoice1Props) => {
               !amortized ? "text-neutral-400" : ""
             }`}
           >
-            Amortized Simple Bond
+            Amortized Floating Rate Bond
           </label>
         </div>
       </div>
 
       {straight ? (
-        <StraightBond countries={countries} currencies={currencies} />
+        <FloatingRateBond countries={countries} currencies={currencies} />
       ) : (
-        <AmortizedSimpleBond
+        <AmoFloating
           countries={countries}
           currencies={currencies}
           schedules={schedules}
@@ -66,4 +70,4 @@ const ValChoice1 = ({ countries, currencies, schedules }: ValChoice1Props) => {
   );
 };
 
-export default ValChoice1;
+export default FloatingChoice;

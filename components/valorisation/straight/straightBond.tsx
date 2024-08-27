@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../ui/breadcrumb";
+} from "../../ui/breadcrumb";
 import {
   Form,
   FormControl,
@@ -16,8 +15,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -31,7 +30,7 @@ import {
   computeDiscountCurve,
   computeGeneralStraightBond,
 } from "@/lib/_sbActions";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   Select,
   SelectContent,
@@ -40,17 +39,16 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 import { Country, CountryList, Currency, DataTypeList } from "@prisma/client";
 import { CouponBasisList, CouponFreqList, CurrencyList } from "@/lib/enums";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
-import GeneralLayout from "../generalLayout";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { Separator } from "../ui/separator";
+import { Checkbox } from "../../ui/checkbox";
+import { Label } from "../../ui/label";
+import GeneralLayout from "../../generalLayout";
 
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Separator } from "../../ui/separator";
+
+import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
 import { getAllYC, getAllZC } from "@/lib/_ycAction";
 import { getCurrency } from "@/lib/_otherActions";
@@ -59,14 +57,14 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import InputCurve from "./inputCurve";
-import CreditSpread from "./creditSpread";
-import YieldCurve from "./yieldCurve";
-import ZCCurve from "./zcCurve";
-import Cashflow from "./cashflow";
-import DCurve from "./dCurve";
-import GrapheValue from "./grapheValue";
+} from "../../ui/tooltip";
+import InputCurve from "../inputCurve";
+import CreditSpread from "../creditSpread";
+import YieldCurve from "../yieldCurve";
+import ZCCurve from "../zcCurve";
+import Cashflow from "../cashflow";
+import DCurve from "../dCurve";
+import GrapheValue from "../grapheValue";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
