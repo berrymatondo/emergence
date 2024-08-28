@@ -1,9 +1,9 @@
 "use server";
 
-import { SBSchema } from "./schemas";
 import { z } from "zod";
+import { StraightSchema } from "./schemas";
 // Get all users
-type Inputs = z.infer<typeof SBSchema>;
+type Inputs = z.infer<typeof StraightSchema>;
 
 export const computeGeneralStraightBond = async (data: Inputs, curve: any) => {
   let headersList = {

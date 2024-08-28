@@ -21,11 +21,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { SBSchema } from "@/lib/schemas";
-import {
-  computeDiscountCurve,
-  computeGeneralStraightBond,
-  computeYieldToMaturity,
-} from "@/lib/_sbActions";
+import { computeDiscountCurve } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
   Select,
@@ -68,9 +64,9 @@ import DCurve from "../dCurve";
 import GrapheValue from "../grapheValue";
 import ForwardRate from "../forwardRate";
 import {
-  computeGeneralStepUpBond,
-  computeStepUpYieldToMaturity,
-} from "@/lib/_stepActions";
+  computeDualYieldToMaturity,
+  computeGeneralDualBond,
+} from "@/lib/_dualActions";
 
 const initialCreditSp = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -332,7 +328,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
     /** COMPUTE Straigth bond price, cashflow, duration and accrued interest */
 
     let tmp;
-    const global = await computeGeneralStraightBond(values, dcurve?.data);
+    const global = await computeGeneralDualBond(values, dcurve?.data);
     if (global?.data) {
       let ttt = values?.price ? +values?.price : 0;
       const prix = values.forcedBondPrice
@@ -369,7 +365,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
       tmp = global?.data.price;
     }
 
-    const yieldToMaturit = await computeYieldToMaturity(
+    const yieldToMaturit = await computeDualYieldToMaturity(
       values,
       tmp,
       dcurve?.data

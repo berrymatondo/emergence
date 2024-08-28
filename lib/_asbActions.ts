@@ -1,9 +1,9 @@
 "use server";
 
-import { ASBSchema, SBSchema } from "./schemas";
 import { z } from "zod";
+import { AStraightSchema } from "./schemas";
 // Get all users
-type Inputs2 = z.infer<typeof ASBSchema>;
+type Inputs2 = z.infer<typeof AStraightSchema>;
 
 // COMPUTE GENERAL AMORTIZATION SIMPLE BOND
 

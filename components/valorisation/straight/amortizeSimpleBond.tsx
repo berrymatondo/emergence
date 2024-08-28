@@ -21,7 +21,6 @@ import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ASBSchema } from "@/lib/schemas";
 import { computeDiscountCurve } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
@@ -93,6 +92,7 @@ import ZCCurve from "../zcCurve";
 import AmoSched from "../amoSchedules";
 import DCurve from "../dCurve";
 import GrapheValue from "../grapheValue";
+import { AStraightSchema } from "@/lib/schemas";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -174,8 +174,8 @@ const AmortizedSimpleBond = ({
 
   //console.log("amoSchedules", amoSchedules);
 
-  const form = useForm<z.infer<typeof ASBSchema>>({
-    resolver: zodResolver(ASBSchema),
+  const form = useForm<z.infer<typeof AStraightSchema>>({
+    resolver: zodResolver(AStraightSchema),
     defaultValues: {
       //bondMaturityDate: new Date().toISOString(),
       price: "0",
@@ -235,7 +235,7 @@ const AmortizedSimpleBond = ({
     fetchCur(couponCurrency);
   }, [defaultCountry, couponCurrency]);
 
-  const procesForm = async (values: z.infer<typeof ASBSchema>) => {
+  const procesForm = async (values: z.infer<typeof AStraightSchema>) => {
     setLoading(true);
     //console.log("Value:", values);
     setShow(false);

@@ -20,7 +20,6 @@ import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { SBSchema } from "@/lib/schemas";
 import { computeDiscountCurve } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
@@ -67,6 +66,7 @@ import {
   computeGeneralFloatingBond,
   computeFloatingYieldToMaturity,
 } from "@/lib/_floatingActions";
+import { FloatingSchema } from "@/lib/schemas";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -142,8 +142,8 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
   const [loading, setLoading] = useState(false);
   const [notional, setNotional] = useState(0);
 
-  const form = useForm<z.infer<typeof SBSchema>>({
-    resolver: zodResolver(SBSchema),
+  const form = useForm<z.infer<typeof FloatingSchema>>({
+    resolver: zodResolver(FloatingSchema),
     defaultValues: {
       //bondMaturityDate: new Date().toISOString(),
       price: "0",
@@ -214,7 +214,7 @@ const FloatingRateBond = ({ countries, currencies }: FloatingRateBondProps) => {
     fetchCur(couponCurrency);
   }, [defaultCountry, couponCurrency, label]);
 
-  const procesForm = async (values: z.infer<typeof SBSchema>) => {
+  const procesForm = async (values: z.infer<typeof FloatingSchema>) => {
     setLoading(true);
     //console.log("Value:", values);
     setShow(false);

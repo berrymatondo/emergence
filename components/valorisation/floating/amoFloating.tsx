@@ -64,12 +64,12 @@ import DCurve from "../dCurve";
 import GrapheValue from "../grapheValue";
 import ForwardRate from "../forwardRate";
 
-import { ASBSchema } from "@/lib/schemas";
 import {
   computeAmoFloatingYieldToMaturity,
   computeGeneralAmoFloatingBond,
 } from "@/lib/_floatingActions";
 import AmoSched from "../amoSchedules";
+import { AFloatingSchema } from "@/lib/schemas";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -151,8 +151,8 @@ const AmoFloating = ({
   const [notional, setNotional] = useState(0);
   const [amoSchedules, setAmoSchedules] = useState(schedules);
 
-  const form = useForm<z.infer<typeof ASBSchema>>({
-    resolver: zodResolver(ASBSchema),
+  const form = useForm<z.infer<typeof AFloatingSchema>>({
+    resolver: zodResolver(AFloatingSchema),
     defaultValues: {
       //bondMaturityDate: new Date().toISOString(),
       price: "0",
@@ -225,7 +225,7 @@ const AmoFloating = ({
     fetchCur(couponCurrency);
   }, [defaultCountry, couponCurrency, label]);
 
-  const procesForm = async (values: z.infer<typeof ASBSchema>) => {
+  const procesForm = async (values: z.infer<typeof AFloatingSchema>) => {
     setLoading(true);
     //console.log("Value:", values);
     setShow(false);

@@ -1,26 +1,20 @@
 "use server";
 
 import { z } from "zod";
-import { StepUpSchema } from "./schemas";
-// Get all users
-type Inputs = z.infer<typeof StepUpSchema>;
+import { SBSchema } from "./schemas";
 
-export const computeGeneralStepUpBond = async (
-  data: Inputs,
-  curve: any,
-  stepuprates: any
-) => {
+type Inputs = z.infer<typeof SBSchema>;
+type Inputs2 = z.infer<typeof SBSchema>;
+
+// COMPUTE GENERAL AMORTIZATION SIMPLE BOND
+
+export const computeGeneralDualBond = async (data: Inputs, curve: any) => {
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
   };
 
-  const forw = [];
-  for (let i = 0; i < stepuprates.length; i++) {
-    forw.push([stepuprates[i].tenor, +stepuprates[i].rate]);
-  }
-
-  //console.log("forw", forw);
+  //console.log("curve", curve);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
     discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
@@ -29,31 +23,20 @@ export const computeGeneralStepUpBond = async (
   let bodyContent = JSON.stringify({
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
-    spread: data.couponRate ? +data.couponRate / 100 : undefined,
-    first_coupon_date: data.firstCouponDate,
-    valuation_date: data.valuationDate,
-    discount_curve: discount_curve,
-    day_count_convention: data.couponBasis,
-    notional: data.notional,
-    forward_curve: forw,
-  });
-  /* 
-  console.log("X", {
-    maturity_date: data.bondMaturityDate,
-    payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
     discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
     notional: data.notional,
-    forward_curve: forw,
-  }); */
+  });
+
+  //console.log("X", bodyContent);
 
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/floating_bond_valuation",
+      "http://213.165.83.130/valuation/straight_bond_valuation",
       {
         method: "POST",
         body: bodyContent,
@@ -70,11 +53,10 @@ export const computeGeneralStepUpBond = async (
   } catch (error) {}
 };
 
-export const computeStepUpYieldToMaturity = async (
+export const computeDualYieldToMaturity = async (
   data: Inputs,
   tmp: number,
-  curve: any,
-  stepuprates: any
+  curve: any
 ) => {
   //console.log("datax", data);
 
@@ -82,11 +64,6 @@ export const computeStepUpYieldToMaturity = async (
     Accept: "*/*",
     "Content-Type": "application/json",
   };
-
-  const forw = [];
-  for (let i = 0; i < stepuprates.length; i++) {
-    forw.push([stepuprates[i].tenor, +stepuprates[i].rate]);
-  }
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
@@ -104,12 +81,11 @@ export const computeStepUpYieldToMaturity = async (
       : +tmp,
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
-    spread: data.couponRate ? +data.couponRate / 100 : undefined,
+    coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
     discount_curve: discount_curve,
     day_count_convention: data.couponBasis,
-    forward_curve: forw,
   });
 
   //console.log("Xcx", bodyContent);
@@ -117,7 +93,7 @@ export const computeStepUpYieldToMaturity = async (
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/floating_bond_yield_to_maturity",
+      "http://213.165.83.130/valuation/straight_bond_yield_to_maturity",
       {
         method: "POST",
         body: bodyContent,
@@ -125,7 +101,7 @@ export const computeStepUpYieldToMaturity = async (
       }
     );
 
-    //console.log("response", response);
+    //  console.log("response", response);
 
     let dataout = await response.json();
     //console.log("DATA", dataout);

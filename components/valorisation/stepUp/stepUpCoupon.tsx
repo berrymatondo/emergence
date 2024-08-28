@@ -20,7 +20,6 @@ import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { SBSchema } from "@/lib/schemas";
 import { computeDiscountCurve } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
@@ -68,6 +67,7 @@ import {
   computeStepUpYieldToMaturity,
 } from "@/lib/_stepActions";
 import StepUp from "./stepUp";
+import { StepUpSchema } from "@/lib/schemas";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -148,8 +148,8 @@ const StepUpCoupon = ({
   const [loading, setLoading] = useState(false);
   const [notional, setNotional] = useState(0);
 
-  const form = useForm<z.infer<typeof SBSchema>>({
-    resolver: zodResolver(SBSchema),
+  const form = useForm<z.infer<typeof StepUpSchema>>({
+    resolver: zodResolver(StepUpSchema),
     defaultValues: {
       //bondMaturityDate: new Date().toISOString(),
       price: "0",
@@ -221,7 +221,7 @@ const StepUpCoupon = ({
   }, [defaultCountry, couponCurrency]);
   // }, [defaultCountry, couponCurrency, label]);
 
-  const procesForm = async (values: z.infer<typeof SBSchema>) => {
+  const procesForm = async (values: z.infer<typeof StepUpSchema>) => {
     setLoading(true);
     //console.log("Value:", values);
     setShow(false);

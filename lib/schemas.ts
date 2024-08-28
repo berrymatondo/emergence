@@ -54,6 +54,63 @@ export const ContactSchema = z.object({
 });
  */
 
+export const StraightSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  liquidityPremium2: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  label: z.string().optional(),
+});
+
+export const FloatingSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  liquidityPremium2: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  label: z.string().optional(),
+});
+
+export const StepUpSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  liquidityPremium2: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  label: z.string().optional(),
+});
+
 export const SBSchema = z.object({
   price: z.string().optional(),
   bondMaturityDate: z.string().optional(),
@@ -74,24 +131,6 @@ export const SBSchema = z.object({
   defaultCountry: z.string().optional(),
   defaultCountry2: z.string().optional(),
   label: z.string().optional(),
-  /*   bondMaturityDate: z.string().min(1, {
-    message: "Le nom d'utilisateur est obligatoire",
-  }),
-  couponCurrency: z
-    .string()
-    .min(1, { message: "Le mot de pass est obligatoire" }),
-  couponRate: z.string().min(1, { message: "Le mot de pass est obligatoire" }),
-  couponFrequency: z
-    .string()
-    .min(1, { message: "Le mot de pass est obligatoire" }),
-  firstCouponDate: z
-    .string()
-    .min(1, { message: "Le mot de pass est obligatoire" }),
-  couponBasis: z.string().min(1, { message: "Le mot de pass est obligatoire" }),
-  valuationDate: z
-    .string()
-    .min(1, { message: "Le mot de pass est obligatoire" }),
-  notional: z.string().min(1, { message: "Le mot de pass est obligatoire" }), */
 });
 
 export const ASBSchema = z.object({
@@ -114,5 +153,45 @@ export const ASBSchema = z.object({
   liquidityPremium2: z.string().optional(),
   defaultCountry: z.string().optional(),
   defaultCountry2: z.string().optional(),
+  label: z.string().optional(),
+});
+
+export const AStraightSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  amortizationStartDate: z.string().optional(),
+  amortizationFrequency: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  label: z.string().optional(),
+});
+
+export const AFloatingSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  amortizationStartDate: z.string().optional(),
+  amortizationFrequency: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  defaultCountry: z.string().optional(),
   label: z.string().optional(),
 });

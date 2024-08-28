@@ -1,10 +1,10 @@
 "use server";
 
-import { ASBSchema, SBSchema } from "./schemas";
 import { z } from "zod";
+import { AFloatingSchema, FloatingSchema } from "./schemas";
 // Get all users
-type Inputs = z.infer<typeof SBSchema>;
-type Inputs2 = z.infer<typeof ASBSchema>;
+type Inputs = z.infer<typeof FloatingSchema>;
+type Inputs2 = z.infer<typeof AFloatingSchema>;
 
 export const computeGeneralFloatingBond = async (
   data: Inputs,
