@@ -54,6 +54,7 @@ export const ContactSchema = z.object({
 });
  */
 
+// STRAIGHT
 export const StraightSchema = z.object({
   price: z.string().optional(),
   bondMaturityDate: z.string().optional(),
@@ -68,11 +69,11 @@ export const StraightSchema = z.object({
   curveType: z.enum(["zcc", "yic", "inc"]),
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
-  liquidityPremium2: z.string().optional(),
   defaultCountry: z.string().optional(),
   label: z.string().optional(),
 });
 
+// FLOATING
 export const FloatingSchema = z.object({
   price: z.string().optional(),
   bondMaturityDate: z.string().optional(),
@@ -87,11 +88,11 @@ export const FloatingSchema = z.object({
   curveType: z.enum(["zcc", "yic", "inc"]),
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
-  liquidityPremium2: z.string().optional(),
   defaultCountry: z.string().optional(),
   label: z.string().optional(),
 });
 
+// STEP UP
 export const StepUpSchema = z.object({
   price: z.string().optional(),
   bondMaturityDate: z.string().optional(),
@@ -106,11 +107,11 @@ export const StepUpSchema = z.object({
   curveType: z.enum(["zcc", "yic", "inc"]),
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
-  liquidityPremium2: z.string().optional(),
   defaultCountry: z.string().optional(),
   label: z.string().optional(),
 });
 
+//DUAL
 export const SBSchema = z.object({
   price: z.string().optional(),
   bondMaturityDate: z.string().optional(),
@@ -132,6 +133,28 @@ export const SBSchema = z.object({
   defaultCountry2: z.string().optional(),
   label: z.string().optional(),
 });
+
+// COMMO
+export const CommoSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  fixedCoupon: z.string().optional(),
+  maxCoupon: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  label: z.string().optional(),
+});
+
+//////////////////////////
 
 export const ASBSchema = z.object({
   price: z.string().optional(),
@@ -181,6 +204,28 @@ export const AFloatingSchema = z.object({
   bondMaturityDate: z.string().optional(),
   couponCurrency: z.string().optional(),
   couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  couponBasis: z.string().optional(),
+  valuationDate: z.string().optional(),
+  amortizationStartDate: z.string().optional(),
+  amortizationFrequency: z.string().optional(),
+  notional: z.string().optional(),
+  forcedBondPrice: z.boolean().default(false),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  label: z.string().optional(),
+});
+
+// Amo. COMMO
+export const ACommoSchema = z.object({
+  price: z.string().optional(),
+  bondMaturityDate: z.string().optional(),
+  couponCurrency: z.string().optional(),
+  fixedCoupon: z.string().optional(),
+  maxCoupon: z.string().optional(),
   couponFrequency: z.string().optional(),
   firstCouponDate: z.string().optional(),
   couponBasis: z.string().optional(),

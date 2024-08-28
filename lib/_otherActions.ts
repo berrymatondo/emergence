@@ -59,22 +59,12 @@ export const getAllAmoSchedule = async () => {
 
 // Get forward rates
 export const getAllForwardRates = async (id: number, label: string) => {
-  // console.log("country", country);
-  // console.log("id", id);
-
   try {
     const zcr = await prisma.forwardRate.findMany({
       where: {
         AND: [{ type: "L" }, { currencyId: id }, { label: label }],
       },
     });
-
-    //revalidatePath("/admin/users");
-
-    /*     console.log(
-      "ycs: ",
-      zcr.sort((a: any, b: any) => a.tenor - b.tenor)
-    ); */
 
     return {
       success: true,
@@ -87,6 +77,29 @@ export const getAllForwardRates = async (id: number, label: string) => {
 export const getAllStepRates = async () => {
   try {
     const ycs = await prisma.stepUpRate.findMany({});
+
+    return {
+      success: true,
+      data: ycs.sort((a: any, b: any) => a.tenor - b.tenor),
+    };
+  } catch (error) {}
+};
+
+// Get amortization commo schedule
+export const getAllAmoCommoSchedule = async () => {
+  try {
+    const ycs = await prisma.amortizationCommoSchedule.findMany({});
+
+    return {
+      success: true,
+      data: ycs.sort((a: any, b: any) => a.date - b.date),
+    };
+  } catch (error) {}
+};
+// Get Commo forward rates
+export const getAllCommoForwardRates = async () => {
+  try {
+    const ycs = await prisma.commoForwardRate.findMany({});
 
     return {
       success: true,

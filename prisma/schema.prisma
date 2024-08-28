@@ -234,3 +234,41 @@ model StepUpRate{
   @@map("stepuprate")
 }
 
+
+model Commo{
+  id Int @id @default(autoincrement())
+  name String
+  commoForwardRate CommoForwardRate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("commo")
+}
+
+model CommoForwardRate{
+  id Int @id @default(autoincrement())
+  tenor Float
+  rate Float
+  type DataTypeList @default(H)
+  commoId Int
+  commo Commo @relation(fields: [commoId], references: [id]) 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("commoforwardrate")
+}
+
+
+model AmortizationCommoSchedule{
+  id Int @id @default(autoincrement())
+  date String
+  rate Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("amortizationcommoschedule")
+}
+

@@ -1,10 +1,7 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { useEffect, useState } from "react";
-import AmoFloating from "../floating/amoFloating";
-import FloatingRateBond from "../floating/floating";
-import CommoBackBond from "../commo/commoBB";
-import AmoCommoBackBond from "../commo/amoCommoBB";
+
 import AmeOption from "../options/ameOpt";
 import EuroOption from "../options/euroOpt";
 
