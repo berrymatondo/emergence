@@ -391,7 +391,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
 
   return (
     <GeneralLayout
-      title="Step Up Bond Valuation"
+      title="Dual Bond Valuation"
       bred={<CustomBreadcrumb name="Floating Bond Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
