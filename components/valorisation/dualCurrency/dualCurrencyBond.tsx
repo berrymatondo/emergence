@@ -328,7 +328,14 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
     /** COMPUTE Straigth bond price, cashflow, duration and accrued interest */
 
     let tmp;
-    const global = await computeGeneralDualBond(values, dcurve?.data);
+    const global = await computeGeneralDualBond(
+      values,
+      dcurve?.data,
+      dcurve2?.data
+    );
+
+    //console.log("GLOBAL", global?.data);
+
     if (global?.data) {
       let ttt = values?.price ? +values?.price : 0;
       const prix = values.forcedBondPrice

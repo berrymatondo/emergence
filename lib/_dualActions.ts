@@ -8,7 +8,11 @@ type Inputs2 = z.infer<typeof SBSchema>;
 
 // COMPUTE GENERAL AMORTIZATION SIMPLE BOND
 
-export const computeGeneralDualBond = async (data: Inputs, curve: any) => {
+export const computeGeneralDualBond = async (
+  data: Inputs,
+  curve: any,
+  curve_coupon: any
+) => {
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
@@ -20,13 +24,29 @@ export const computeGeneralDualBond = async (data: Inputs, curve: any) => {
     discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
   }
 
+  let discount_curve_coupon = [];
+  for (let i = 0; i < curve_coupon.length; i++) {
+    discount_curve_coupon.push([
+      curve_coupon[i].tenor,
+      +(curve_coupon[i].rate / 100).toFixed(2),
+    ]);
+  }
+
   let bodyContent = JSON.stringify({
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
     first_coupon_date: data.firstCouponDate,
     valuation_date: data.valuationDate,
-    discount_curve: discount_curve,
+    discount_curve_principal: discount_curve,
+    discount_curve_coupon: discount_curve_coupon,
+    /*     discount_curve_coupon: [
+      [0.5, 0.015],
+      [1.0, 0.02],
+      [1.5, 0.025],
+      [2.0, 0.03],
+      [2.5, 0.035],
+    ], */
     day_count_convention: data.couponBasis,
     notional: data.notional,
   });
@@ -36,7 +56,7 @@ export const computeGeneralDualBond = async (data: Inputs, curve: any) => {
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/straight_bond_valuation",
+      "http://213.165.83.130/valuation/dual_currency_valuation",
       {
         method: "POST",
         body: bodyContent,
@@ -93,7 +113,7 @@ export const computeDualYieldToMaturity = async (
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/straight_bond_yield_to_maturity",
+      "http://213.165.83.130/valuation/dual_currency_yield_to_maturity",
       {
         method: "POST",
         body: bodyContent,

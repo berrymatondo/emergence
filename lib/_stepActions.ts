@@ -53,7 +53,7 @@ export const computeGeneralStepUpBond = async (
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/floating_bond_valuation",
+      "http://213.165.83.130/valuation/step_bond_valuation",
       {
         method: "POST",
         body: bodyContent,
@@ -117,7 +117,7 @@ export const computeStepUpYieldToMaturity = async (
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/floating_bond_yield_to_maturity",
+      "http://213.165.83.130/valuation/step_bond_yield_to_maturity",
       {
         method: "POST",
         body: bodyContent,
