@@ -24,13 +24,18 @@ import { useState } from "react";
 type DCurveProps = {
   disc: any;
   setDisc: (el: any) => void;
+  title?: string;
 };
 
-const DCurve = ({ disc, setDisc }: DCurveProps) => {
+const DCurve = ({ disc, setDisc, title }: DCurveProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="font-semibold">Discount Curve</p>
+        {title ? (
+          <p className="font-semibold">{title}</p>
+        ) : (
+          <p className="font-semibold">Discount Curve</p>
+        )}
         <AddDisc disc={disc} openDialog={false} />
       </div>
       <Table>

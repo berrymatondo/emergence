@@ -24,12 +24,21 @@ import { useState } from "react";
 type CreditSpreadProps = {
   creditSpread: any;
   setCreditSpread: (el: any) => void;
+  title?: string;
 };
-const CreditSpread = ({ creditSpread, setCreditSpread }: CreditSpreadProps) => {
+const CreditSpread = ({
+  creditSpread,
+  setCreditSpread,
+  title,
+}: CreditSpreadProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="font-semibold">Credit Spread</p>
+        {title ? (
+          <p className="font-semibold">{title}</p>
+        ) : (
+          <p className="font-semibold">Credit Spread</p>
+        )}
         <AddCreditSpread creditSpread={creditSpread} openDialog={false} />
       </div>
       <Table>

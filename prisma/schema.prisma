@@ -218,3 +218,19 @@ model ForwardRate{
 
   @@map("forwardrate")
 }
+
+
+model StepUpRate{
+  id Int @id @default(autoincrement())
+  tenor Float
+  rate Float
+  //type DataTypeList @default(H)
+  //currencyId Int
+  //currency Currency @relation(fields: [currencyId], references: [id]) 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("stepuprate")
+}
+

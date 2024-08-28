@@ -82,3 +82,15 @@ export const getAllForwardRates = async (id: number, label: string) => {
     };
   } catch (error) {}
 };
+
+// Get all Step up rates
+export const getAllStepRates = async () => {
+  try {
+    const ycs = await prisma.stepUpRate.findMany({});
+
+    return {
+      success: true,
+      data: ycs.sort((a: any, b: any) => a.tenor - b.tenor),
+    };
+  } catch (error) {}
+};
