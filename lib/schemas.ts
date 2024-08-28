@@ -108,8 +108,11 @@ export const ASBSchema = z.object({
   notional: z.string().optional(),
   forcedBondPrice: z.boolean().default(false),
   curveType: z.enum(["zcc", "yic", "inc"]),
+  curveType2: z.enum(["zcc", "yic", "inc"]),
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
+  liquidityPremium2: z.string().optional(),
   defaultCountry: z.string().optional(),
+  defaultCountry2: z.string().optional(),
   label: z.string().optional(),
 });
