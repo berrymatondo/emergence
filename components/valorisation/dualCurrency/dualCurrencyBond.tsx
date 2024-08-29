@@ -900,7 +900,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Liq. premium (%) "}
+                                {"Principal Liq. premium (%) "}
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -923,7 +923,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Liq. premium 2 (%) "}
+                                {"Coupon Liq. premium 2 (%) "}
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -1081,6 +1081,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               <CreditSpread
                                 creditSpread={creditSpread}
                                 setCreditSpread={setCreditSpread}
+                                title="Principal Credit Spread"
                               />
                             </div>
                           )}
@@ -1091,7 +1092,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               <CreditSpread
                                 creditSpread={creditSpread2}
                                 setCreditSpread={setCreditSpread2}
-                                title="Credit Spread 2"
+                                title="Coupon Credit Spread"
                               />
                             </div>
                           )}
