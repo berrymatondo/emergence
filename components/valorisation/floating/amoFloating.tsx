@@ -319,7 +319,7 @@ const AmoFloating = ({
   return (
     <GeneralLayout
       title="Amortized Floating Bond Valuation"
-      bred={<CustomBreadcrumb name="Floating Bond Valuation" />}
+      bred={<CustomBreadcrumb name="Amortized Floating Bond Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-2/3  max-md:w-full  p-4 rounded-xl">

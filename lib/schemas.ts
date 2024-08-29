@@ -240,3 +240,35 @@ export const ACommoSchema = z.object({
   defaultCountry: z.string().optional(),
   label: z.string().optional(),
 });
+
+// EUROPOEAN
+export const EuroSchema = z.object({
+  optionMaturityDate: z.string().optional(),
+  optionCurrency: z.string().optional(),
+  spot: z.string().optional(),
+  strike: z.string().optional(),
+  optionType: z.enum(["call", "put"]),
+  optionStyle: z.enum(["European"]),
+  model: z.enum(["Black-Scholes", "Monte Carlo"]),
+  valuationDate: z.string().optional(),
+  notional: z.string().optional(),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  defaultCountry: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+});
+
+// AMERICAN
+export const AmericSchema = z.object({
+  optionMaturityDate: z.string().optional(),
+  optionCurrency: z.string().optional(),
+  spot: z.string().optional(),
+  strike: z.string().optional(),
+  optionType: z.enum(["call", "put"]),
+  optionStyle: z.enum(["American"]),
+  model: z.enum(["Black-Scholes", "Monte Carlo", "Binomial Tree"]),
+  valuationDate: z.string().optional(),
+  notional: z.string().optional(),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  defaultCountry: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+});

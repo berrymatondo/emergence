@@ -278,7 +278,7 @@ const CommoBackBond = ({
   return (
     <GeneralLayout
       title="Commodity Back Bond Valuation"
-      bred={<CustomBreadcrumb name="Straight Bond Valuation" />}
+      bred={<CustomBreadcrumb name="Commodity Back Bond Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-2/3  max-md:w-full  p-4 rounded-xl">

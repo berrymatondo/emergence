@@ -94,6 +94,11 @@ const ListItems = [
         title: "Commo/Amort. Back Bond",
         link: "/valorisation/commo",
       },
+      {
+        id: 10,
+        title: "European/American Option",
+        link: "/valorisation/options",
+      },
       //  { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
       //  { id: 13, title: "Cross Currency Swap", link: "/valorisation/ccs" },
     ],
