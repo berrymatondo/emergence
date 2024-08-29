@@ -107,3 +107,47 @@ export const getAllCommoForwardRates = async () => {
     };
   } catch (error) {}
 };
+
+// Get Forward by commo
+export const getForwardByCommo = async (id: number) => {
+  try {
+    const ycs = await prisma.commoForwardRate.findMany({
+      where: {
+        commoId: id,
+      },
+    });
+
+    return {
+      success: true,
+      data: ycs.sort((a: any, b: any) => a.tenor - b.tenor),
+    };
+  } catch (error) {}
+};
+
+// Get all commos
+export const getAllCommos = async () => {
+  try {
+    const ycs = await prisma.commo.findMany({});
+
+    return {
+      success: true,
+      data: ycs.sort((a: any, b: any) => a.tenor - b.tenor),
+    };
+  } catch (error) {}
+};
+
+// Get specific commo
+export const getCommo = async (id: number) => {
+  try {
+    const ycs = await prisma.commo.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return {
+      success: true,
+      data: ycs,
+    };
+  } catch (error) {}
+};

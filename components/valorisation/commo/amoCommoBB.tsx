@@ -31,7 +31,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
-import { Country, CountryList, Currency, DataTypeList } from "@prisma/client";
+import {
+  Commo,
+  Country,
+  CountryList,
+  Currency,
+  DataTypeList,
+} from "@prisma/client";
 import {
   AmortizedCouponFreqList,
   CouponBasisList,
@@ -47,7 +53,7 @@ import { Separator } from "../../ui/separator";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
 import { getAllYC, getAllZC } from "@/lib/_ycAction";
-import { getCurrency } from "@/lib/_otherActions";
+import { getCommo, getCurrency, getForwardByCommo } from "@/lib/_otherActions";
 import {
   Tooltip,
   TooltipContent,
@@ -108,14 +114,14 @@ const initialDisc = [
 type AmoCommoBackBondProps = {
   countries: any;
   currencies: any;
-  commoFRates: any;
+  commos: any;
   schedules: any;
 };
 
 const AmoCommoBackBond = ({
   countries,
   currencies,
-  commoFRates,
+  commos,
   schedules,
 }: AmoCommoBackBondProps) => {
   const [price, setPrice] = useState(0);
@@ -126,17 +132,19 @@ const AmoCommoBackBond = ({
   const [show, setShow] = useState(false);
   const [yieldcurve, setYieldcurve] = useState<any>();
   const [zcrates, setZcrates] = useState<any>();
+  const [commoForward, setCommoForward] = useState<any>();
   const [inputCurve, setInputCurve] = useState(initialInputCurve);
   const [creditSpread, setCreditSpread] = useState<any>(initialCreditSpread);
 
   const [cur, setCur] = useState<any>();
+  const [commo, setCommo] = useState<any>();
   const [cashflow, setCashflow] = useState<any>();
   const [disc, setDisc] = useState<any>(initialDisc);
   const [loading, setLoading] = useState(false);
   const [notional, setNotional] = useState(0);
   const [amoSchedules, setAmoSchedules] = useState(schedules);
 
-  console.log("schedules:", schedules);
+  //console.log("schedules:", schedules);
 
   const form = useForm<z.infer<typeof ACommoSchema>>({
     resolver: zodResolver(ACommoSchema),
@@ -146,6 +154,7 @@ const AmoCommoBackBond = ({
       //bondMaturityDate: new Date().toISOString().split("T")[0],
       bondMaturityDate: "2030-07-30",
       couponCurrency: "1",
+      commodity: "1",
       //couponRate: "0.00",
       fixedCoupon: "2",
       maxCoupon: "5",
@@ -170,6 +179,7 @@ const AmoCommoBackBond = ({
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
+  const commodity = form.watch("commodity");
 
   useEffect(() => {
     const fetchYC = async (id: any) => {
@@ -198,7 +208,27 @@ const AmoCommoBackBond = ({
       setCur(dat?.code);
     };
     fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency]);
+
+    // Fetch Commo Forward Rates
+    const fetchForwardCommo = async (id: any) => {
+      const resu = await getForwardByCommo(+id);
+      const data = resu?.data;
+
+      //console.log("ZC:", data);
+
+      setCommoForward(data);
+    };
+    fetchForwardCommo(commodity);
+
+    // Fetch Commodity
+    const fetchCommo = async (id: any) => {
+      const resu = await getCommo(+id);
+      const dat = resu?.data;
+
+      setCommo(dat?.name);
+    };
+    fetchCommo(commodity);
+  }, [defaultCountry, couponCurrency, commodity]);
 
   const procesForm = async (values: z.infer<typeof ACommoSchema>) => {
     setLoading(true);
@@ -233,7 +263,7 @@ const AmoCommoBackBond = ({
     const global = await computeGeneralAmoCommoBond(
       values,
       dcurve?.data,
-      commoFRates,
+      commoForward,
       amoSchedules
     );
 
@@ -287,7 +317,7 @@ const AmoCommoBackBond = ({
       values,
       tmp,
       dcurve?.data,
-      commoFRates,
+      commoForward,
       amoSchedules
     );
 
@@ -718,6 +748,50 @@ const AmoCommoBackBond = ({
                         }}
                       />
 
+                      <FormField
+                        control={form.control}
+                        name="commodity"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/3  max-md:w-1/2">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <FormLabel>Commodity</FormLabel>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Commodity</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <SelectTrigger id="framework">
+                                  <SelectValue placeholder="Sélectionner une devise" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                  {commos?.map((ctr: Commo) => (
+                                    <SelectItem
+                                      key={ctr.id}
+                                      value={ctr.id.toString()}
+                                    >
+                                      <span className="text-xs">
+                                        {ctr.name}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
                       {curveType === "yic" && (
                         <FormField
                           control={form.control}
@@ -826,7 +900,7 @@ const AmoCommoBackBond = ({
                           </div>
                           <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
                             <p className="font-semibold">Commo Forward</p>
-                            <CommoForwardRate commoFRates={commoFRates} />
+                            <CommoForwardRate commoFRates={commoForward} />
                           </div>
 
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">

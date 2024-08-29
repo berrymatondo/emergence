@@ -3,6 +3,7 @@ import {
   getAllAmoCommoSchedule,
   getAllAmoSchedule,
   getAllCommoForwardRates,
+  getAllCommos,
   getAllCountries,
   getAllCurrencies,
 } from "@/lib/_otherActions";
@@ -11,7 +12,7 @@ import React, { useState } from "react";
 const CommoPage = async () => {
   const countries = await getAllCountries();
   const currencies = await getAllCurrencies();
-  const commoFRates = await getAllCommoForwardRates();
+  const commos = await getAllCommos();
   const schedules = await getAllAmoCommoSchedule();
 
   return (
@@ -19,7 +20,7 @@ const CommoPage = async () => {
       <CommoChoice
         countries={countries?.data}
         currencies={currencies?.data}
-        commoFRates={commoFRates?.data}
+        commos={commos?.data}
         schedules={schedules?.data}
       />
     </div>

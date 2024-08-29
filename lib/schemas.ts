@@ -152,6 +152,7 @@ export const CommoSchema = z.object({
   liquidityPremium: z.string().optional(),
   defaultCountry: z.string().optional(),
   label: z.string().optional(),
+  commodity: z.string().optional(),
 });
 
 //////////////////////////
@@ -239,6 +240,7 @@ export const ACommoSchema = z.object({
   liquidityPremium: z.string().optional(),
   defaultCountry: z.string().optional(),
   label: z.string().optional(),
+  commodity: z.string().optional(),
 });
 
 // EUROPOEAN

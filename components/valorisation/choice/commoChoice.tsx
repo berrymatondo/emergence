@@ -9,14 +9,14 @@ import AmoCommoBackBond from "../commo/amoCommoBB";
 type CommoChoiceProps = {
   countries: any;
   currencies: any;
-  commoFRates: any;
+  commos: any;
   schedules: any;
 };
 
 const CommoChoice = ({
   countries,
   currencies,
-  commoFRates,
+  commos,
   schedules,
 }: CommoChoiceProps) => {
   const [straight, setStraight] = useState(true);
@@ -65,13 +65,13 @@ const CommoChoice = ({
         <CommoBackBond
           countries={countries}
           currencies={currencies}
-          commoFRates={commoFRates}
+          commos={commos}
         />
       ) : (
         <AmoCommoBackBond
           countries={countries}
           currencies={currencies}
-          commoFRates={commoFRates}
+          commos={commos}
           schedules={schedules}
         />
       )}
