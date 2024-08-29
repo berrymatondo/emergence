@@ -28,7 +28,7 @@ export const computeGeneralDualBond = async (
   for (let i = 0; i < curve_coupon.length; i++) {
     discount_curve_coupon.push([
       curve_coupon[i].tenor,
-      +(curve_coupon[i].rate / 100).toFixed(2),
+      +(curve_coupon[i].rate / 100),
     ]);
   }
 
@@ -40,19 +40,22 @@ export const computeGeneralDualBond = async (
     valuation_date: data.valuationDate,
     discount_curve_principal: discount_curve,
     discount_curve_coupon: discount_curve_coupon,
-    /*     discount_curve_coupon: [
-      [0.5, 0.015],
-      [1.0, 0.02],
-      [1.5, 0.025],
-      [2.0, 0.03],
-      [2.5, 0.035],
-    ], */
     day_count_convention: data.couponBasis,
     notional: data.notional,
   });
 
-  //console.log("X", bodyContent);
-
+  /*   console.log("X", {
+    maturity_date: data.bondMaturityDate,
+    payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
+    coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
+    first_coupon_date: data.firstCouponDate,
+    valuation_date: data.valuationDate,
+    discount_curve_principal: discount_curve,
+    discount_curve_coupon: discount_curve_coupon,
+    day_count_convention: data.couponBasis,
+    notional: data.notional,
+  });
+ */
   //BOND PRICE
   try {
     let response = await fetch(
