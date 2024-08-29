@@ -391,8 +391,8 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
 
   return (
     <GeneralLayout
-      title="Dual Bond Valuation"
-      bred={<CustomBreadcrumb name="Dual Bond Valuation" />}
+      title="Dual Currency Bond Valuation"
+      bred={<CustomBreadcrumb name="Dual Currency Bond Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full  max-md:w-full  p-4 rounded-xl">
@@ -434,10 +434,10 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <FormLabel>Currency</FormLabel>
+                                    <FormLabel>Principal Currency</FormLabel>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Principal / Coupon Currency</p>
+                                    <p>Principal Currency</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -479,10 +479,10 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <FormLabel>Currency 2</FormLabel>
+                                    <FormLabel>Coupon Currency</FormLabel>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Principal / Coupon Currency 2</p>
+                                    <p>Coupon Currency</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -523,7 +523,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>{"Step up Spread (%)"}</FormLabel>
+                              <FormLabel>{"Coupon (%)"}</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -731,7 +731,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Curve Type"}
+                                {"Coupon Curve Type"}
                               </FormLabel>
                               <Select
                                 onValueChange={field.onChange}
@@ -765,7 +765,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Curve Type 2"}
+                                {"Coupon Curve Type"}
                               </FormLabel>
                               <Select
                                 onValueChange={field.onChange}
@@ -1016,20 +1016,24 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                             {/* <p className="font-semibold">Discount Curve</p> */}
-                            <DCurve disc={disc} setDisc={setDisc} />
+                            <DCurve
+                              disc={disc}
+                              setDisc={setDisc}
+                              title="Dis. Curve Principal"
+                            />
                           </div>
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                             {/* <p className="font-semibold">Discount Curve</p> */}
                             <DCurve
                               disc={disc2}
                               setDisc={setDisc2}
-                              title="Discount Curve 2"
+                              title="Dis. Curve Coupon"
                             />
                           </div>
                           {curveType === "zcc" && (
                             <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
                               <p className="font-semibold">
-                                ZC Curve - <span>{cur}</span>
+                                ZC Curve Principal - <span>{cur}</span>
                               </p>
                               <ZCCurve zccurve={zcrates} />
                             </div>
@@ -1037,7 +1041,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           {curveType === "zcc" && (
                             <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
                               <p className="font-semibold">
-                                ZC Curve 2- <span>{cur2}</span>
+                                ZC Curve Coupon - <span>{cur2}</span>
                               </p>
                               <ZCCurve zccurve={zcrates2} />
                             </div>

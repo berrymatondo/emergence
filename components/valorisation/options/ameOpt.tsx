@@ -916,10 +916,6 @@ const AmeOption = ({ countries, currencies }: AmeOptionProps) => {
                 <div className=" text-muted-foreground">Option</div>
                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                   {option.toFixed(2)}
-
-                  <span className="text-sm font-normal text-muted-foreground">
-                    %
-                  </span>
                 </div>
               </div>
 
