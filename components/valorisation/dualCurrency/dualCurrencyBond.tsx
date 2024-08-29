@@ -923,7 +923,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Coupon Liq. premium 2 (%) "}
+                                {"Coupon Liq. premium (%) "}
                               </FormLabel>
                               <FormControl>
                                 <Input
