@@ -93,7 +93,7 @@ export const computeFloatingYieldToMaturity = async (
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
   //console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
 
@@ -164,7 +164,7 @@ export const computeGeneralAmoFloatingBond = async (
   //console.log("forw", forw);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let bodyContent = JSON.stringify({
@@ -242,7 +242,7 @@ export const computeAmoFloatingYieldToMaturity = async (
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
   //console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
 

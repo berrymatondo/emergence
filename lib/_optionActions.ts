@@ -254,7 +254,7 @@ export const computeGeneralEuropeanOption = async (
   //console.log("forw", forw);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   const tmpp = data.spot ? +data.spot : 0;
@@ -559,7 +559,7 @@ export const computeGeneralAmericanOption = async (
   //console.log("forw", forw);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   const tmpp = data.spot ? +data.spot : 0;

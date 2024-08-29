@@ -14,7 +14,7 @@ export const computeGeneralStraightBond = async (data: Inputs, curve: any) => {
   //console.log("curve", curve);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let bodyContent = JSON.stringify({
@@ -59,7 +59,7 @@ export const computeStraightBondPrice = async (data: Inputs, curve: any) => {
   //console.log("curve", curve);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   //console.log("discount_curve", discount_curve);
@@ -131,7 +131,7 @@ export const computeAccruedInterest = async (data: Inputs, curve: any) => {
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let bodyContent = JSON.stringify({
@@ -183,7 +183,7 @@ export const computeYieldToMaturity = async (
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
   //console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
 
@@ -239,7 +239,7 @@ export const computeDuration = async (data: Inputs, curve: any) => {
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let bodyContent = JSON.stringify({
@@ -290,7 +290,7 @@ export const computeStraight_bond_cash_flow = async (
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let bodyContent = JSON.stringify({

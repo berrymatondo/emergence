@@ -21,7 +21,7 @@ export const computeGeneralDualBond = async (
   //console.log("curve", curve);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let discount_curve_coupon = [];
@@ -87,7 +87,7 @@ export const computeDualYieldToMaturity = async (
 
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
   //console.log("tmpp", +tmp * 100, data.price, data.forcedBondPrice);
 
