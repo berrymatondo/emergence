@@ -77,6 +77,7 @@ const config = {
 
       const { pathname } = request.nextUrl;
       if (pathname === "/overview") return !!auth;
+      if (pathname.includes("valorisation")) return !!auth;
 
       if (pathname.startsWith("/_next") || pathname === "/favicon.ico")
         return true;

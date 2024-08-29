@@ -28,40 +28,54 @@ import {
 } from "@/components/ui/chart";
 import { TrendingUp } from "lucide-react";
 import { GiSuspensionBridge } from "react-icons/gi";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const HomePage = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  //console.log("Session", session);
+
+  /*  if (session?.user) router.push("/overview"); */
+
   return (
     /*     <div className="flex min-h-screen flex-col items-center justify-between p-24">
      */
     <div className="relative h-full  w-full md:container flex max-md:flex-col justify-start items-center my-auto max-md:gap-8">
       <div className=" md:container md:py-24 max-md:pt-10 flex flex-col gap-4 justify-center md:my-auto  dark:bg-transparent">
         <div className="flex justify-center text-teal-700 text-xl font-bold">
-          <strong className="text-9xl max-md:text-7xl">E</strong>
+          {/*           <strong className="text-9xl max-md:text-7xl">E</strong>
+           */}{" "}
           <div className="leading-10 flex flex-col items-start justify-center">
-            <span className="pt-1 text-6xl max-md:text-2xl">merging</span>
-            <span className="text-4xl max-md:text-xl md:py-4">
+            <span className="pt-1 text-8xl max-md:text-4xl">Emergence</span>
+            {/*             <span className="text-4xl max-md:text-xl md:py-4">
               <strong>M</strong>arkets
-            </span>
+            </span> */}
           </div>
         </div>
-        <p className="text-sm max-md:text-xs text-center text-yellow-400">
+        <p className="text-xl max-md:text-sm text-center text-yellow-400">
           {"Boosting your activity on the financial markets"}
         </p>
 
-        <p className="text-center my-4">
-          <Link
-            href="/auth/login"
-            className="text-white py-4 px-20 max-md:px-4 max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
-          >
-            Login
-          </Link>
-        </p>
-        <p className="text-center">
-          <span className="text-xs">{"No account yet ?"}</span>
-          <Link href="/auth/register" className="px-2 underline">
-            {"Sign up here"}
-          </Link>
-        </p>
+        {!session?.user && (
+          <p className="text-center my-4">
+            <Link
+              href="/auth/login"
+              className="text-white py-4 px-32 max-md:w-full max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
+            >
+              Login
+            </Link>
+          </p>
+        )}
+        {!session?.user && (
+          <p className="text-center">
+            <span className="text-xs">{"No account yet ?"}</span>
+            <Link href="/auth/register" className="px-2 underline">
+              {"Sign up here"}
+            </Link>
+          </p>
+        )}
       </div>
 
       <div className=" w-full max-md:p-2">

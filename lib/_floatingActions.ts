@@ -24,7 +24,7 @@ export const computeGeneralFloatingBond = async (
   //console.log("forw", forw);
   let discount_curve = [];
   for (let i = 0; i < curve.length; i++) {
-    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100).toFixed(2)]);
+    discount_curve.push([curve[i].tenor, +(curve[i].rate / 100)]);
   }
 
   let bodyContent = JSON.stringify({
@@ -38,8 +38,8 @@ export const computeGeneralFloatingBond = async (
     notional: data.notional,
     forward_curve: forw,
   });
-  /* 
-  console.log("X", {
+
+  /*   console.log("X", {
     maturity_date: data.bondMaturityDate,
     payment_frequency: data.couponFrequency ? +data.couponFrequency : undefined,
     coupon_rate: data.couponRate ? +data.couponRate / 100 : undefined,
@@ -63,6 +63,8 @@ export const computeGeneralFloatingBond = async (
     );
 
     let data = await response.json();
+
+    //console.log("OUT", data);
 
     return {
       success: true,

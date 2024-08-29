@@ -9,7 +9,7 @@ type HeaderProps = {
 const Header = ({ userSession }: HeaderProps) => {
   return (
     <div className="w-full flex justify-end max-md:justify-between max-md:items-baseline px-2 py-4">
-      <MobileNav userSession={userSession} />
+      {userSession?.user && <MobileNav userSession={userSession} />}
       <ModeToggle />
     </div>
   );

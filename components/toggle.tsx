@@ -32,9 +32,10 @@ export default function ModeToggle() {
             href="/"
             className="dark:text-white  font-bold text-xl max-md:text-md  text-blue-800"
           >
-            <p className="text-xs md:text-3xl text-teal-600">
+            {/*             <p className="text-xs md:text-3xl text-teal-600">
               Emerging Markets
-            </p>
+            </p> */}
+            <p className="text-xs md:text-3xl text-teal-600">Emergence</p>
           </Link>
         </div>
       </div>

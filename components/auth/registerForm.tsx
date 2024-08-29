@@ -122,12 +122,13 @@ export default function RegisterForm({ usr }: RegisterFormProps) {
             className="md:absolute md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2
   flex max-md:justify-center text-teal-700 text-xl font-bold"
           >
-            <strong className="text-9xl max-md:text-7xl">E</strong>
+            {/*             <strong className="text-9xl max-md:text-7xl">E</strong>
+             */}{" "}
             <div className="leading-10 flex flex-col items-start justify-center">
-              <span className="pt-1 text-6xl max-md:text-2xl">merging</span>
-              <span className="text-4xl max-md:text-xl md:py-4">
+              <span className="pt-1 text-8xl max-md:text-2xl">Emergence</span>
+              {/*               <span className="text-4xl max-md:text-xl md:py-4">
                 <strong>M</strong>arkets
-              </span>
+              </span> */}
             </div>
           </div>
         </div>

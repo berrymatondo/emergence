@@ -313,7 +313,7 @@ const ListItems = [
     icon: <MdOutlineDiamond size={20} />,
     role: "AGENT",
     tooltip: "Analyse des matières premières",
-    subtitle: "Analyse des matières premières",
+    subtitle: "An. des matières premières",
     subdesc:
       "Examiner les tendances, volatilité, projections et impacts des matières premières sur la dette.",
     sublinks: [
