@@ -15,7 +15,7 @@ const CommoPage = async () => {
       <StepUpCoupon
         countries={countries?.data}
         currencies={currencies?.data}
-        stepuprates={stepuprates?.data}
+        stepur={stepuprates?.data}
       />
     </div>
   );

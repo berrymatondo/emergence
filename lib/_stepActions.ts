@@ -17,7 +17,7 @@ export const computeGeneralStepUpBond = async (
 
   const forw = [];
   for (let i = 0; i < stepuprates.length; i++) {
-    forw.push([stepuprates[i].tenor, +stepuprates[i].rate]);
+    forw.push([stepuprates[i].tenor, +stepuprates[i].rate / 100]);
   }
 
   //console.log("forw", forw);
@@ -85,7 +85,7 @@ export const computeStepUpYieldToMaturity = async (
 
   const forw = [];
   for (let i = 0; i < stepuprates.length; i++) {
-    forw.push([stepuprates[i].tenor, +stepuprates[i].rate]);
+    forw.push([stepuprates[i].tenor, +stepuprates[i].rate / 100]);
   }
 
   let discount_curve = [];

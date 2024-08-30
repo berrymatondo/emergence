@@ -66,8 +66,9 @@ import {
   computeGeneralStepUpBond,
   computeStepUpYieldToMaturity,
 } from "@/lib/_stepActions";
-import StepUp from "./stepUp";
 import { StepUpSchema } from "@/lib/schemas";
+import StepUpNew from "./stepUp";
+import StepUp from "./stepUp";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -122,14 +123,10 @@ const initialDisc = [
 type StepUpCouponProps = {
   countries: any;
   currencies: any;
-  stepuprates: any;
+  stepur: any;
 };
 
-const StepUpCoupon = ({
-  countries,
-  currencies,
-  stepuprates,
-}: StepUpCouponProps) => {
+const StepUpCoupon = ({ countries, currencies, stepur }: StepUpCouponProps) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);
@@ -147,6 +144,7 @@ const StepUpCoupon = ({
   const [disc, setDisc] = useState<any>(initialDisc);
   const [loading, setLoading] = useState(false);
   const [notional, setNotional] = useState(0);
+  const [stepuprates, setStepuprates] = useState(stepur);
 
   const form = useForm<z.infer<typeof StepUpSchema>>({
     resolver: zodResolver(StepUpSchema),
@@ -780,8 +778,10 @@ const StepUpCoupon = ({
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                           <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                            <p className="font-semibold">Step Up Coupon</p>
-                            <StepUp stepuprates={stepuprates} />
+                            <StepUp
+                              stepuprates={stepuprates}
+                              setStepuprates={setStepuprates}
+                            />
                           </div>
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                             {/* <p className="font-semibold">Discount Curve</p> */}
