@@ -243,12 +243,12 @@ export const computeGeneralEuropeanOption = async (
 
   const volatility_curve = [];
   for (let i = 0; i < volatility.length; i++) {
-    volatility_curve.push([volatility[i].tenor, +volatility[i].rate]);
+    volatility_curve.push([volatility[i].tenor, +volatility[i].rate / 100]);
   }
 
   const dividend_yield_curve = [];
   for (let i = 0; i < dividend.length; i++) {
-    dividend_yield_curve.push([dividend[i].tenor, +dividend[i].rate]);
+    dividend_yield_curve.push([dividend[i].tenor, +dividend[i].rate / 100]);
   }
 
   //console.log("forw", forw);
@@ -548,12 +548,12 @@ export const computeGeneralAmericanOption = async (
 
   const volatility_curve = [];
   for (let i = 0; i < volatility.length; i++) {
-    volatility_curve.push([volatility[i].tenor, +volatility[i].rate]);
+    volatility_curve.push([volatility[i].tenor, +volatility[i].rate / 100]);
   }
 
   const dividend_yield_curve = [];
   for (let i = 0; i < dividend.length; i++) {
-    dividend_yield_curve.push([dividend[i].tenor, +dividend[i].rate]);
+    dividend_yield_curve.push([dividend[i].tenor, +dividend[i].rate / 100]);
   }
 
   //console.log("forw", forw);
