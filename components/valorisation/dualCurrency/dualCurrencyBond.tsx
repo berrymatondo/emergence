@@ -731,7 +731,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Coupon Curve Type"}
+                                {"Principal Curve Type"}
                               </FormLabel>
                               <Select
                                 onValueChange={field.onChange}
@@ -1012,93 +1012,97 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                       )}
                     </div>
                     <div className="w-full">
-                      <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
-                        <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
-                          <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                            {/* <p className="font-semibold">Discount Curve</p> */}
-                            <DCurve
-                              disc={disc}
-                              setDisc={setDisc}
-                              title="Dis. Curve Principal"
-                            />
+                      <div className="flex justify-end w-[960px] overflow-hidden">
+                        <ScrollArea className="flex w-full h-72 my-4 p-1 md:p-4 dark:bg-teal-400/10 whitespace-nowrap rounded-md border ">
+                          {/*                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
+                           */}{" "}
+                          <div className="flex w-max space-x-4 p-4">
+                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
+                              {/* <p className="font-semibold">Discount Curve</p> */}
+                              <DCurve
+                                disc={disc}
+                                setDisc={setDisc}
+                                title="Dis. Curve Principal"
+                              />
+                            </div>
+                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
+                              {/* <p className="font-semibold">Discount Curve</p> */}
+                              <DCurve
+                                disc={disc2}
+                                setDisc={setDisc2}
+                                title="Dis. Curve Coupon"
+                              />
+                            </div>
+                            {curveType === "zcc" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
+                                <p className="font-semibold">
+                                  ZC Curve Principal - <span>{cur}</span>
+                                </p>
+                                <ZCCurve zccurve={zcrates} />
+                              </div>
+                            )}
+                            {curveType === "zcc" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
+                                <p className="font-semibold">
+                                  ZC Curve Coupon - <span>{cur2}</span>
+                                </p>
+                                <ZCCurve zccurve={zcrates2} />
+                              </div>
+                            )}
+                            {curveType === "yic" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
+                                <p className="font-semibold">Yield Curve</p>
+                                <YieldCurve yieldcurve={yieldcurve} />
+                              </div>
+                            )}
+                            {curveType2 === "yic" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
+                                <p className="font-semibold">Yield Curve 2</p>
+                                <YieldCurve yieldcurve={yieldcurve2} />
+                              </div>
+                            )}
+                            {curveType === "inc" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                <InputCurve
+                                  inputCurve={inputCurve}
+                                  setInputCurve={setInputCurve}
+                                />
+                              </div>
+                            )}
+                            {curveType2 === "inc" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                <InputCurve
+                                  inputCurve={inputCurve2}
+                                  setInputCurve={setInputCurve2}
+                                />
+                              </div>
+                            )}
+                            {curveType !== "yic" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                {/*                               <p className="font-semibold">Credit Spread</p>
+                                 */}{" "}
+                                <CreditSpread
+                                  creditSpread={creditSpread}
+                                  setCreditSpread={setCreditSpread}
+                                  title="Principal Credit Spread"
+                                />
+                              </div>
+                            )}
+                            {curveType2 !== "yic" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                {/*                               <p className="font-semibold">Credit Spread</p>
+                                 */}{" "}
+                                <CreditSpread
+                                  creditSpread={creditSpread2}
+                                  setCreditSpread={setCreditSpread2}
+                                  title="Coupon Credit Spread"
+                                />
+                              </div>
+                            )}
                           </div>
-                          <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                            {/* <p className="font-semibold">Discount Curve</p> */}
-                            <DCurve
-                              disc={disc2}
-                              setDisc={setDisc2}
-                              title="Dis. Curve Coupon"
-                            />
-                          </div>
-                          {curveType === "zcc" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                              <p className="font-semibold">
-                                ZC Curve Principal - <span>{cur}</span>
-                              </p>
-                              <ZCCurve zccurve={zcrates} />
-                            </div>
-                          )}
-                          {curveType === "zcc" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                              <p className="font-semibold">
-                                ZC Curve Coupon - <span>{cur2}</span>
-                              </p>
-                              <ZCCurve zccurve={zcrates2} />
-                            </div>
-                          )}
-                          {curveType === "yic" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-1/3">
-                              <p className="font-semibold">Yield Curve</p>
-                              <YieldCurve yieldcurve={yieldcurve} />
-                            </div>
-                          )}
-                          {curveType2 === "yic" && (
-                            <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-1/3">
-                              <p className="font-semibold">Yield Curve 2</p>
-                              <YieldCurve yieldcurve={yieldcurve2} />
-                            </div>
-                          )}
-                          {curveType === "inc" && (
-                            <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <InputCurve
-                                inputCurve={inputCurve}
-                                setInputCurve={setInputCurve}
-                              />
-                            </div>
-                          )}
-                          {curveType2 === "inc" && (
-                            <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              <InputCurve
-                                inputCurve={inputCurve2}
-                                setInputCurve={setInputCurve2}
-                              />
-                            </div>
-                          )}
-                          {curveType !== "yic" && (
-                            <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              {/*                               <p className="font-semibold">Credit Spread</p>
-                               */}{" "}
-                              <CreditSpread
-                                creditSpread={creditSpread}
-                                setCreditSpread={setCreditSpread}
-                                title="Principal Credit Spread"
-                              />
-                            </div>
-                          )}
-                          {curveType2 !== "yic" && (
-                            <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                              {/*                               <p className="font-semibold">Credit Spread</p>
-                               */}{" "}
-                              <CreditSpread
-                                creditSpread={creditSpread2}
-                                setCreditSpread={setCreditSpread2}
-                                title="Coupon Credit Spread"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <ScrollBar orientation="horizontal" />
-                      </ScrollArea>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                      </div>
                     </div>
                   </div>
                 </div>
