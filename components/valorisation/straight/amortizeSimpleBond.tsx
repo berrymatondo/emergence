@@ -193,7 +193,7 @@ const AmortizedSimpleBond = ({
       notional: "",
       forcedBondPrice: false,
       amortizationFrequency: "1",
-      amortizationStartDate: "2023-12-30",
+      amortizationStartDate: "2025-01-01",
       curveType: "zcc",
       curveTypeName: "",
       liquidityPremium: "0.00",

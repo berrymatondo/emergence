@@ -175,7 +175,7 @@ const AmoFloating = ({
       defaultCountry: "1",
       label: "1M",
       amortizationFrequency: "1",
-      amortizationStartDate: "2023-12-30",
+      amortizationStartDate: "2025-01-01",
     },
   });
 
