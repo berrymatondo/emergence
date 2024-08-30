@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { SBSchema } from "@/lib/schemas";
-import { computeDiscountCurve } from "@/lib/_sbActions";
+import { computeDiscountCurve, computeDiscountCurve2 } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
   Select,
@@ -201,7 +201,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
       notional: "",
       forcedBondPrice: false,
       curveType: "zcc",
-      curveType2: "zcc",
+      curveType2: "zcc2",
       curveTypeName: "",
       liquidityPremium: "0.00",
       liquidityPremium2: "0.00",
@@ -309,7 +309,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
       curveType
     );
 
-    const dcurve2 = await computeDiscountCurve(
+    const dcurve2 = await computeDiscountCurve2(
       values,
       disc2,
       yieldcurve2,
@@ -777,11 +777,11 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="zcc">ZC Curve</SelectItem>
-                                  <SelectItem value="yic">
+                                  <SelectItem value="zcc2">ZC Curve</SelectItem>
+                                  <SelectItem value="yic2">
                                     Yield Curve
                                   </SelectItem>
-                                  <SelectItem value="inc">
+                                  <SelectItem value="inc2">
                                     Input Curve
                                   </SelectItem>
                                 </SelectContent>
@@ -857,7 +857,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         />
                       )}
 
-                      {curveType2 === "yic" && (
+                      {curveType2 === "yic2" && (
                         <FormField
                           control={form.control}
                           name="defaultCountry2"
@@ -975,7 +975,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           }}
                         />
                       )}
-                      {curveType2 === "yic" && (
+                      {curveType2 === "yic2" && (
                         <FormField
                           control={form.control}
                           name="defaultCountry2"
@@ -1041,7 +1041,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                                 <ZCCurve zccurve={zcrates} />
                               </div>
                             )}
-                            {curveType === "zcc" && (
+                            {curveType2 === "zcc2" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
                                 <p className="font-semibold">
                                   ZC Curve Coupon - <span>{cur2}</span>
@@ -1051,13 +1051,17 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                             )}
                             {curveType === "yic" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
-                                <p className="font-semibold">Yield Curve</p>
+                                <p className="font-semibold">
+                                  Yield Curve Principal
+                                </p>
                                 <YieldCurve yieldcurve={yieldcurve} />
                               </div>
                             )}
-                            {curveType2 === "yic" && (
+                            {curveType2 === "yic2" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
-                                <p className="font-semibold">Yield Curve 2</p>
+                                <p className="font-semibold">
+                                  Yield Curve Coupon
+                                </p>
                                 <YieldCurve yieldcurve={yieldcurve2} />
                               </div>
                             )}
@@ -1066,14 +1070,16 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                                 <InputCurve
                                   inputCurve={inputCurve}
                                   setInputCurve={setInputCurve}
+                                  title="Input Curve Principal"
                                 />
                               </div>
                             )}
-                            {curveType2 === "inc" && (
+                            {curveType2 === "inc2" && (
                               <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
                                 <InputCurve
                                   inputCurve={inputCurve2}
                                   setInputCurve={setInputCurve2}
+                                  title="Input Curve Coupon"
                                 />
                               </div>
                             )}
@@ -1088,7 +1094,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                                 />
                               </div>
                             )}
-                            {curveType2 !== "yic" && (
+                            {curveType2 !== "yic2" && (
                               <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
                                 {/*                               <p className="font-semibold">Credit Spread</p>
                                  */}{" "}

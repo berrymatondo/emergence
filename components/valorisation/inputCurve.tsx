@@ -24,13 +24,18 @@ import { useState } from "react";
 type InputCurveProps = {
   inputCurve: any;
   setInputCurve: (el: any) => void;
+  title?: string;
 };
 
-const InputCurve = ({ inputCurve, setInputCurve }: InputCurveProps) => {
+const InputCurve = ({ inputCurve, setInputCurve, title }: InputCurveProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="font-semibold">Input Curve</p>
+        {title ? (
+          <p className="font-semibold">{title}</p>
+        ) : (
+          <p className="font-semibold">Input Curve</p>
+        )}
         <AddInputCurve inputCurve={inputCurve} openDialog={false} />
       </div>
       <Table>

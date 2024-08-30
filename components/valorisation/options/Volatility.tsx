@@ -33,7 +33,7 @@ const VolatilityCurve = ({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="font-semibold">Volatility Curve</p>
+        <p className="font-semibold">Volatility</p>
         <AddVolatilityCurve volatility={volatility} openDialog={false} />
       </div>
       <Table>

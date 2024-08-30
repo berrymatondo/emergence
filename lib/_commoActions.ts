@@ -153,7 +153,7 @@ export const computeGeneralAmoCommoBond = async (
 
   const amo = [];
   for (let i = 0; i < amoSchedules.length; i++) {
-    amo.push([amoSchedules[i].date, +amoSchedules[i].rate]);
+    amo.push([amoSchedules[i].date, +amoSchedules[i].rate / 100]);
   }
 
   const forw = [];
@@ -233,7 +233,7 @@ export const computeAmoCommoYieldToMaturity = async (
 
   const amo = [];
   for (let i = 0; i < amoSchedules.length; i++) {
-    amo.push([amoSchedules[i].date, +amoSchedules[i].rate]);
+    amo.push([amoSchedules[i].date, +amoSchedules[i].rate / 100]);
   }
 
   const forw = [];

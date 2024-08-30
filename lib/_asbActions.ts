@@ -21,7 +21,7 @@ export const computeGeneralAmortizedBond = async (
 
   const amo = [];
   for (let i = 0; i < amoSchedules.length; i++) {
-    amo.push([amoSchedules[i].date, +amoSchedules[i].rate]);
+    amo.push([amoSchedules[i].date, +amoSchedules[i].rate / 100]);
   }
 
   //console.log("amoSchedules ", amo);
@@ -101,7 +101,7 @@ export const computeAmortizedYieldToMaturity = async (
 
   const amo = [];
   for (let i = 0; i < amoSchedules.length; i++) {
-    amo.push([amoSchedules[i].date, +amoSchedules[i].rate]);
+    amo.push([amoSchedules[i].date, +amoSchedules[i].rate / 100]);
   }
 
   let discount_curve = [];

@@ -30,7 +30,7 @@ const DividendCurve = ({ dividend, setDividend }: DividendCurveProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="font-semibold">Dividend Curve</p>
+        <p className="font-semibold">Dividend Yield</p>
         <AddDividendCurve dividend={dividend} openDialog={false} />
       </div>
       <Table>

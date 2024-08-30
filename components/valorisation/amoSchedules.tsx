@@ -206,7 +206,7 @@ const UpdateAmoSchedule = ({
       <AlertDialogTrigger asChild>
         <div className="flex justify-between">
           <span>{ic?.date.split("-").reverse().join("-")}</span>
-          <span>{ic?.rate}</span>
+          <span>{ic?.rate}%</span>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>

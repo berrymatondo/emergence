@@ -125,7 +125,7 @@ export const SBSchema = z.object({
   notional: z.string().optional(),
   forcedBondPrice: z.boolean().default(false),
   curveType: z.enum(["zcc", "yic", "inc"]),
-  curveType2: z.enum(["zcc", "yic", "inc"]),
+  curveType2: z.enum(["zcc2", "yic2", "inc2"]),
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
   liquidityPremium2: z.string().optional(),

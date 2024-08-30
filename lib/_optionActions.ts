@@ -149,7 +149,7 @@ export const computeEuroOptionDiscountCurve = async (
       } catch (error) {}
     } else {
       // Compute Input curve valuation
-      console.log("inputCurve", inputCurve);
+      //console.log("inputCurve", inputCurve);
       let c1 = [];
       let c2 = [];
       let c3 = [];
@@ -299,11 +299,11 @@ export const computeGeneralEuropeanOption = async (
       }
     );
 
-    console.log("response", response);
+    //console.log("response", response);
 
     let data = await response.json();
 
-    console.log("DATA", data);
+    //console.log("DATA", data);
 
     return {
       success: true,
@@ -604,7 +604,7 @@ export const computeGeneralAmericanOption = async (
       }
     );
 
-    console.log("response", response);
+    //console.log("response", response);
 
     let data = await response.json();
 

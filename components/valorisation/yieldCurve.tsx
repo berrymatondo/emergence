@@ -25,7 +25,9 @@ const YieldCurve = ({ yieldcurve }: YieldCurveProps) => {
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">{yc.tenor}</TableCell>
 
-            <TableCell className="text-right  mx-0 px-0">{yc.yield}</TableCell>
+            <TableCell className="text-right  mx-0 px-0">
+              {yc.yield} %
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
