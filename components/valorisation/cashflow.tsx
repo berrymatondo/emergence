@@ -19,7 +19,7 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
           <TableHead className="text-left mx-0 pl-0 pr-2">
             Payment Date
           </TableHead>
-          <TableHead className="mx-0 pl-0">Gross Payment</TableHead>
+          <TableHead className="text-center mx-0 pl-0">Gross Payment</TableHead>
 
           <TableHead className="text-right  mx-0 px-0">
             Discounted Payment
@@ -32,12 +32,12 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
             <TableCell className="font-medium  mx-0 px-0">
               {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="  mx-0 px-0">
-              {(yc.gross * 100).toFixed(2)}%
+            <TableCell className="text-center    mx-0 px-0">
+              {(yc.gross * 100).toFixed(2)} %
             </TableCell>
 
             <TableCell className="text-right  mx-0 px-0">
-              {(yc.discounted * 100).toFixed(2)}%
+              {(yc.discounted * 100).toFixed(2)} %
             </TableCell>
           </TableRow>
         ))}

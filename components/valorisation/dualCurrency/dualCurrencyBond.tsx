@@ -403,8 +403,8 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                 className="space-y-6"
               >
                 <div className="flex max-md:flex-col gap-4">
-                  <div className="md:w-1/2 space-y-4">
-                    <div className="flex justify-between items-center gap-4">
+                  <div className="md:w-1/4 space-y-4">
+                    <div className="flex max-md:flex-col md:justify-between md:items-center gap-4">
                       <FormField
                         control={form.control}
                         name="bondMaturityDate"
@@ -424,7 +424,9 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           );
                         }}
                       />
+                    </div>
 
+                    <div className="flex  md:justify-between md:items-center gap-2">
                       <FormField
                         control={form.control}
                         name="couponCurrency"
@@ -515,8 +517,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         }}
                       />
                     </div>
-
-                    <div className="flex justify-between items-center gap-4">
+                    <div className="flex   md:justify-between md:items-center gap-2">
                       <FormField
                         control={form.control}
                         name="couponRate"
@@ -569,7 +570,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         }}
                       />
                     </div>
-                    <div className="flex justify-between items-center gap-4">
+                    <div className="flex  md:justify-between md:items-center gap-2">
                       <FormField
                         control={form.control}
                         name="firstCouponDate"
@@ -621,7 +622,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         }}
                       />
                     </div>
-                    <div className="flex justify-between items-center gap-4">
+                    <div className="flex  md:justify-between md:items-center gap-2">
                       <FormField
                         control={form.control}
                         name="valuationDate"
@@ -939,7 +940,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         }}
                       />
                     </div>
-                    <div className="py-4 md:hidden flex gap-4">
+                    <div className="py-4 md:hidden flex gap-4 ">
                       {curveType === "yic" && (
                         <FormField
                           control={form.control}
@@ -1011,12 +1012,12 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         />
                       )}
                     </div>
-                    <div className="w-full">
-                      <div className="flex justify-end w-[960px] overflow-hidden">
-                        <ScrollArea className="flex w-full h-72 my-4 p-1 md:p-4 dark:bg-teal-400/10 whitespace-nowrap rounded-md border ">
+                    <div className="w-full ">
+                      <div className="flex flex-col justify-end max-w-[1200px] overflow-hidden">
+                        <ScrollArea className="max-md:hidden flex w-full h-72 my-4 p-1 md:p-4 dark:bg-teal-400/10 whitespace-nowrap rounded-md border ">
                           {/*                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                            */}{" "}
-                          <div className="flex w-max space-x-4 p-4">
+                          <div className="flex max-md:grid w-max space-x-4 p-4">
                             <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
                               {/* <p className="font-semibold">Discount Curve</p> */}
                               <DCurve
@@ -1108,16 +1109,119 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                           </div>
                           <ScrollBar orientation="horizontal" />
                         </ScrollArea>
+
+                        <ScrollArea className="md:hidden flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
+                          {/*                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
+                           */}{" "}
+                          <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
+                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
+                              {/* <p className="font-semibold">Discount Curve</p> */}
+                              <DCurve
+                                disc={disc}
+                                setDisc={setDisc}
+                                title="Dis. Curve Principal"
+                              />
+                            </div>
+                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
+                              {/* <p className="font-semibold">Discount Curve</p> */}
+                              <DCurve
+                                disc={disc2}
+                                setDisc={setDisc2}
+                                title="Dis. Curve Coupon"
+                              />
+                            </div>
+                            {curveType === "zcc" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
+                                <p className="font-semibold">
+                                  ZC Curve Principal - <span>{cur}</span>
+                                </p>
+                                <ZCCurve zccurve={zcrates} />
+                              </div>
+                            )}
+                            {curveType2 === "zcc2" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
+                                <p className="font-semibold">
+                                  ZC Curve Coupon - <span>{cur2}</span>
+                                </p>
+                                <ZCCurve zccurve={zcrates2} />
+                              </div>
+                            )}
+                            {curveType === "yic" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
+                                <p className="font-semibold">
+                                  Yield Curve Principal
+                                </p>
+                                <YieldCurve yieldcurve={yieldcurve} />
+                              </div>
+                            )}
+                            {curveType2 === "yic2" && (
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
+                                <p className="font-semibold">
+                                  Yield Curve Coupon
+                                </p>
+                                <YieldCurve yieldcurve={yieldcurve2} />
+                              </div>
+                            )}
+                            {curveType === "inc" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                <InputCurve
+                                  inputCurve={inputCurve}
+                                  setInputCurve={setInputCurve}
+                                  title="Input Curve Principal"
+                                />
+                              </div>
+                            )}
+                            {curveType2 === "inc2" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                <InputCurve
+                                  inputCurve={inputCurve2}
+                                  setInputCurve={setInputCurve2}
+                                  title="Input Curve Coupon"
+                                />
+                              </div>
+                            )}
+                            {curveType !== "yic" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                {/*                               <p className="font-semibold">Credit Spread</p>
+                                 */}{" "}
+                                <CreditSpread
+                                  creditSpread={creditSpread}
+                                  setCreditSpread={setCreditSpread}
+                                  title="Principal Credit Spread"
+                                />
+                              </div>
+                            )}
+                            {curveType2 !== "yic2" && (
+                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                                {/*                               <p className="font-semibold">Credit Spread</p>
+                                 */}{" "}
+                                <CreditSpread
+                                  creditSpread={creditSpread2}
+                                  setCreditSpread={setCreditSpread2}
+                                  title="Coupon Credit Spread"
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+
+                        <Button
+                          type="submit"
+                          className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
+                        >
+                          {loading ? "Computing ..." : "Compute"}
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <Button
+                {/*                 <Button
                   type="submit"
                   className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
                 >
                   {loading ? "Computing ..." : "Compute"}
-                </Button>
+                </Button> */}
               </form>
             </Form>
           </div>
