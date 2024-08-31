@@ -85,7 +85,7 @@ const AddVolatilityCurve = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <MdAdd className="bg-sky-600 rounded-full" />
+        <MdAdd className="bg-sky-600 rounded-full" size={25} />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

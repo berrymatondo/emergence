@@ -35,9 +35,9 @@ const CreditSpread = ({
     <div>
       <div className="flex items-center justify-between">
         {title ? (
-          <p className="font-semibold">{title}</p>
+          <p className="font-semibold text-sm mr-2">{title}</p>
         ) : (
-          <p className="font-semibold">Credit Spread</p>
+          <p className="font-semibold  text-sm mr-2">Credit Spread</p>
         )}
         <AddCreditSpread creditSpread={creditSpread} openDialog={false} />
       </div>
@@ -188,7 +188,7 @@ const AddCreditSpread = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <MdAdd className="bg-sky-600 rounded-full" />
+        <MdAdd className="bg-sky-600 rounded-full" size={25} />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

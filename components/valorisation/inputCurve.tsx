@@ -32,9 +32,9 @@ const InputCurve = ({ inputCurve, setInputCurve, title }: InputCurveProps) => {
     <div>
       <div className="flex items-center justify-between">
         {title ? (
-          <p className="font-semibold">{title}</p>
+          <p className="font-semibold  text-sm mr-2">{title}</p>
         ) : (
-          <p className="font-semibold">Input Curve</p>
+          <p className="font-semibold text-sm mr-2">Input Curve</p>
         )}
         <AddInputCurve inputCurve={inputCurve} openDialog={false} />
       </div>
@@ -85,7 +85,7 @@ const AddInputCurve = ({ inputCurve, openDialog }: AddInputCurveProps) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <MdAdd className="bg-sky-600 rounded-full" />
+        <MdAdd className="bg-sky-600 rounded-full" size={25} />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

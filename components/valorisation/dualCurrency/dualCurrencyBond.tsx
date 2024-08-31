@@ -1012,13 +1012,13 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                         />
                       )}
                     </div>
-                    <div className="w-full ">
-                      <div className="flex flex-col justify-end max-w-[1200px] overflow-hidden">
+                    <div className="w-full md:max-w-fit">
+                      <div className="flex flex-col justify-end max-w-full overflow-hidden md:container">
                         <ScrollArea className="max-md:hidden flex w-full h-72 my-4 p-1 md:p-4 dark:bg-teal-400/10 whitespace-nowrap rounded-md border ">
                           {/*                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                            */}{" "}
                           <div className="flex max-md:grid w-max space-x-4 p-4">
-                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
+                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                               {/* <p className="font-semibold">Discount Curve</p> */}
                               <DCurve
                                 disc={disc}
@@ -1026,7 +1026,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                                 title="Dis. Curve Principal"
                               />
                             </div>
-                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
+                            <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                               {/* <p className="font-semibold">Discount Curve</p> */}
                               <DCurve
                                 disc={disc2}
@@ -1035,39 +1035,39 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               />
                             </div>
                             {curveType === "zcc" && (
-                              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
-                                <p className="font-semibold">
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                                <p className="font-semibold text-sm mr-2">
                                   ZC Curve Principal - <span>{cur}</span>
                                 </p>
                                 <ZCCurve zccurve={zcrates} />
                               </div>
                             )}
                             {curveType2 === "zcc2" && (
-                              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
-                                <p className="font-semibold">
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                                <p className="font-semibold  text-sm mr-2">
                                   ZC Curve Coupon - <span>{cur2}</span>
                                 </p>
                                 <ZCCurve zccurve={zcrates2} />
                               </div>
                             )}
                             {curveType === "yic" && (
-                              <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
-                                <p className="font-semibold">
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20  ">
+                                <p className="font-semibold  text-sm mr-2">
                                   Yield Curve Principal
                                 </p>
                                 <YieldCurve yieldcurve={yieldcurve} />
                               </div>
                             )}
                             {curveType2 === "yic2" && (
-                              <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
-                                <p className="font-semibold">
+                              <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
+                                <p className="font-semibold  text-sm mr-2">
                                   Yield Curve Coupon
                                 </p>
                                 <YieldCurve yieldcurve={yieldcurve2} />
                               </div>
                             )}
                             {curveType === "inc" && (
-                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                              <div className=" border rounded-xl p-4 bg-card  ">
                                 <InputCurve
                                   inputCurve={inputCurve}
                                   setInputCurve={setInputCurve}
@@ -1076,7 +1076,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               </div>
                             )}
                             {curveType2 === "inc2" && (
-                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                              <div className=" border rounded-xl p-4 bg-card  ">
                                 <InputCurve
                                   inputCurve={inputCurve2}
                                   setInputCurve={setInputCurve2}
@@ -1085,7 +1085,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               </div>
                             )}
                             {curveType !== "yic" && (
-                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                              <div className=" border rounded-xl p-4 bg-card  ">
                                 {/*                               <p className="font-semibold">Credit Spread</p>
                                  */}{" "}
                                 <CreditSpread
@@ -1096,7 +1096,7 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
                               </div>
                             )}
                             {curveType2 !== "yic2" && (
-                              <div className=" border rounded-xl p-4 bg-card  md:w-[200px]">
+                              <div className=" border rounded-xl p-4 bg-card ">
                                 {/*                               <p className="font-semibold">Credit Spread</p>
                                  */}{" "}
                                 <CreditSpread

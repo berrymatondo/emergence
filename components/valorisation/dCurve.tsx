@@ -32,9 +32,9 @@ const DCurve = ({ disc, setDisc, title }: DCurveProps) => {
     <div>
       <div className="flex items-center justify-between">
         {title ? (
-          <p className="font-semibold">{title}</p>
+          <p className="font-semibold text-sm mr-2">{title}</p>
         ) : (
-          <p className="font-semibold">Discount Curve</p>
+          <p className="font-semibold text-sm mr-2">Discount Curve</p>
         )}
         <AddDisc disc={disc} openDialog={false} />
       </div>
@@ -92,7 +92,7 @@ const AddDisc = ({ disc, openDialog }: AddDiscProps) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <MdAdd className="bg-sky-600 rounded-full" />
+        <MdAdd className="bg-sky-600 rounded-full" size={25} />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
