@@ -57,13 +57,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import InputCurve from "../inputCurve";
-import CreditSpread from "../creditSpread";
-import YieldCurve from "../yieldCurve";
-import ZCCurve from "../zcCurve";
-import Cashflow from "../cashflow";
-import DCurve from "../dCurve";
-import GrapheValue from "../grapheValue";
+import InputCurve from "../../commonCurves/inputCurve";
+import CreditSpread from "../../commonCurves/creditSpread";
+import YieldCurve from "../../commonCurves/yieldCurve";
+import ZCCurve from "../../commonCurves/zcCurve";
+import Cashflow from "../../commonCurves/cashflow";
+import DCurve from "../../commonCurves/dCurve";
+import GrapheValue from "../../commonCurves/grapheValue";
 import { StraightSchema } from "@/lib/schemas";
 
 const initialCreditSpread = [
@@ -888,10 +888,13 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                       <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                         {forcedBondPrice
                           ? bondPrice.toFixed(2)
-                          : notional.toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
+                          : new Intl.NumberFormat(undefined, {
+                              currency: cur,
+                              style: "currency",
+                            }).format(+notional.toFixed(2))}
+                        {/*                         <span className="text-sm font-normal text-muted-foreground">
                           {cur}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </div>
@@ -915,10 +918,13 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                     <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
                       <div className=" text-muted-foreground">Value</div>
                       <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {notional.toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
+                        {new Intl.NumberFormat(undefined, {
+                          currency: cur,
+                          style: "currency",
+                        }).format(+notional.toFixed(2))}
+                        {/*    <span className="text-sm font-normal text-muted-foreground">
                           {cur}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </div>

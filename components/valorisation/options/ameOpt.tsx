@@ -54,13 +54,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import InputCurve from "../inputCurve";
-import CreditSpread from "../creditSpread";
-import YieldCurve from "../yieldCurve";
-import ZCCurve from "../zcCurve";
-import Cashflow from "../cashflow";
-import DCurve from "../dCurve";
-import GrapheValue from "../grapheValue";
+import InputCurve from "../../commonCurves/inputCurve";
+import CreditSpread from "../../commonCurves/creditSpread";
+import YieldCurve from "../../commonCurves/yieldCurve";
+import ZCCurve from "../../commonCurves/zcCurve";
+import Cashflow from "../../commonCurves/cashflow";
+import DCurve from "../../commonCurves/dCurve";
+import GrapheValue from "../../commonCurves/grapheValue";
 import ForwardRate from "../forwardRate";
 import {
   computeAmeOptionDiscountCurve,

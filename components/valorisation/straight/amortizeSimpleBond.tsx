@@ -84,14 +84,14 @@ import {
   computeGeneralAmortizedBond,
   computeAmortizedYieldToMaturity,
 } from "@/lib/_asbActions";
-import InputCurve from "../inputCurve";
-import CreditSpread from "../creditSpread";
-import YieldCurve from "../yieldCurve";
-import Cashflow from "../cashflow";
-import ZCCurve from "../zcCurve";
+import InputCurve from "../../commonCurves/inputCurve";
+import CreditSpread from "../../commonCurves/creditSpread";
+import YieldCurve from "../../commonCurves/yieldCurve";
+import Cashflow from "../../commonCurves/cashflow";
+import ZCCurve from "../../commonCurves/zcCurve";
 import AmoSched from "../amoSchedules";
-import DCurve from "../dCurve";
-import GrapheValue from "../grapheValue";
+import DCurve from "../../commonCurves/dCurve";
+import GrapheValue from "../../commonCurves/grapheValue";
 import { AStraightSchema } from "@/lib/schemas";
 
 const initialCreditSpread = [

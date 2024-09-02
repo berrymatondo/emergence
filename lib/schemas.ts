@@ -274,3 +274,22 @@ export const AmericSchema = z.object({
   defaultCountry: z.string().optional(),
   liquidityPremium: z.string().optional(),
 });
+
+// BANK: INTEREST RATE
+export const InterestRateSchema = z.object({
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  fixedCurrency: z.string().optional(),
+  floatingCurrency: z.string().optional(),
+  fixedRate: z.string().optional(),
+  fixedFrequency: z.string().optional(),
+  floatingFrequency: z.string().optional(),
+  swapPayer: z.enum(["fixedLeg", "floatingLeg"]),
+  swapReceiver: z.enum(["fixedLeg", "floatingLeg"]),
+  swapNotional: z.string().optional(),
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  swapValue: z.string().optional(),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  defaultCountry: z.string().optional(),
+});

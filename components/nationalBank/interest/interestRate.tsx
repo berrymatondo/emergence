@@ -20,7 +20,6 @@ import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { computeDiscountCurve } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
   Select,
@@ -33,11 +32,11 @@ import {
 } from "../../ui/select";
 import { Country, CountryList, Currency, DataTypeList } from "@prisma/client";
 import {
-  AmortizedCouponFreqList,
   CouponBasisList,
   CouponFreqList,
   CurrencyList,
   LabelList,
+  SwapFreqList,
 } from "@/lib/enums";
 import { Checkbox } from "../../ui/checkbox";
 import { Label } from "../../ui/label";
@@ -55,21 +54,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import InputCurve from "../../commonCurves/inputCurve";
-import CreditSpread from "../../commonCurves/creditSpread";
-import YieldCurve from "../../commonCurves/yieldCurve";
-import ZCCurve from "../../commonCurves/zcCurve";
-import Cashflow from "../../commonCurves/cashflow";
-import DCurve from "../../commonCurves/dCurve";
-import GrapheValue from "../../commonCurves/grapheValue";
-import ForwardRate from "../forwardRate";
-
+import { InterestRateSchema } from "@/lib/schemas";
 import {
-  computeAmoFloatingYieldToMaturity,
-  computeGeneralAmoFloatingBond,
-} from "@/lib/_floatingActions";
-import AmoSched from "../amoSchedules";
-import { AFloatingSchema } from "@/lib/schemas";
+  computeInterestDiscountCurve,
+  computeInterestRateSwap,
+} from "@/lib/_bankActions";
+import DCurve from "@/components/commonCurves/dCurve";
+import ZCCurve from "@/components/commonCurves/zcCurve";
+import YieldCurve from "@/components/commonCurves/yieldCurve";
+import InputCurve from "@/components/commonCurves/inputCurve";
+import CreditSpread from "@/components/commonCurves/creditSpread";
+import Cashflow from "@/components/commonCurves/cashflow";
+import GrapheValue from "@/components/commonCurves/grapheValue";
+import UserInputs from "../userInputs";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -86,22 +83,9 @@ const initialCreditSpread = [
   { id: 12, tenor: 30.0, rate: 0.0 },
 ];
 
-/* const initialInputCurve = [
-  { id: 1, tenor: 0, rate: 0.0 },
-  { id: 2, tenor: 0.5, rate: 0.0 },
-  { id: 3, tenor: 1.0, rate: 0.0 },
-  { id: 4, tenor: 2.0, rate: 0.0 },
-  { id: 5, tenor: 3.0, rate: 0.0 },
-  { id: 6, tenor: 4.0, rate: 0.0 },
-  { id: 7, tenor: 5.0, rate: 0.0 },
-  { id: 8, tenor: 7.0, rate: 0.0 },
-  { id: 9, tenor: 10.0, rate: 0.0 },
-  { id: 10, tenor: 15.0, rate: 0.0 },
-  { id: 11, tenor: 20.0, rate: 0.0 },
-  { id: 12, tenor: 30.0, rate: 0.0 },
-]; */
-
 const initialInputCurve: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
+const initialInputs: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
+const initialIndexes: any[] = [{ id: 1, tenor: 0.5, rate: 3 }];
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -121,69 +105,61 @@ const initialDisc = [
   { id: 15, tenor: 30, rate: 0 },
 ];
 
-type FloatingRateBondProps = {
+type InterestRateProps = {
   countries: any;
   currencies: any;
-  schedules: any;
 };
 
-const AmoFloating = ({
-  countries,
-  currencies,
-  schedules,
-}: FloatingRateBondProps) => {
+const InterestRate = ({ countries, currencies }: InterestRateProps) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);
   const [yieldToMaturity, setYieldToMaturity] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [swapValue, setSwapValue] = useState(0);
   const [show, setShow] = useState(false);
   const [yieldcurve, setYieldcurve] = useState<any>();
   const [zcrates, setZcrates] = useState<any>();
   const [forwardrates, setForwardrates] = useState<any>();
   const [inputCurve, setInputCurve] = useState(initialInputCurve);
   const [creditSpread, setCreditSpread] = useState<any>(initialCreditSpread);
+  const [inputs, setInputs] = useState<any>(initialInputs);
+  const [indexes, setIndexes] = useState<any>(initialIndexes);
 
-  const [cur, setCur] = useState<any>();
+  const [cur, setCur] = useState<any>("USD");
   const [cashflow, setCashflow] = useState<any>();
   const [disc, setDisc] = useState<any>(initialDisc);
   const [loading, setLoading] = useState(false);
-  const [notional, setNotional] = useState(0);
-  const [amoSchedules, setAmoSchedules] = useState(schedules);
+  const [swapNotional, setSwapNotional] = useState(0);
 
-  const form = useForm<z.infer<typeof AFloatingSchema>>({
-    resolver: zodResolver(AFloatingSchema),
+  //console.log("disc", disc);
+
+  const form = useForm<z.infer<typeof InterestRateSchema>>({
+    resolver: zodResolver(InterestRateSchema),
     defaultValues: {
-      //bondMaturityDate: new Date().toISOString(),
-      price: "0",
-      //bondMaturityDate: new Date().toISOString().split("T")[0],
-      bondMaturityDate: "2030-07-30",
-      couponCurrency: "1",
-      //couponRate: "0.00",
-      couponRate: "5",
-      couponFrequency: "1",
-      //firstCouponDate: new Date().toISOString().split("T")[0],
-      firstCouponDate: "2023-07-30",
-      couponBasis: "AA",
-      //valuationDate: new Date().toISOString().split("T")[0],
-      valuationDate: "2024-07-01",
-      notional: "",
-      forcedBondPrice: false,
+      startDate: "2023-12-30",
+      endDate: "2030-01-01",
+      fixedCurrency: "1",
+      floatingCurrency: "1",
+      fixedRate: "3",
+      fixedFrequency: "6 months",
+      floatingFrequency: "6 months",
+      swapPayer: "fixedLeg",
+      swapReceiver: "floatingLeg",
+      swapNotional: "1000",
       curveType: "zcc",
       curveTypeName: "",
       liquidityPremium: "0.00",
       defaultCountry: "1",
-      label: "1M",
-      amortizationFrequency: "1",
-      amortizationStartDate: "2025-01-01",
     },
   });
 
-  const forcedBondPrice = form.watch("forcedBondPrice");
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
-  const couponCurrency = form.watch("couponCurrency");
-  const label = form.watch("label");
+  const fixedCurrency = form.watch("fixedCurrency");
+  const swapPayer = form.watch("swapPayer");
+  const swapReceiver = form.watch("swapReceiver");
+  const floatingCurrency = form.watch("floatingCurrency");
+  //const label = form.watch("label");
 
   useEffect(() => {
     const fetchYC = async (id: any) => {
@@ -202,10 +178,10 @@ const AmoFloating = ({
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(fixedCurrency);
 
     // Fetch Forward Rates
-    const fetchFR = async (id: any, label: string) => {
+    /*     const fetchFR = async (id: any, label: string) => {
       const resu = await getAllForwardRates(+id, label);
       const data = resu?.data;
 
@@ -214,7 +190,7 @@ const AmoFloating = ({
       setForwardrates(data);
     };
     fetchFR(couponCurrency, label ? label : "1M");
-
+ */
     // Fetch Currency name
     const fetchCur = async (id: any) => {
       const resu = await getCurrency(+id);
@@ -222,12 +198,13 @@ const AmoFloating = ({
 
       setCur(dat?.code);
     };
-    fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency, label]);
+    fetchCur(fixedCurrency);
+  }, [defaultCountry, fixedCurrency]);
+  // }, [defaultCountry, couponCurrency, label]);
 
-  const procesForm = async (values: z.infer<typeof AFloatingSchema>) => {
+  const procesForm = async (values: z.infer<typeof InterestRateSchema>) => {
     setLoading(true);
-    //console.log("Value:", values);
+    // console.log("Value:", values);
     setShow(false);
 
     /** START COMPUTE DISCOUNT CURVE */
@@ -237,7 +214,7 @@ const AmoFloating = ({
 
     //console.log("creditSpread", creditSpread);
 
-    const dcurve = await computeDiscountCurve(
+    const dcurve = await computeInterestDiscountCurve(
       values,
       disc,
       yieldcurve,
@@ -247,62 +224,37 @@ const AmoFloating = ({
       curveType
     );
     //console.log("DCurve", dcurve?.data);
-
     if (dcurve?.data) setDisc(dcurve?.data);
+
+    // if (dcurve?.data) setDisc(dcurve?.data);
+
+    const dcurvex = await computeInterestRateSwap(
+      values,
+      dcurve?.data,
+      inputs,
+      indexes
+    );
+    console.log("dcurvex", dcurvex?.data);
+    if (dcurvex?.data) {
+      console.log("dcurvex?.data.swap_value", dcurvex?.data.swap_value);
+
+      setSwapValue(dcurvex?.data.swap_value);
+      setSwapNotional(values.swapNotional ? +values.swapNotional : 0);
+    }
+
+    //console.log("DCurve", dcurve?.data);
+
+    //  if (dcurvex?.data) setDisc(dcurvex?.data);
 
     /** END COMPUTE DISCOUNT CURVE */
 
     /** COMPUTE Straigth bond price, cashflow, duration and accrued interest */
 
-    let tmp;
-    const global = await computeGeneralAmoFloatingBond(
-      values,
-      dcurve?.data,
-      forwardrates,
-      amoSchedules
-    );
-    if (global?.data) {
-      let ttt = values?.price ? +values?.price : 0;
-      const prix = values.forcedBondPrice
-        ? ttt.toFixed(2)
-        : (global?.data.price * 100).toFixed(2);
-
-      setBondPrice(global?.data.price);
-      setPrice(global?.data.price);
-      setAccruedInterest(global?.data.accrued_interest);
-      setDuration(global?.data.duration);
-
-      if (values?.notional) {
-        if (+values?.notional > 0) {
-          const tmpVal = (+prix * +values.notional) / 100.0;
-
-          setNotional(+tmpVal);
-        } else {
-          setNotional(0);
-        }
-      } else {
-        setNotional(0);
-      }
-
-      let cashflowFin = [];
-      for (let i = 0; i < global?.data?.cash_flow?.length; i++) {
-        cashflowFin.push({
-          gross: global?.data?.cash_flow[i],
-          date: global?.data?.date[i],
-          discounted: global?.data?.discounted_cash_flow[i],
-        });
-      }
-      setCashflow(cashflowFin);
-
-      tmp = global?.data.price;
-    }
-
-    const yieldToMaturit = await computeAmoFloatingYieldToMaturity(
+    /*     const yieldToMaturit = await computeStepUpYieldToMaturity(
       values,
       tmp,
       dcurve?.data,
-      forwardrates,
-      amoSchedules
+      stepuprates
     );
 
     if (yieldToMaturit?.data) {
@@ -311,18 +263,18 @@ const AmoFloating = ({
         setBondPrice(values.price ? +values.price : 0);
         setShow(true);
       }
-    }
+    } */
 
     setLoading(false);
   };
 
   return (
     <GeneralLayout
-      title="Amortized Floating Bond Valuation"
-      bred={<CustomBreadcrumb name="Amortized Floating Bond Valuation" />}
+      title="Interest Rate Swap Valuation"
+      bred={<CustomBreadcrumb name="Interest Rate Swap Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
-        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-2/3  max-md:w-full  p-4 rounded-xl">
+        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-3/4  max-md:w-full  p-4 rounded-xl">
           <div>
             <Form {...form}>
               <form
@@ -334,11 +286,11 @@ const AmoFloating = ({
                     <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="bondMaturityDate"
+                        name="startDate"
                         render={({ field }) => {
                           return (
                             <FormItem className=" w-1/2">
-                              <FormLabel>{"Bond Maturity Date"}</FormLabel>
+                              <FormLabel>{"Start Date"}</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -354,37 +306,87 @@ const AmoFloating = ({
 
                       <FormField
                         control={form.control}
-                        name="couponCurrency"
+                        name="endDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className=" w-1/2">
+                              <FormLabel>{"End Date"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="date"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex justify-between items-center gap-4">
+                      <FormField
+                        control={form.control}
+                        name="fixedCurrency"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <FormLabel>Currency</FormLabel>
+                                    <FormLabel>Fixed Leg Currency</FormLabel>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Principal / Coupon Currency</p>
+                                    <p>Fixed Leg Currency</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
-                              {/*                         <Select
+
+                              <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                               >
                                 <SelectTrigger id="framework">
-                                  <SelectValue placeholder="Select a currency" />
+                                  <SelectValue placeholder="Sélectionner une devise" />
                                 </SelectTrigger>
                                 <SelectContent position="popper">
-                                  {Object.values(CurrencyList)?.map(
-                                    (ur: any) => (
-                                      <SelectItem key={ur} value={ur}>
-                                        {ur}
-                                      </SelectItem>
-                                    )
-                                  )}
+                                  {currencies?.map((ctr: Currency) => (
+                                    <SelectItem
+                                      key={ctr.id}
+                                      value={ctr.id.toString()}
+                                    >
+                                      {ctr.code} -{" "}
+                                      <span className="text-xs">
+                                        {ctr.name}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
                                 </SelectContent>
-                              </Select> */}
+                              </Select>
+
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="floatingCurrency"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <FormLabel>Floating Leg Currency</FormLabel>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Floating Leg Currency</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
 
                               <Select
                                 onValueChange={field.onChange}
@@ -418,11 +420,11 @@ const AmoFloating = ({
                     <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="couponRate"
+                        name="fixedRate"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>{"FRN Spread (%)"}</FormLabel>
+                              <FormLabel>{"Fixed Rate (%)"}</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -439,116 +441,12 @@ const AmoFloating = ({
 
                       <FormField
                         control={form.control}
-                        name="couponFrequency"
-                        render={({ field }) => {
-                          return (
-                            <FormItem className="w-1/2">
-                              <FormLabel>Coupon Frequency</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <SelectTrigger id="framework">
-                                  <SelectValue placeholder="Select a frequency" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                  {Object.values(CouponFreqList)?.map(
-                                    (ur: any) => (
-                                      <SelectItem key={ur} value={ur}>
-                                        {ur}
-                                      </SelectItem>
-                                    )
-                                  )}
-                                </SelectContent>
-                              </Select>
-
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center gap-4">
-                      <FormField
-                        control={form.control}
-                        name="firstCouponDate"
-                        render={({ field }) => {
-                          return (
-                            <FormItem className="w-1/2">
-                              <FormLabel>{"First Coupon Date"}</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Entrer la valeur"
-                                  type="date"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="couponBasis"
-                        render={({ field }) => {
-                          return (
-                            <FormItem className="w-1/2">
-                              <FormLabel>Coupon Basis</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <SelectTrigger id="framework">
-                                  <SelectValue placeholder="Select a coupon basis" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                  {Object.values(CouponBasisList)?.map(
-                                    (ur: any) => (
-                                      <SelectItem key={ur} value={ur}>
-                                        {ur}
-                                      </SelectItem>
-                                    )
-                                  )}
-                                </SelectContent>
-                              </Select>
-
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center gap-4">
-                      <FormField
-                        control={form.control}
-                        name="valuationDate"
-                        render={({ field }) => {
-                          return (
-                            <FormItem className="w-1/2">
-                              <FormLabel>{"Valuation Date "}</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Entrer la date"
-                                  type="date"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="notional"
+                        name="swapNotional"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
                               <FormLabel className="w-1/2">
-                                {"Notional"} ({cur})
+                                {"Swap Notional"} ({cur})
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -564,23 +462,15 @@ const AmoFloating = ({
                         }}
                       />
                     </div>
+
                     <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="amortizationFrequency"
+                        name="fixedFrequency"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <FormLabel>Am. Frequency</FormLabel>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Amortization Frequency</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                              <FormLabel>Payment Frequency</FormLabel>
                               <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
@@ -589,7 +479,7 @@ const AmoFloating = ({
                                   <SelectValue placeholder="Select a frequency" />
                                 </SelectTrigger>
                                 <SelectContent position="popper">
-                                  {Object.values(AmortizedCouponFreqList)?.map(
+                                  {Object.values(SwapFreqList)?.map(
                                     (ur: any) => (
                                       <SelectItem key={ur} value={ur}>
                                         {ur}
@@ -607,84 +497,97 @@ const AmoFloating = ({
 
                       <FormField
                         control={form.control}
-                        name="amortizationStartDate"
+                        name="floatingFrequency"
                         render={({ field }) => {
                           return (
-                            <FormItem className="w-1/2">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <FormLabel>{"Am. Start Date "}</FormLabel>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Amortization Start Date</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Enter the date"
-                                  type="date"
-                                />
-                              </FormControl>
+                            <FormItem className="w-1/2 hidden">
+                              <FormLabel>Floating Frequency</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <SelectTrigger id="framework">
+                                  <SelectValue placeholder="Select a frequency" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                  {Object.values(SwapFreqList)?.map(
+                                    (ur: any) => (
+                                      <SelectItem key={ur} value={ur}>
+                                        {ur}
+                                      </SelectItem>
+                                    )
+                                  )}
+                                </SelectContent>
+                              </Select>
+
                               <FormMessage />
                             </FormItem>
                           );
                         }}
                       />
                     </div>
-                    <div>
+                    <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="forcedBondPrice"
+                        name="swapPayer"
                         render={({ field }) => {
                           return (
-                            <FormItem className="w-full">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  // onCheckedChange={field.onChange}
-                                  onCheckedChange={() => {
-                                    field.onChange(!field.value);
-                                    setBondPrice(0);
-                                  }}
-                                />
-                              </FormControl>
-                              <Label className="ml-2" htmlFor="isIcc">
-                                Forced Bond Price ?
-                              </Label>
+                            <FormItem className="w-1/2">
+                              <FormLabel>Swap Payer</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select curve type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="fixedLeg">
+                                    Fixed Leg
+                                  </SelectItem>
+                                  <SelectItem value="floatingLeg">
+                                    Floating Leg
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="swapReceiver"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>Swap Receiver</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select curve type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="fixedLeg">
+                                    Fixed Leg
+                                  </SelectItem>
+                                  <SelectItem value="floatingLeg">
+                                    Floating Leg
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
 
                               <FormMessage />
                             </FormItem>
                           );
                         }}
                       />
-
-                      {forcedBondPrice && (
-                        <FormField
-                          control={form.control}
-                          name="price"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel className="w-1/2">
-                                  {"Forced Bond Price (%)"}
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer le montant"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      )}
                     </div>
                   </div>
                   <div className="max-md:hidden">
@@ -727,7 +630,7 @@ const AmoFloating = ({
                         }}
                       />
 
-                      <FormField
+                      {/*                       <FormField
                         control={form.control}
                         name="label"
                         render={({ field }) => {
@@ -754,7 +657,7 @@ const AmoFloating = ({
                             </FormItem>
                           );
                         }}
-                      />
+                      /> */}
 
                       {curveType === "yic" && (
                         <FormField
@@ -855,17 +758,21 @@ const AmoFloating = ({
                     <div className="w-full">
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
-                          <div className=" border rounded-xl p-4 bg-card  md:w-1/3">
-                            <AmoSched
-                              amoSchedules={amoSchedules}
-                              setAmoSchedules={setAmoSchedules}
+                          <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
+                            <UserInputs
+                              inputs={indexes}
+                              setInputs={setIndexes}
+                              title="Floating Rate Index"
+                              label={true}
                             />
                           </div>
                           <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                            <p className="font-semibold">
-                              Forward - <span>{cur}</span>
-                            </p>
-                            <ForwardRate forwardrates={forwardrates} />
+                            <UserInputs
+                              inputs={inputs}
+                              setInputs={setInputs}
+                              title="Floating Rate Curve"
+                              label={false}
+                            />
                           </div>
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                             {/* <p className="font-semibold">Discount Curve</p> */}
@@ -909,116 +816,46 @@ const AmoFloating = ({
                     </div>
                   </div>
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
-                >
-                  {loading ? "Computing ..." : "Compute"}
-                </Button>
+                <div className="flex gap-4">
+                  <Button
+                    type="submit"
+                    className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
+                  >
+                    {loading ? "Computing ..." : "Compute"}
+                  </Button>
+
+                  <div className=" w-full md:flex md:items-center md:justify-around border rounded-xl  p-4 bg-sky-400/20 dark:bg-sky-400/30">
+                    <div className="flex  justify-between items-center md:items-start gap-4">
+                      <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                        <div className=" text-muted-foreground">Swap Price</div>
+                        <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                          {((swapValue * 100) / swapNotional).toFixed(2)}
+                          <span className="text-sm font-normal text-muted-foreground">
+                            %
+                          </span>
+                        </div>
+                      </div>
+                      <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                        <div className=" text-muted-foreground">Swap Value</div>
+                        <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                          {new Intl.NumberFormat(undefined, {
+                            currency: cur,
+                            style: "currency",
+                          }).format(+swapValue.toFixed(2))}
+                          {/*     <span className="text-sm font-normal text-muted-foreground">
+                            Years
+                          </span> */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </form>
             </Form>
           </div>
-
-          {bondPrice > 0 && (
-            <div className="md:flex md:items-center md:justify-around border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
-              <div className="flex md:flex-col  justify-between items-center md:items-start gap-4">
-                {!forcedBondPrice && (
-                  <div className="flex gap-8">
-                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                      <div className=" text-muted-foreground">Bond Price</div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {forcedBondPrice
-                          ? bondPrice.toFixed(2)
-                          : (bondPrice * 100).toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
-                      <div className=" text-muted-foreground">Value</div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {forcedBondPrice
-                          ? bondPrice.toFixed(2)
-                          : new Intl.NumberFormat(undefined, {
-                              currency: cur,
-                              style: "currency",
-                            }).format(+notional.toFixed(2))}
-                        {/*  <span className="text-sm font-normal text-muted-foreground">
-                          {cur}
-                        </span> */}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {show && forcedBondPrice && (
-                  <div className="flex gap-8">
-                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                      <div className="text-red-600 text-muted-foreground">
-                        Forced Price
-                      </div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {forcedBondPrice
-                          ? bondPrice.toFixed(2)
-                          : (bondPrice * 100).toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
-                      <div className=" text-muted-foreground">Value</div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {new Intl.NumberFormat(undefined, {
-                          currency: cur,
-                          style: "currency",
-                        }).format(+notional.toFixed(2))}
-                        {/* <span className="text-sm font-normal text-muted-foreground">
-                          {cur}
-                        </span> */}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className=" grid flex-1 auto-rows-min gap-0.5 mt-4">
-                  <div className=" text-muted-foreground">Accrued Interest</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    {(accruedInterest * 100).toFixed(2)}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex md:flex-col justify-between items-center md:items-start gap-4">
-                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                  <div className=" text-muted-foreground">
-                    Yield to Maturity
-                  </div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    {(yieldToMaturity * 100).toFixed(2)}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                  <div className=" text-muted-foreground">Duration</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    {duration ? duration.toFixed(2) : duration}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      Years
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
-        <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/3 max-md:w-full">
+        <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/4 max-md:w-full">
           <div>
             <p className="font-semibold max-md:p-2 pb-2 max-md:mt-4">
               Cashflows MAP
@@ -1035,7 +872,7 @@ const AmoFloating = ({
   );
 };
 
-export default AmoFloating;
+export default InterestRate;
 
 const CustomBreadcrumb = ({ name }: { name: string }) => {
   return (

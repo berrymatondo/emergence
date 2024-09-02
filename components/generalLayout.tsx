@@ -5,6 +5,7 @@ import { FaBalanceScaleLeft } from "react-icons/fa";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 
 import Link from "next/link";
+import { MdBalance } from "react-icons/md";
 
 type GeneralLayoutProps = {
   title: string;
@@ -19,7 +20,9 @@ const GeneralLayout = ({ title, bred, children }: GeneralLayoutProps) => {
       <CardHeader className=" p-2">
         <CardTitle className="text-2xl px-1 md:flex md:justify-between">
           <span>{title}</span>
-          <Shortcut shortcut="Valorisation" />
+          <div className="max-md:hidden">
+            <Shortcut shortcut="Valorisation" />
+          </div>
         </CardTitle>
         {bred}
       </CardHeader>
@@ -47,8 +50,9 @@ export function Shortcut({ shortcut }: ShortcutProps) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <span>
-          <FaBalanceScaleLeft size={30} className="text-sky-500" />
+        <span className="flex text-sm items-end gap-2 dark:bg-teal-400/10 p-2 rounded-full hover:cursor-pointer">
+          <MdBalance size={30} className="font-thin text-sky-500" />
+          {shortcut}
         </span>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">
@@ -60,7 +64,7 @@ export function Shortcut({ shortcut }: ShortcutProps) {
                 <Link
                   key={link.id}
                   href={link.link}
-                  className="hover:text-yellow-400 text-sm font-medium"
+                  className="hover:text-yellow-400 text-sm font-medium mb-2"
                 >
                   {link.title}
                 </Link>

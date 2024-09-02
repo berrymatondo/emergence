@@ -60,13 +60,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import InputCurve from "../inputCurve";
-import CreditSpread from "../creditSpread";
-import YieldCurve from "../yieldCurve";
-import ZCCurve from "../zcCurve";
-import Cashflow from "../cashflow";
-import DCurve from "../dCurve";
-import GrapheValue from "../grapheValue";
+import InputCurve from "../../commonCurves/inputCurve";
+import CreditSpread from "../../commonCurves/creditSpread";
+import YieldCurve from "../../commonCurves/yieldCurve";
+import ZCCurve from "../../commonCurves/zcCurve";
+import Cashflow from "../../commonCurves/cashflow";
+import DCurve from "../../commonCurves/dCurve";
+import GrapheValue from "../../commonCurves/grapheValue";
 
 import CommoForwardRate from "../commoForward";
 import {
@@ -337,8 +337,8 @@ const AmoCommoBackBond = ({
       title="Amortized Commo Back Bond Valuation"
       bred={<CustomBreadcrumb name="Amortized Commo Back Bond Valuation" />}
     >
-      <div className="max-md:px-1 md:flex gap-4 w-full ">
-        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-2/3  max-md:w-full  p-4 rounded-xl">
+      <div className="max-md:px-1 md:flex gap-4 w-full  ">
+        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-3/4  max-md:w-full  p-4 rounded-xl">
           <div>
             <Form {...form}>
               <form
@@ -346,7 +346,7 @@ const AmoCommoBackBond = ({
                 className="space-y-6"
               >
                 <div className="flex max-md:flex-col gap-4">
-                  <div className="md:w-1/2 space-y-4">
+                  <div className="md:w-1/3 space-y-4">
                     <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
@@ -712,7 +712,7 @@ const AmoCommoBackBond = ({
                     <Separator orientation="vertical" />
                   </div>
 
-                  <div className="w-full">
+                  <div className="w-full ">
                     <div className="flex justify-between max-md:gap-4 gap-2">
                       <FormField
                         control={form.control}
@@ -976,10 +976,13 @@ const AmoCommoBackBond = ({
                       <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                         {forcedBondPrice
                           ? bondPrice.toFixed(2)
-                          : notional.toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
+                          : new Intl.NumberFormat(undefined, {
+                              currency: cur,
+                              style: "currency",
+                            }).format(+notional.toFixed(2))}
+                        {/*  <span className="text-sm font-normal text-muted-foreground">
                           {cur}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </div>
@@ -1003,10 +1006,13 @@ const AmoCommoBackBond = ({
                     <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
                       <div className=" text-muted-foreground">Value</div>
                       <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {notional.toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
+                        {new Intl.NumberFormat(undefined, {
+                          currency: cur,
+                          style: "currency",
+                        }).format(+notional.toFixed(2))}
+                        {/*     <span className="text-sm font-normal text-muted-foreground">
                           {cur}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </div>
@@ -1048,7 +1054,7 @@ const AmoCommoBackBond = ({
           )}
         </div>
 
-        <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/3 max-md:w-full">
+        <div className="flex flex-col gap-4 max-md:gap-1 max-md:mt-1  w-1/4 max-md:w-full">
           <div>
             <p className="font-semibold max-md:p-2 pb-2 max-md:mt-4">
               Cashflows MAP
