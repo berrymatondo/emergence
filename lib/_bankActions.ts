@@ -318,7 +318,7 @@ export const computeInterestRateSwap = async (
 
     let data = await response.json();
 
-    console.log("DATA", data);
+    // console.log("DATA", data);
 
     return {
       success: true,

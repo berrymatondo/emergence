@@ -67,6 +67,7 @@ import CreditSpread from "@/components/commonCurves/creditSpread";
 import Cashflow from "@/components/commonCurves/cashflow";
 import GrapheValue from "@/components/commonCurves/grapheValue";
 import UserInputs from "../userInputs";
+import LegCashflow from "@/components/commonCurves/legCashFlow";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -127,6 +128,8 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
   const [cur, setCur] = useState<any>("USD");
   const [cashflow, setCashflow] = useState<any>();
+  const [fixed, setFixed] = useState<any>();
+  const [floating, setFloating] = useState<any>();
   const [disc, setDisc] = useState<any>(initialDisc);
   const [loading, setLoading] = useState(false);
   const [swapNotional, setSwapNotional] = useState(0);
@@ -234,12 +237,14 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
       inputs,
       indexes
     );
-    console.log("dcurvex", dcurvex?.data);
+    //console.log("dcurvex", dcurvex?.data);
     if (dcurvex?.data) {
-      console.log("dcurvex?.data.swap_value", dcurvex?.data.swap_value);
+      //console.log("dcurvex?.data.swap_value", dcurvex?.data.swap_value);
 
       setSwapValue(dcurvex?.data.swap_value);
       setSwapNotional(values.swapNotional ? +values.swapNotional : 0);
+      setFixed(dcurvex?.data.fixed_leg_cashflows);
+      setFloating(dcurvex?.data.floating_leg_cashflows);
     }
 
     //console.log("DCurve", dcurve?.data);
@@ -861,7 +866,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
               Cashflows MAP
             </p>
             <ScrollArea className="flex h-72 w-full p-2 md:px-4 md:pb-4 rounded-lg bg-gray-500/10 dark:bg-teal-400/10 ">
-              <Cashflow cashflow={cashflow} />
+              <LegCashflow fixed={fixed} floating={floating} cur={cur} />
             </ScrollArea>
           </div>
 
