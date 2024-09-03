@@ -292,4 +292,5 @@ export const InterestRateSchema = z.object({
   curveTypeName: z.string().optional(),
   liquidityPremium: z.string().optional(),
   defaultCountry: z.string().optional(),
+  valuationDate: z.string().optional(),
 });

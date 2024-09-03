@@ -46,7 +46,7 @@ import { Separator } from "../../ui/separator";
 
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
-import { getAllYC, getAllZC } from "@/lib/_ycAction";
+import { getAllYC, getAllYCNew, getAllZC, getAllZCNew } from "@/lib/_ycAction";
 import { getAllForwardRates, getCurrency } from "@/lib/_otherActions";
 import {
   Tooltip,
@@ -153,6 +153,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
       curveTypeName: "",
       liquidityPremium: "0.00",
       defaultCountry: "1",
+      valuationDate: "2024-07-01",
     },
   });
 
@@ -162,18 +163,26 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
   const swapPayer = form.watch("swapPayer");
   const swapReceiver = form.watch("swapReceiver");
   const floatingCurrency = form.watch("floatingCurrency");
+  const valuationDate = form.watch("valuationDate");
   //const label = form.watch("label");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
     };
-    fetchYC(defaultCountry);
+    fetchYC(defaultCountry); */
+
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYCNew(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
 
     // Fetch ZC Rates
-    const fetchZC = async (id: any) => {
+    /*     const fetchZC = async (id: any) => {
       const resu = await getAllZC(+id);
       const data = resu?.data;
 
@@ -181,7 +190,18 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
       setZcrates(data);
     };
-    fetchZC(fixedCurrency);
+    fetchZC(fixedCurrency); */
+
+    const fetchZC = async (id: any, date: any) => {
+      //const resu = await getAllZC(+id);
+      const resu = await getAllZCNew(+id, date);
+      const data = resu?.data;
+
+      //console.log("ZC:", data);
+
+      setZcrates(data);
+    };
+    fetchZC(fixedCurrency, valuationDate);
 
     // Fetch Forward Rates
     /*     const fetchFR = async (id: any, label: string) => {
@@ -202,7 +222,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
       setCur(dat?.code);
     };
     fetchCur(fixedCurrency);
-  }, [defaultCountry, fixedCurrency]);
+  }, [defaultCountry, fixedCurrency, valuationDate]);
   // }, [defaultCountry, couponCurrency, label]);
 
   const procesForm = async (values: z.infer<typeof InterestRateSchema>) => {
@@ -469,6 +489,25 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                     </div>
 
                     <div className="flex justify-between items-center gap-4">
+                      <FormField
+                        control={form.control}
+                        name="valuationDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>{"Valuation Date "}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la date"
+                                  type="date"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
                       <FormField
                         control={form.control}
                         name="fixedFrequency"

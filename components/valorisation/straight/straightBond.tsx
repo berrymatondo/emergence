@@ -49,7 +49,7 @@ import { Separator } from "../../ui/separator";
 
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
-import { getAllYC, getAllZC } from "@/lib/_ycAction";
+import { getAllYC, getAllYCNew, getAllZC, getAllZCNew } from "@/lib/_ycAction";
 import { getCurrency } from "@/lib/_otherActions";
 import {
   Tooltip,
@@ -259,27 +259,39 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
   const forcedBondPrice = form.watch("forcedBondPrice");
   const curveType = form.watch("curveType");
+  const valuationDate = form.watch("valuationDate");
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
 
+  // console.log("valuationDate", valuationDate);
+
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    // Yield Curve
+    /*          const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
     };
-    fetchYC(defaultCountry);
+    fetchYC(defaultCountry);  */
+
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYCNew(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
 
     // Fetch ZC Rates
-    const fetchZC = async (id: any) => {
-      const resu = await getAllZC(+id);
+    const fetchZC = async (id: any, date: any) => {
+      //const resu = await getAllZC(+id);
+      const resu = await getAllZCNew(+id, date);
       const data = resu?.data;
 
       //console.log("ZC:", data);
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(couponCurrency, valuationDate);
 
     // Fetch Currency name
     const fetchCur = async (id: any) => {
@@ -289,11 +301,11 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       setCur(dat?.code);
     };
     fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency]);
+  }, [defaultCountry, couponCurrency, valuationDate]);
 
   const procesForm = async (values: z.infer<typeof StraightSchema>) => {
     setLoading(true);
-    console.log("Value:", values);
+    //console.log("Value:", values);
     setShow(false);
 
     /** START COMPUTE DISCOUNT CURVE */
