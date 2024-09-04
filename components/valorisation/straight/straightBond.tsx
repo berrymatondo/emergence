@@ -49,7 +49,7 @@ import { Separator } from "../../ui/separator";
 
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
-import { getAllYC, getAllYCNew, getAllZC, getAllZCNew } from "@/lib/_ycAction";
+import { getAllYC, getAllZC } from "@/lib/_ycAction";
 import { getCurrency } from "@/lib/_otherActions";
 import {
   Tooltip,
@@ -267,15 +267,9 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
   useEffect(() => {
     // Yield Curve
-    /*          const fetchYC = async (id: any) => {
-      const resu = await getAllYC(true, +id);
-      const data = resu?.data;
-      setYieldcurve(data);
-    };
-    fetchYC(defaultCountry);  */
 
     const fetchYC = async (id: any, date: any) => {
-      const resu = await getAllYCNew(true, +id, date);
+      const resu = await getAllYC(true, +id, date);
       const data = resu?.data;
       setYieldcurve(data);
     };
@@ -283,12 +277,8 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
 
     // Fetch ZC Rates
     const fetchZC = async (id: any, date: any) => {
-      //const resu = await getAllZC(+id);
-      const resu = await getAllZCNew(+id, date);
+      const resu = await getAllZC(+id, date);
       const data = resu?.data;
-
-      //console.log("ZC:", data);
-
       setZcrates(data);
     };
     fetchZC(couponCurrency, valuationDate);

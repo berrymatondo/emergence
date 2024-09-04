@@ -218,43 +218,44 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
   const defaultCountry2 = form.watch("defaultCountry2");
   const couponCurrency = form.watch("couponCurrency");
   const couponCurrency2 = form.watch("couponCurrency2");
+  const valuationDate = form.watch("valuationDate");
   //const label = form.watch("label");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
-      const resu = await getAllYC(true, +id);
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
       const data = resu?.data;
       setYieldcurve(data);
     };
-    fetchYC(defaultCountry);
+    fetchYC(defaultCountry, valuationDate);
 
-    const fetchYC2 = async (id: any) => {
-      const resu = await getAllYC(true, +id);
+    const fetchYC2 = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
       const data = resu?.data;
       setYieldcurve2(data);
     };
-    fetchYC2(defaultCountry2);
+    fetchYC2(defaultCountry2, valuationDate);
 
     // Fetch ZC Rates
-    const fetchZC = async (id: any) => {
-      const resu = await getAllZC(+id);
+    const fetchZC = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
       const data = resu?.data;
 
       //console.log("ZC:", data);
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(couponCurrency, valuationDate);
 
-    const fetchZC2 = async (id: any) => {
-      const resu = await getAllZC(+id);
+    const fetchZC2 = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
       const data = resu?.data;
 
       //console.log("ZC:", data);
 
       setZcrates2(data);
     };
-    fetchZC2(couponCurrency2);
+    fetchZC2(couponCurrency2, valuationDate);
 
     // Fetch Forward Rates
     /*     const fetchFR = async (id: any, label: string) => {
@@ -283,7 +284,13 @@ const DualCurrencyBond = ({ countries, currencies }: DualCurrencyBondProps) => {
       setCur2(dat?.code);
     };
     fetchCur2(couponCurrency2);
-  }, [defaultCountry, couponCurrency, defaultCountry2, couponCurrency2]);
+  }, [
+    defaultCountry,
+    couponCurrency,
+    defaultCountry2,
+    couponCurrency2,
+    valuationDate,
+  ]);
 
   // }, [defaultCountry, couponCurrency, label]);
 

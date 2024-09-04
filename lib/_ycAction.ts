@@ -2,7 +2,7 @@
 import prisma from "./prisma";
 
 // Get all yied curve per country
-export const getAllYC = async (country: boolean, id: number) => {
+/* export const getAllYC = async (country: boolean, id: number) => {
   // console.log("country", country);
   // console.log("id", id);
 
@@ -31,13 +31,9 @@ export const getAllYC = async (country: boolean, id: number) => {
       data: ycs,
     };
   } catch (error) {}
-};
+}; */
 
-export const getAllYCNew = async (
-  country: boolean,
-  id: number,
-  date: string
-) => {
+export const getAllYC = async (country: boolean, id: number, date: string) => {
   // console.log("country", country);
   // console.log("id", id);
 
@@ -69,7 +65,7 @@ export const getAllYCNew = async (
 };
 
 // Get all zero coupu per currency
-export const getAllZC = async (id: number) => {
+/* export const getAllZC = async (id: number) => {
   // console.log("country", country);
   // console.log("id", id);
 
@@ -90,9 +86,9 @@ export const getAllZC = async (id: number) => {
     };
   } catch (error) {}
 };
-
+ */
 // Get all zero coupu per currency
-export const getAllZCNew = async (id: number, date: string) => {
+export const getAllZC = async (id: number, date: string) => {
   // console.log("country", country);
   // console.log("id", id);
 

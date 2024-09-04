@@ -184,9 +184,10 @@ const AmoFloating = ({
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
   const label = form.watch("label");
+  const valuationDate = form.watch("valuationDate");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
@@ -202,7 +203,24 @@ const AmoFloating = ({
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(couponCurrency); */
+
+    // Yield Curve
+
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
+      const data = resu?.data;
+      setZcrates(data);
+    };
+    fetchZC(couponCurrency, valuationDate);
 
     // Fetch Forward Rates
     const fetchFR = async (id: any, label: string) => {
@@ -223,7 +241,7 @@ const AmoFloating = ({
       setCur(dat?.code);
     };
     fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency, label]);
+  }, [defaultCountry, couponCurrency, label, valuationDate]);
 
   const procesForm = async (values: z.infer<typeof AFloatingSchema>) => {
     setLoading(true);

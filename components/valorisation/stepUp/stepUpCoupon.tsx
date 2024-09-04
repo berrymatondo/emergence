@@ -176,10 +176,11 @@ const StepUpCoupon = ({ countries, currencies, stepur }: StepUpCouponProps) => {
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
+  const valuationDate = form.watch("valuationDate");
   //const label = form.watch("label");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
@@ -195,7 +196,22 @@ const StepUpCoupon = ({ countries, currencies, stepur }: StepUpCouponProps) => {
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(couponCurrency); */
+
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
+      const data = resu?.data;
+      setZcrates(data);
+    };
+    fetchZC(couponCurrency, valuationDate);
 
     // Fetch Forward Rates
     /*     const fetchFR = async (id: any, label: string) => {
@@ -216,7 +232,7 @@ const StepUpCoupon = ({ countries, currencies, stepur }: StepUpCouponProps) => {
       setCur(dat?.code);
     };
     fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency]);
+  }, [defaultCountry, couponCurrency, valuationDate]);
   // }, [defaultCountry, couponCurrency, label]);
 
   const procesForm = async (values: z.infer<typeof StepUpSchema>) => {

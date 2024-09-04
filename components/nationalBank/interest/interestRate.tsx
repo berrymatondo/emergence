@@ -46,7 +46,7 @@ import { Separator } from "../../ui/separator";
 
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 
-import { getAllYC, getAllYCNew, getAllZC, getAllZCNew } from "@/lib/_ycAction";
+import { getAllYC, getAllZC } from "@/lib/_ycAction";
 import { getAllForwardRates, getCurrency } from "@/lib/_otherActions";
 import {
   Tooltip,
@@ -175,7 +175,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
     fetchYC(defaultCountry); */
 
     const fetchYC = async (id: any, date: any) => {
-      const resu = await getAllYCNew(true, +id, date);
+      const resu = await getAllYC(true, +id, date);
       const data = resu?.data;
       setYieldcurve(data);
     };
@@ -194,7 +194,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
     const fetchZC = async (id: any, date: any) => {
       //const resu = await getAllZC(+id);
-      const resu = await getAllZCNew(+id, date);
+      const resu = await getAllZC(+id, date);
       const data = resu?.data;
 
       //console.log("ZC:", data);

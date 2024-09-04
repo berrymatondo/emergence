@@ -172,9 +172,10 @@ const AmeOption = ({ countries, currencies }: AmeOptionProps) => {
   const curveType = form.watch("curveType");
   const optionCurrency = form.watch("optionCurrency");
   const defaultCountry = form.watch("defaultCountry");
+  const valuationDate = form.watch("valuationDate");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
@@ -190,7 +191,21 @@ const AmeOption = ({ countries, currencies }: AmeOptionProps) => {
 
       setZcrates(data);
     };
-    fetchZC(optionCurrency);
+    fetchZC(optionCurrency); */
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
+      const data = resu?.data;
+      setZcrates(data);
+    };
+    fetchZC(optionCurrency, valuationDate);
 
     // Fetch Forward Rates
     /*     const fetchFR = async (id: any, label: string) => {
@@ -211,7 +226,7 @@ const AmeOption = ({ countries, currencies }: AmeOptionProps) => {
       setCur(dat?.code);
     };
     fetchCur(optionCurrency);
-  }, [defaultCountry, optionCurrency]);
+  }, [defaultCountry, optionCurrency, valuationDate]);
   // }, [defaultCountry, couponCurrency, label]);
 
   const procesForm = async (values: z.infer<typeof AmericSchema>) => {

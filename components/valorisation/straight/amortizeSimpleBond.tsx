@@ -205,9 +205,10 @@ const AmortizedSimpleBond = ({
   const curveType = form.watch("curveType");
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
+  const valuationDate = form.watch("valuationDate");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
@@ -223,7 +224,22 @@ const AmortizedSimpleBond = ({
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(couponCurrency); */
+
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
+      const data = resu?.data;
+      setZcrates(data);
+    };
+    fetchZC(couponCurrency, valuationDate);
 
     // Fetch Currency name
     const fetchCur = async (id: any) => {
@@ -233,7 +249,7 @@ const AmortizedSimpleBond = ({
       setCur(dat?.code);
     };
     fetchCur(couponCurrency);
-  }, [defaultCountry, couponCurrency]);
+  }, [defaultCountry, couponCurrency, valuationDate]);
 
   const procesForm = async (values: z.infer<typeof AStraightSchema>) => {
     setLoading(true);

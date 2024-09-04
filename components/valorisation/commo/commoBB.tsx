@@ -166,9 +166,10 @@ const CommoBackBond = ({
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
   const commodity = form.watch("commodity");
+  const valuationDate = form.watch("valuationDate");
 
   useEffect(() => {
-    const fetchYC = async (id: any) => {
+    /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
       setYieldcurve(data);
@@ -180,11 +181,23 @@ const CommoBackBond = ({
       const resu = await getAllZC(+id);
       const data = resu?.data;
 
-      //console.log("ZC:", data);
-
       setZcrates(data);
     };
-    fetchZC(couponCurrency);
+    fetchZC(couponCurrency); */
+    const fetchYC = async (id: any, date: any) => {
+      const resu = await getAllYC(true, +id, date);
+      const data = resu?.data;
+      setYieldcurve(data);
+    };
+    fetchYC(defaultCountry, valuationDate);
+
+    // Fetch ZC Rates
+    const fetchZC = async (id: any, date: any) => {
+      const resu = await getAllZC(+id, date);
+      const data = resu?.data;
+      setZcrates(data);
+    };
+    fetchZC(couponCurrency, valuationDate);
 
     // Fetch Currency name
     const fetchCur = async (id: any) => {
@@ -214,7 +227,7 @@ const CommoBackBond = ({
       setCommo(dat?.name);
     };
     fetchCommo(commodity);
-  }, [defaultCountry, couponCurrency, commodity]);
+  }, [defaultCountry, couponCurrency, commodity, valuationDate]);
 
   const procesForm = async (values: z.infer<typeof CommoSchema>) => {
     setLoading(true);
