@@ -54,11 +54,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../ui/tooltip";
-import { InterestRateSchema } from "@/lib/schemas";
-import {
-  computeInterestDiscountCurve,
-  computeInterestRateSwap,
-} from "@/lib/_bankActions";
+
 import DCurve from "@/components/commonCurves/dCurve";
 import ZCCurve from "@/components/commonCurves/zcCurve";
 import YieldCurve from "@/components/commonCurves/yieldCurve";
@@ -68,6 +64,11 @@ import Cashflow from "@/components/commonCurves/cashflow";
 import GrapheValue from "@/components/commonCurves/grapheValue";
 import UserInputs from "../userInputs";
 import LegCashflow from "@/components/commonCurves/legCashFlow";
+import { CommoPriceSchema } from "@/lib/schemas";
+import {
+  computeCommoDiscountCurve,
+  computeCommoPriceSwap,
+} from "@/lib/_bankActions";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -111,7 +112,7 @@ type InterestRateProps = {
   currencies: any;
 };
 
-const InterestRate = ({ countries, currencies }: InterestRateProps) => {
+const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
   const [price, setPrice] = useState(0);
   const [bondPrice, setBondPrice] = useState(0);
   const [accruedInterest, setAccruedInterest] = useState(0);
@@ -136,14 +137,14 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
   //console.log("disc", disc);
 
-  const form = useForm<z.infer<typeof InterestRateSchema>>({
-    resolver: zodResolver(InterestRateSchema),
+  const form = useForm<z.infer<typeof CommoPriceSchema>>({
+    resolver: zodResolver(CommoPriceSchema),
     defaultValues: {
       startDate: "2023-12-30",
       endDate: "2030-01-01",
       fixedCurrency: "1",
       floatingCurrency: "1",
-      fixedRate: "3",
+      fixedPrice: "30.50",
       fixedFrequency: "6 months",
       floatingFrequency: "6 months",
       swapPayer: "fixedLeg",
@@ -225,7 +226,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
   }, [defaultCountry, fixedCurrency, valuationDate]);
   // }, [defaultCountry, couponCurrency, label]);
 
-  const procesForm = async (values: z.infer<typeof InterestRateSchema>) => {
+  const procesForm = async (values: z.infer<typeof CommoPriceSchema>) => {
     setLoading(true);
     // console.log("Value:", values);
     setShow(false);
@@ -237,7 +238,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
     //console.log("creditSpread", creditSpread);
 
-    const dcurve = await computeInterestDiscountCurve(
+    const dcurve = await computeCommoDiscountCurve(
       values,
       disc,
       yieldcurve,
@@ -251,7 +252,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
     // if (dcurve?.data) setDisc(dcurve?.data);
 
-    const dcurvex = await computeInterestRateSwap(
+    const dcurvex = await computeCommoPriceSwap(
       values,
       dcurve?.data,
       inputs,
@@ -295,8 +296,8 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
 
   return (
     <GeneralLayout
-      title="Interest Rate Swap Valuation"
-      bred={<CustomBreadcrumb name="Interest Rate Swap Valuation" />}
+      title="Commodity Swap Valuation"
+      bred={<CustomBreadcrumb name="Commodity Swap Valuation" />}
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-3/4  max-md:w-full  p-4 rounded-xl">
@@ -405,7 +406,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <FormLabel>Floating Leg Currency</FormLabel>
+                                    <FormLabel>Commo Leg Currency</FormLabel>
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>Floating Leg Currency</p>
@@ -445,11 +446,11 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                     <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="fixedRate"
+                        name="fixedPrice"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>{"Fixed Rate (%)"}</FormLabel>
+                              <FormLabel>{"Fixed Price "}</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -806,7 +807,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                             <UserInputs
                               inputs={indexes}
                               setInputs={setIndexes}
-                              title="Floating Rate Index"
+                              title="Commo Index"
                               label={true}
                             />
                           </div>
@@ -814,7 +815,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                             <UserInputs
                               inputs={inputs}
                               setInputs={setInputs}
-                              title="Floating Rate Curve"
+                              title="Commo Curve"
                               label={false}
                             />
                           </div>
@@ -916,7 +917,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
   );
 };
 
-export default InterestRate;
+export default CommoSwap;
 
 const CustomBreadcrumb = ({ name }: { name: string }) => {
   return (
