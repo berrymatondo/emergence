@@ -1,10 +1,15 @@
 "use server";
 
 import { z } from "zod";
-import { CommoPriceSchema, InterestRateSchema, StepUpSchema } from "./schemas";
+import {
+  CommoPriceSchema,
+  InterestRateSchema,
+  CrossPriceSchema,
+} from "./schemas";
 // Get all users
 type Inputs = z.infer<typeof InterestRateSchema>;
 type Inputs2 = z.infer<typeof CommoPriceSchema>;
+type Inputs3 = z.infer<typeof CrossPriceSchema>;
 
 // Compute Discounted Curve
 export const computeInterestDiscountCurve = async (
@@ -636,6 +641,305 @@ export const computeCommoPriceSwap = async (
     return {
       success: true,
       data: data,
+    };
+  } catch (error) {}
+};
+
+// CROSS
+export const computeCrossDiscountCurve = async (
+  data: Inputs3,
+  disc: any,
+  yieldcurve: any,
+  zcrates: any,
+  inputCurve: any,
+  creditSpread: any,
+  curveType: any
+) => {
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+  };
+
+  let s1 = [];
+  let s2 = [];
+  const liquidity = data.liquidityPremium ? +data.liquidityPremium : 0;
+  let val2 = 0;
+  let val3 = 0;
+
+  if (curveType == "zcc") {
+    let c1 = [];
+    let c2 = [];
+    let c3 = [];
+
+    // Compute ZC CURVE valuation
+    for (let i = 0; i < zcrates?.length; i++) {
+      c1.push([+zcrates[i].tenor, +zcrates[i].rate]);
+    }
+
+    for (let j = 0; j < disc?.length; j++) {
+      c3.push(+disc[j].tenor);
+    }
+
+    let bodyContent = JSON.stringify({
+      curve: c1,
+      time: c3,
+    });
+
+    try {
+      let response = await fetch(
+        "http://213.165.83.130/metrics/interpolation_lineaire_multiple",
+        {
+          method: "POST",
+          body: bodyContent,
+          headers: headersList,
+        }
+      );
+
+      let dataout = await response.json();
+
+      // Format ZC Curve valuation output
+      for (let j = 0; j < disc?.length; j++) {
+        s1.push({ tenor: disc[j].tenor, rate: dataout[j] });
+      }
+    } catch (error) {}
+
+    // Compute Spread Valuation
+
+    for (let i = 0; i < creditSpread?.length; i++) {
+      c2.push([+creditSpread[i].tenor, +creditSpread[i].rate]);
+    }
+
+    let bodyContent2 = JSON.stringify({
+      curve: c2,
+      time: c3,
+    });
+
+    try {
+      // console.log("ici");
+
+      let response2 = await fetch(
+        "http://213.165.83.130/metrics/interpolation_lineaire_multiple",
+        {
+          method: "POST",
+          body: bodyContent2,
+          headers: headersList,
+        }
+      );
+
+      let dataout2 = await response2.json();
+
+      // Format Spread curve  valuation output
+      for (let j = 0; j < disc?.length; j++) {
+        s2.push({
+          id: disc[j].id,
+          tenor: disc[j].tenor,
+          rate: +dataout2[j] + s1[j].rate + liquidity,
+          rateOut: (+dataout2[j] + s1[j].rate + liquidity) * 100,
+        });
+      }
+    } catch (error) {}
+  } else {
+    if (curveType == "yic") {
+      let c1 = [];
+      let c3 = [];
+
+      // Compute Yield Curve
+      for (let i = 0; i < yieldcurve?.length; i++) {
+        c1.push([+yieldcurve[i].tenor, +yieldcurve[i].yield]);
+      }
+
+      for (let j = 0; j < disc?.length; j++) {
+        c3.push(+disc[j].tenor);
+      }
+
+      let bodyContent = JSON.stringify({
+        curve: c1,
+        time: c3,
+      });
+
+      try {
+        let response = await fetch(
+          "http://213.165.83.130/metrics/interpolation_lineaire_multiple",
+          {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList,
+          }
+        );
+
+        let dataout = await response.json();
+
+        // console.log("dataout", dataout);
+
+        // Format Yield Curve valuation output
+        for (let j = 0; j < disc?.length; j++) {
+          s2.push({
+            id: disc[j].id,
+            tenor: disc[j].tenor,
+            rate: +dataout[j] + liquidity,
+            rateOut: (+dataout[j] + liquidity) * 100,
+          });
+        }
+
+        //  console.log("S2", s2);
+      } catch (error) {}
+    } else {
+      // Compute Input curve valuation
+      // console.log("inputCurve", inputCurve);
+      let c1 = [];
+      let c2 = [];
+      let c3 = [];
+
+      // Compute INPUT CURVE valuation
+      for (let i = 0; i < inputCurve?.length; i++) {
+        c1.push([+inputCurve[i].tenor, +inputCurve[i].rate]);
+      }
+
+      for (let j = 0; j < disc?.length; j++) {
+        c3.push(+disc[j].tenor);
+      }
+
+      let bodyContent = JSON.stringify({
+        curve: c1,
+        time: c3,
+      });
+
+      try {
+        let response = await fetch(
+          "http://213.165.83.130/metrics/interpolation_lineaire_multiple",
+          {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList,
+          }
+        );
+
+        let dataout = await response.json();
+
+        // Format INPUT Curve valuation output
+        for (let j = 0; j < disc?.length; j++) {
+          s1.push({ tenor: disc[j].tenor, rate: dataout[j] });
+        }
+      } catch (error) {}
+
+      // Compute Spread Valuation
+
+      for (let i = 0; i < creditSpread?.length; i++) {
+        c2.push([+creditSpread[i].tenor, +creditSpread[i].rate]);
+      }
+
+      let bodyContent2 = JSON.stringify({
+        curve: c2,
+        time: c3,
+      });
+
+      try {
+        let response2 = await fetch(
+          "http://213.165.83.130/metrics/interpolation_lineaire_multiple",
+          {
+            method: "POST",
+            body: bodyContent2,
+            headers: headersList,
+          }
+        );
+
+        let dataout2 = await response2.json();
+
+        // Format Spread curve  valuation output
+        for (let j = 0; j < disc?.length; j++) {
+          s2.push({
+            id: disc[j].id,
+            tenor: disc[j].tenor,
+            rate: +dataout2[j] + s1[j].rate + liquidity,
+            rateOut: (+dataout2[j] + s1[j].rate + liquidity) * 100,
+          });
+        }
+      } catch (error) {}
+    }
+  }
+
+  //console.log("S22", s2);
+
+  return {
+    success: true,
+    data: s2,
+  };
+};
+
+export const computeCrossCurrencySwap = async (
+  data: Inputs3,
+  tmp: number,
+  curve1: any,
+  curve2: any,
+  floatingRates2: any
+) => {
+  //console.log("datax", data);
+
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+  };
+
+  let discountCurve1 = [];
+  for (let i = 0; i < curve1.length; i++) {
+    discountCurve1.push([curve1[i].tenor, +(curve1[i].rate / 100)]);
+  }
+
+  let discountCurve2 = [];
+  for (let i = 0; i < curve2.length; i++) {
+    discountCurve2.push([curve2[i].tenor, +(curve2[i].rate / 100)]);
+  }
+
+  let floatingRateIndex2 = [];
+  for (let i = 0; i < floatingRates2.length; i++) {
+    floatingRateIndex2.push([
+      floatingRates2[i].tenor,
+      +(floatingRates2[i].rate / 100),
+    ]);
+  }
+
+  const suf = data.fixedFrequency ? data.fixedFrequency.split(" ")[1] : "month";
+
+  const tt = data.fixedFrequency ? data.fixedFrequency.split(" ")[0] : 1;
+  const freq = suf.includes("month") ? +tt / 12 : tt;
+
+  let bodyContent = JSON.stringify({
+    start_date: data.startDate,
+    end_date: data.endDate,
+
+    notional_1: data.swapNotional1 ? +data.swapNotional1 : 0,
+    fixed_rate_1: data.fixedRate1 ? +data.fixedRate1 / 100 : undefined,
+    currency_1_discount_curve: discountCurve1,
+
+    notional_2: data.swapNotional2 ? +data.swapNotional2 : 0,
+    floating_rate_index_2: floatingRateIndex2,
+    currency_2_discount_curve: discountCurve2,
+
+    exchange_rate: data.exchangeRate,
+    payment_frequency: +freq,
+  });
+
+  //console.log("Xcx", bodyContent);
+
+  //BOND PRICE
+  try {
+    let response = await fetch(
+      "http://213.165.83.130/valuation/dual_currency_yield_to_maturity",
+      {
+        method: "POST",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+
+    //  console.log("response", response);
+
+    let dataout = await response.json();
+    //console.log("DATA", dataout);
+
+    return {
+      success: true,
+      data: dataout,
     };
   } catch (error) {}
 };

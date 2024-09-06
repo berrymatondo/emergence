@@ -314,3 +314,30 @@ export const CommoPriceSchema = z.object({
   defaultCountry: z.string().optional(),
   valuationDate: z.string().optional(),
 });
+
+// BANK: CROSS RATE
+export const CrossPriceSchema = z.object({
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  swapNotional1: z.string().optional(),
+  swapNotional2: z.string().optional(),
+  fixedRate1: z.string().optional(),
+  exchangeRate: z.string().optional(),
+
+  fixedCurrency: z.string().optional(),
+  floatingCurrency: z.string().optional(),
+
+  curveType: z.enum(["zcc", "yic", "inc"]),
+  curveType2: z.enum(["zcc2", "yic2", "inc2"]),
+  curveTypeName: z.string().optional(),
+  liquidityPremium: z.string().optional(),
+  liquidityPremium2: z.string().optional(),
+  defaultCountry: z.string().optional(),
+  defaultCountry2: z.string().optional(),
+
+  fixedFrequency: z.string().optional(),
+  floatingFrequency: z.string().optional(),
+  swapPayer: z.enum(["fixedLeg", "floatingLeg"]),
+  swapReceiver: z.enum(["fixedLeg", "floatingLeg"]),
+  swapValue: z.string().optional(),
+});
