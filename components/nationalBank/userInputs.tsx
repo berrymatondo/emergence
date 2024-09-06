@@ -26,18 +26,25 @@ type UserInputsProps = {
   setInputs: (el: any) => void;
   title?: string;
   label: boolean;
+  labelName: string;
 };
-const UserInputs = ({ inputs, setInputs, title, label }: UserInputsProps) => {
+const UserInputs = ({
+  inputs,
+  setInputs,
+  title,
+  label,
+  labelName,
+}: UserInputsProps) => {
   //console.log("OUT", inputs);
-  let colTitle = "Rate";
-  if (label) colTitle = "Label";
+  // let colTitle = "Rate";
+  // if (label) colTitle = "Label";
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <p className="font-semibold text-sm mr-2">{title}</p>
 
-        <AddInputs inputs={inputs} openDialog={false} label={colTitle} />
+        <AddInputs inputs={inputs} openDialog={false} labelName={labelName} />
       </div>
       <Table>
         <TableHeader>
@@ -45,7 +52,7 @@ const UserInputs = ({ inputs, setInputs, title, label }: UserInputsProps) => {
             <TableHead className="text-left mx-0 px-0">
               <p className="flex justify-between">
                 <span>Tenor</span>
-                <span> {colTitle}</span>
+                <span> {labelName}</span>
               </p>
             </TableHead>
           </TableRow>
@@ -59,7 +66,7 @@ const UserInputs = ({ inputs, setInputs, title, label }: UserInputsProps) => {
                   cs={yc}
                   openDialog={false}
                   setInputs={setInputs}
-                  label={colTitle}
+                  labelName={labelName}
                 />
               </TableCell>
             </TableRow>
@@ -76,14 +83,14 @@ type UpdateInputsProps = {
   cs: any;
   openDialog: boolean;
   setInputs: (el: any) => void;
-  label: any;
+  labelName: any;
 };
 const UpdateInputs = ({
   inputs,
   cs,
   openDialog,
   setInputs,
-  label,
+  labelName,
 }: UpdateInputsProps) => {
   const [open, setOpen] = useState(openDialog);
   const [tenor, setTenor] = useState(cs.tenor);
@@ -93,7 +100,7 @@ const UpdateInputs = ({
       <AlertDialogTrigger asChild>
         <div className="flex justify-between">
           <span>{cs?.tenor}</span>
-          {label == "Label" ? (
+          {labelName !== "Rate" ? (
             <span>{cs?.rate} </span>
           ) : (
             <span>{cs?.rate} %</span>
@@ -133,7 +140,7 @@ const UpdateInputs = ({
                 />
               </div>
               <div>
-                <Label>{label}:</Label>
+                <Label>{labelName}:</Label>
                 <Input
                   value={rate}
                   type="number"
@@ -179,10 +186,10 @@ type AddInputsdProps = {
   inputs: any;
 
   openDialog: boolean;
-  label: string;
+  labelName: string;
 };
 
-const AddInputs = ({ inputs, openDialog, label }: AddInputsdProps) => {
+const AddInputs = ({ inputs, openDialog, labelName }: AddInputsdProps) => {
   const [open, setOpen] = useState(openDialog);
   const [tenor, setTenor] = useState(0);
   const [rate, setRate] = useState(0);
@@ -224,7 +231,7 @@ const AddInputs = ({ inputs, openDialog, label }: AddInputsdProps) => {
                 />
               </div>
               <div>
-                <Label>{label}:</Label>
+                <Label>{labelName}:</Label>
                 <Input
                   value={rate}
                   type="number"

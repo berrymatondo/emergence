@@ -87,7 +87,7 @@ const initialCreditSpread = [
 
 const initialInputCurve: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
 const initialInputs: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
-const initialIndexes: any[] = [{ id: 1, tenor: 0.5, rate: 3 }];
+//const initialIndexes: any[] = [{ id: 1, tenor: 0.5, rate: 3 }];
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -125,7 +125,7 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
   const [inputCurve, setInputCurve] = useState(initialInputCurve);
   const [creditSpread, setCreditSpread] = useState<any>(initialCreditSpread);
   const [inputs, setInputs] = useState<any>(initialInputs);
-  const [indexes, setIndexes] = useState<any>(initialIndexes);
+  //const [indexes, setIndexes] = useState<any>(initialIndexes);
 
   const [cur, setCur] = useState<any>("USD");
   const [cashflow, setCashflow] = useState<any>();
@@ -252,12 +252,7 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
 
     // if (dcurve?.data) setDisc(dcurve?.data);
 
-    const dcurvex = await computeCommoPriceSwap(
-      values,
-      dcurve?.data,
-      inputs,
-      indexes
-    );
+    const dcurvex = await computeCommoPriceSwap(values, dcurve?.data, inputs);
     //console.log("dcurvex", dcurvex?.data);
     if (dcurvex?.data) {
       //console.log("dcurvex?.data.swap_value", dcurvex?.data.swap_value);
@@ -803,20 +798,21 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
                     <div className="w-full">
                       <ScrollArea className="flex h-72 w-full my-4 p-1 md:p-4 dark:bg-teal-400/10 ">
                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
-                          <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
+                          {/*                           <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
                             <UserInputs
                               inputs={indexes}
                               setInputs={setIndexes}
                               title="Commo Index"
                               label={true}
                             />
-                          </div>
+                          </div> */}
                           <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
                             <UserInputs
                               inputs={inputs}
                               setInputs={setInputs}
                               title="Commo Curve"
-                              label={false}
+                              label={true}
+                              labelName="Value"
                             />
                           </div>
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">

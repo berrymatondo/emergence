@@ -808,6 +808,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                               setInputs={setIndexes}
                               title="Floating Rate Index"
                               label={true}
+                              labelName="Rate"
                             />
                           </div>
                           <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
@@ -816,6 +817,7 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                               setInputs={setInputs}
                               title="Floating Rate Curve"
                               label={false}
+                              labelName="Label"
                             />
                           </div>
                           <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">

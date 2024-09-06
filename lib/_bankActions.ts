@@ -261,8 +261,10 @@ export const computeInterestRateSwap = async (
   }
 
   //MAPPING
+  const suf = data.fixedFrequency ? data.fixedFrequency.split(" ")[1] : "month";
+
   const tt = data.fixedFrequency ? data.fixedFrequency.split(" ")[0] : 1;
-  //console.log("Freq", tt);
+  const freq = suf.includes("month") ? +tt / 12 : tt;
 
   /*   mois	base annuelle 	label
 1	0.0833	1 month
@@ -284,7 +286,7 @@ export const computeInterestRateSwap = async (
     end_date: data.endDate,
     fixed_rate: data.fixedRate ? +data.fixedRate / 100 : undefined,
     floating_rate_index: floating_rate_index,
-    payment_frequency: +tt / 12,
+    payment_frequency: +freq,
     notional: data.swapNotional ? +data.swapNotional : 0,
     discount_curve: discount_curve,
     floating_rate_curve: floating_rate_curve,
@@ -295,7 +297,7 @@ export const computeInterestRateSwap = async (
     end_date: data.endDate,
     fixed_rate: data.fixedRate ? +data.fixedRate / 100 : undefined,
     floating_rate_index: floating_rate_index,
-    payment_frequency: +tt / 12,
+    payment_frequency: +freq,
     notional: data.swapNotional ? +data.swapNotional : 0,
     discount_curve: discount_curve,
     floating_rate_curve: floating_rate_curve,
@@ -547,28 +549,24 @@ export const computeCommoDiscountCurve = async (
 export const computeCommoPriceSwap = async (
   data: Inputs2,
   curve: any,
-  floatingRates: any,
-  indexesRates: any
+  floatingRates: any
 ) => {
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
   };
 
-  let floating_rate_index = [];
+  /*   let floating_rate_index = [];
   for (let i = 0; i < indexesRates.length; i++) {
     floating_rate_index.push([
       indexesRates[i].tenor,
       +indexesRates[i].rate / 100,
     ]);
   }
-
+ */
   let floating_rate_curve = [];
   for (let i = 0; i < floatingRates.length; i++) {
-    floating_rate_curve.push([
-      floatingRates[i].tenor,
-      +floatingRates[i].rate / 100,
-    ]);
+    floating_rate_curve.push([floatingRates[i].tenor, +floatingRates[i].rate]);
   }
 
   //console.log("curve", curve);
@@ -578,8 +576,10 @@ export const computeCommoPriceSwap = async (
   }
 
   //MAPPING
+  const suf = data.fixedFrequency ? data.fixedFrequency.split(" ")[1] : "month";
+
   const tt = data.fixedFrequency ? data.fixedFrequency.split(" ")[0] : 1;
-  //console.log("Freq", tt);
+  const freq = suf.includes("month") ? +tt / 12 : tt;
 
   /*   mois	base annuelle 	label
 1	0.0833	1 month
@@ -600,19 +600,19 @@ export const computeCommoPriceSwap = async (
     start_date: data.startDate,
     end_date: data.endDate,
     fixed_price: data.fixedPrice ? +data.fixedPrice : 0,
-    floating_price_index: floating_rate_index,
-    payment_frequency: +tt / 12,
+    //floating_price_index: floating_rate_index,
+    payment_frequency: +freq,
     notional: data.swapNotional ? +data.swapNotional : 0,
     discount_curve: discount_curve,
     floating_price_curve: floating_rate_curve,
   });
 
-  console.log("X", {
+  console.log("X ", {
     start_date: data.startDate,
     end_date: data.endDate,
     fixed_price: data.fixedPrice ? +data.fixedPrice : 0,
-    floating_price_index: floating_rate_index,
-    payment_frequency: +tt / 12,
+    //floating_price_index: floating_rate_index,
+    payment_frequency: +freq,
     notional: data.swapNotional ? +data.swapNotional : 0,
     discount_curve: discount_curve,
     floating_price_curve: floating_rate_curve,
