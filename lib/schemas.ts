@@ -340,4 +340,6 @@ export const CrossPriceSchema = z.object({
   swapPayer: z.enum(["fixedLeg", "floatingLeg"]),
   swapReceiver: z.enum(["fixedLeg", "floatingLeg"]),
   swapValue: z.string().optional(),
+
+  valuationDate: z.string().optional(),
 });

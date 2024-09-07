@@ -612,16 +612,15 @@ export const computeCommoPriceSwap = async (
     floating_price_curve: floating_rate_curve,
   });
 
-  console.log("X ", {
+  /*   console.log("X ", {
     start_date: data.startDate,
     end_date: data.endDate,
     fixed_price: data.fixedPrice ? +data.fixedPrice : 0,
-    //floating_price_index: floating_rate_index,
     payment_frequency: +freq,
     notional: data.swapNotional ? +data.swapNotional : 0,
     discount_curve: discount_curve,
     floating_price_curve: floating_rate_curve,
-  });
+  }); */
 
   //BOND PRICE
   try {
@@ -662,11 +661,14 @@ export const computeCrossDiscountCurve = async (
 
   let s1 = [];
   let s2 = [];
-  const liquidity = data.liquidityPremium ? +data.liquidityPremium : 0;
+
+  let liquidity = data.liquidityPremium ? +data.liquidityPremium : 0;
+  if (curveType.includes("2"))
+    liquidity = data.liquidityPremium2 ? +data.liquidityPremium2 : 0;
   let val2 = 0;
   let val3 = 0;
 
-  if (curveType == "zcc") {
+  if (curveType == "zcc" || curveType == "zcc2") {
     let c1 = [];
     let c2 = [];
     let c3 = [];
@@ -739,7 +741,7 @@ export const computeCrossDiscountCurve = async (
       }
     } catch (error) {}
   } else {
-    if (curveType == "yic") {
+    if (curveType == "yic" || curveType == "yic2") {
       let c1 = [];
       let c3 = [];
 
@@ -868,7 +870,6 @@ export const computeCrossDiscountCurve = async (
 
 export const computeCrossCurrencySwap = async (
   data: Inputs3,
-  tmp: number,
   curve1: any,
   curve2: any,
   floatingRates2: any
@@ -915,16 +916,30 @@ export const computeCrossCurrencySwap = async (
     floating_rate_index_2: floatingRateIndex2,
     currency_2_discount_curve: discountCurve2,
 
-    exchange_rate: data.exchangeRate,
+    exchange_rate: data.exchangeRate ? +data.exchangeRate : 0,
     payment_frequency: +freq,
   });
 
-  //console.log("Xcx", bodyContent);
+  /*   console.log("Xcx ", {
+    start_date: data.startDate,
+    end_date: data.endDate,
+
+    notional_1: data.swapNotional1 ? +data.swapNotional1 : 0,
+    fixed_rate_1: data.fixedRate1 ? +data.fixedRate1 / 100 : undefined,
+    currency_1_discount_curve: discountCurve1,
+
+    notional_2: data.swapNotional2 ? +data.swapNotional2 : 0,
+    floating_rate_index_2: floatingRateIndex2,
+    currency_2_discount_curve: discountCurve2,
+
+    exchange_rate: data.exchangeRate ? +data.exchangeRate : 0,
+    payment_frequency: +freq,
+  }); */
 
   //BOND PRICE
   try {
     let response = await fetch(
-      "http://213.165.83.130/valuation/dual_currency_yield_to_maturity",
+      "http://213.165.83.130/valuation/cross_currency_swap",
       {
         method: "POST",
         body: bodyContent,
@@ -932,7 +947,7 @@ export const computeCrossCurrencySwap = async (
       }
     );
 
-    //  console.log("response", response);
+    //console.log("response", response);
 
     let dataout = await response.json();
     //console.log("DATA", dataout);

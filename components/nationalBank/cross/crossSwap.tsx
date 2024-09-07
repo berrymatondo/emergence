@@ -20,7 +20,6 @@ import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { SBSchema } from "@/lib/schemas";
 import { computeDiscountCurve, computeDiscountCurve2 } from "@/lib/_sbActions";
 import { Button } from "../../ui/button";
 import {
@@ -38,6 +37,7 @@ import {
   CouponFreqList,
   CurrencyList,
   LabelList,
+  SwapFreqList,
 } from "@/lib/enums";
 import { Checkbox } from "../../ui/checkbox";
 import { Label } from "../../ui/label";
@@ -66,6 +66,13 @@ import {
   computeDualYieldToMaturity,
   computeGeneralDualBond,
 } from "@/lib/_dualActions";
+import {
+  computeCrossCurrencySwap,
+  computeCrossDiscountCurve,
+} from "@/lib/_bankActions";
+import UserInputs from "../userInputs";
+import { CrossPriceSchema } from "@/lib/schemas";
+import LegCashflow from "@/components/commonCurves/legCashFlow";
 
 const initialCreditSp = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -149,6 +156,7 @@ const initialDisc2 = [
   { id: 14, tenor: 20, rate: 0 },
   { id: 15, tenor: 30, rate: 0 },
 ];
+const initialInputs: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
 
 type CrossSwapProps = {
   countries: any;
@@ -171,7 +179,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
   const [inputCurve2, setInputCurve2] = useState(initialInputCurve2);
   const [creditSpread, setCreditSpread] = useState<any>(initialCreditSp);
   const [creditSpread2, setCreditSpread2] = useState<any>(initialCreditSp2);
-
+  const [inputs, setInputs] = useState<any>(initialInputs);
   const [cur, setCur] = useState<any>();
   const [cur2, setCur2] = useState<any>();
   const [cashflow, setCashflow] = useState<any>();
@@ -179,44 +187,57 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
   const [disc2, setDisc2] = useState<any>(initialDisc2);
   const [loading, setLoading] = useState(false);
   const [notional, setNotional] = useState(0);
+  const [fixed, setFixed] = useState<any>();
+  const [swapValue, setSwapValue] = useState(0);
+  const [swapNotional1, setSwapNotional1] = useState(0);
+  const [floating, setFloating] = useState<any>();
 
-  const form = useForm<z.infer<typeof SBSchema>>({
-    resolver: zodResolver(SBSchema),
+  const form = useForm<z.infer<typeof CrossPriceSchema>>({
+    resolver: zodResolver(CrossPriceSchema),
     defaultValues: {
       //bondMaturityDate: new Date().toISOString(),
-      price: "0",
+      //price: "0",
       //bondMaturityDate: new Date().toISOString().split("T")[0],
-      bondMaturityDate: "2030-07-30",
-      couponCurrency: "1",
-      couponCurrency2: "2",
+      //bondMaturityDate: "2030-07-30",
+      startDate: "2023-12-30",
+      endDate: "2030-01-01",
+      swapNotional1: "100000",
+      swapNotional2: "100000",
+      fixedRate1: "3",
+      exchangeRate: "1.1",
+
+      fixedCurrency: "1",
+      floatingCurrency: "1",
       //couponRate: "0.00",
-      couponRate: "5",
-      couponFrequency: "1",
-      //firstCouponDate: new Date().toISOString().split("T")[0],
-      firstCouponDate: "2023-07-30",
-      couponBasis: "AA",
-      //valuationDate: new Date().toISOString().split("T")[0],
-      valuationDate: "2024-07-01",
-      notional: "",
-      forcedBondPrice: false,
+
       curveType: "zcc",
       curveType2: "zcc2",
-      curveTypeName: "",
+
       liquidityPremium: "0.00",
       liquidityPremium2: "0.00",
+
+      fixedFrequency: "6 months",
+      floatingFrequency: "6 months",
+
+      curveTypeName: "",
+
       defaultCountry: "1",
       defaultCountry2: "2",
+
+      swapPayer: "fixedLeg",
+      swapReceiver: "floatingLeg",
+
+      valuationDate: "2024-07-01",
       //label: "1M",
     },
   });
 
-  const forcedBondPrice = form.watch("forcedBondPrice");
   const curveType = form.watch("curveType");
   const curveType2 = form.watch("curveType2");
   const defaultCountry = form.watch("defaultCountry");
   const defaultCountry2 = form.watch("defaultCountry2");
-  const couponCurrency = form.watch("couponCurrency");
-  const couponCurrency2 = form.watch("couponCurrency2");
+  const fixedCurrency = form.watch("fixedCurrency");
+  const floatingCurrency = form.watch("floatingCurrency");
   const valuationDate = form.watch("valuationDate");
   //const label = form.watch("label");
 
@@ -244,7 +265,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
       setZcrates(data);
     };
-    fetchZC(couponCurrency, valuationDate);
+    fetchZC(fixedCurrency, valuationDate);
 
     const fetchZC2 = async (id: any, date: any) => {
       const resu = await getAllZC(+id, date);
@@ -254,7 +275,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
       setZcrates2(data);
     };
-    fetchZC2(couponCurrency2, valuationDate);
+    fetchZC2(floatingCurrency, valuationDate);
 
     // Fetch Forward Rates
     /*     const fetchFR = async (id: any, label: string) => {
@@ -273,8 +294,10 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
       const dat = resu?.data;
 
       setCur(dat?.code);
+
+      console.log("fixedCurrency", fixedCurrency);
     };
-    fetchCur(couponCurrency);
+    fetchCur(fixedCurrency);
 
     const fetchCur2 = async (id: any) => {
       const resu = await getCurrency(+id);
@@ -282,30 +305,31 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
       setCur2(dat?.code);
     };
-    fetchCur2(couponCurrency2);
+    fetchCur2(floatingCurrency);
   }, [
     defaultCountry,
-    couponCurrency,
+    fixedCurrency,
     defaultCountry2,
-    couponCurrency2,
+    floatingCurrency,
     valuationDate,
   ]);
 
   // }, [defaultCountry, couponCurrency, label]);
 
-  const procesForm = async (values: z.infer<typeof SBSchema>) => {
+  const procesForm = async (values: z.infer<typeof CrossPriceSchema>) => {
     setLoading(true);
     //console.log("Value:", values);
     setShow(false);
 
     /** START COMPUTE DISCOUNT CURVE */
 
-    //console.log("zcc tp ", zcrates);
+    //console.log("zcc  ", curveType);
+    //console.log("zcc 2 ", curveType2);
     //console.log("disci tp ", disc);
 
     //console.log("creditSpread", creditSpread);
 
-    const dcurve = await computeDiscountCurve(
+    const dcurve = await computeCrossDiscountCurve(
       values,
       disc,
       yieldcurve,
@@ -315,7 +339,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
       curveType
     );
 
-    const dcurve2 = await computeDiscountCurve2(
+    const dcurve2 = await computeCrossDiscountCurve(
       values,
       disc2,
       yieldcurve2,
@@ -325,6 +349,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
       curveType2
     );
     //console.log("DCurve", dcurve?.data);
+    //console.log("DCurve2", dcurve2?.data);
 
     if (dcurve?.data) setDisc(dcurve?.data);
     if (dcurve2?.data) setDisc2(dcurve2?.data);
@@ -334,15 +359,25 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
     /** COMPUTE Straigth bond price, cashflow, duration and accrued interest */
 
     let tmp;
-    const global = await computeGeneralDualBond(
+    const dcurvex = await computeCrossCurrencySwap(
       values,
       dcurve?.data,
-      dcurve2?.data
+      dcurve2?.data,
+      dcurve?.data
     );
+
+    if (dcurvex?.data) {
+      //console.log("dcurvex?.data.swap_value", dcurvex?.data.swap_value);
+
+      setSwapValue(dcurvex?.data.swap_value);
+      setSwapNotional1(values.swapNotional1 ? +values.swapNotional1 : 0);
+      setFixed(dcurvex?.data.leg_1_cashflows);
+      setFloating(dcurvex?.data.leg_2_cashflows);
+    }
 
     //console.log("GLOBAL", global?.data);
 
-    if (global?.data) {
+    /*     if (global?.data) {
       let ttt = values?.price ? +values?.price : 0;
       const prix = values.forcedBondPrice
         ? ttt.toFixed(2)
@@ -376,9 +411,9 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
       setCashflow(cashflowFin);
 
       tmp = global?.data.price;
-    }
+    } */
 
-    const yieldToMaturit = await computeDualYieldToMaturity(
+    /*     const yieldToMaturit = await computeDualYieldToMaturity(
       values,
       tmp,
       dcurve?.data
@@ -391,7 +426,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
         setShow(true);
       }
     }
-
+ */
     setLoading(false);
   };
 
@@ -410,14 +445,34 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
               >
                 <div className="flex max-md:flex-col gap-4">
                   <div className="md:w-1/4 space-y-4">
-                    <div className="flex max-md:flex-col md:justify-between md:items-center gap-4">
+                    <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="bondMaturityDate"
+                        name="startDate"
                         render={({ field }) => {
                           return (
                             <FormItem className=" w-1/2">
-                              <FormLabel>{"Bond Maturity Date"}</FormLabel>
+                              <FormLabel>{"Start Date"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="date"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="endDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className=" w-1/2">
+                              <FormLabel>{"End Date"}</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -432,20 +487,20 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                       />
                     </div>
 
-                    <div className="flex  md:justify-between md:items-center gap-2">
+                    <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="couponCurrency"
+                        name="fixedCurrency"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <FormLabel>Principal Currency</FormLabel>
+                                    <FormLabel>Fixed Leg Currency</FormLabel>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Principal Currency</p>
+                                    <p>Fixed Leg Currency</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -480,17 +535,17 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
                       <FormField
                         control={form.control}
-                        name="couponCurrency2"
+                        name="floatingCurrency"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <FormLabel>Coupon Currency</FormLabel>
+                                    <FormLabel>Floating Currency</FormLabel>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>Coupon Currency</p>
+                                    <p>Floating Currency</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -523,14 +578,15 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                         }}
                       />
                     </div>
-                    <div className="flex   md:justify-between md:items-center gap-2">
+
+                    <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="couponRate"
+                        name="exchangeRate"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>{"Coupon (%)"}</FormLabel>
+                              <FormLabel>{"Exchange Rate (%)"}</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -547,11 +603,34 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
                       <FormField
                         control={form.control}
-                        name="couponFrequency"
+                        name="fixedRate1"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>Coupon Frequency</FormLabel>
+                              <FormLabel>{"Fixed Rate (%)"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="number"
+                                  step="0.01"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex justify-between items-center gap-4">
+                      <FormField
+                        control={form.control}
+                        name="fixedFrequency"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>Payment Frequency</FormLabel>
                               <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
@@ -560,7 +639,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                   <SelectValue placeholder="Select a frequency" />
                                 </SelectTrigger>
                                 <SelectContent position="popper">
-                                  {Object.values(CouponFreqList)?.map(
+                                  {Object.values(SwapFreqList)?.map(
                                     (ur: any) => (
                                       <SelectItem key={ur} value={ur}>
                                         {ur}
@@ -575,44 +654,23 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           );
                         }}
                       />
-                    </div>
-                    <div className="flex  md:justify-between md:items-center gap-2">
-                      <FormField
-                        control={form.control}
-                        name="firstCouponDate"
-                        render={({ field }) => {
-                          return (
-                            <FormItem className="w-1/2">
-                              <FormLabel>{"First Coupon Date"}</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Entrer la valeur"
-                                  type="date"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
 
                       <FormField
                         control={form.control}
-                        name="couponBasis"
+                        name="floatingFrequency"
                         render={({ field }) => {
                           return (
-                            <FormItem className="w-1/2">
-                              <FormLabel>Coupon Basis</FormLabel>
+                            <FormItem className="w-1/2 hidden">
+                              <FormLabel>Floating Frequency</FormLabel>
                               <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                               >
                                 <SelectTrigger id="framework">
-                                  <SelectValue placeholder="Select a coupon basis" />
+                                  <SelectValue placeholder="Select a frequency" />
                                 </SelectTrigger>
                                 <SelectContent position="popper">
-                                  {Object.values(CouponBasisList)?.map(
+                                  {Object.values(SwapFreqList)?.map(
                                     (ur: any) => (
                                       <SelectItem key={ur} value={ur}>
                                         {ur}
@@ -628,19 +686,87 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                         }}
                       />
                     </div>
-                    <div className="flex  md:justify-between md:items-center gap-2">
+
+                    <div className="flex justify-between items-center gap-4">
                       <FormField
                         control={form.control}
-                        name="valuationDate"
+                        name="swapPayer"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
-                              <FormLabel>{"Valuation Date "}</FormLabel>
+                              <FormLabel>Swap Payer</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select curve type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="fixedLeg">
+                                    Fixed Leg
+                                  </SelectItem>
+                                  <SelectItem value="floatingLeg">
+                                    Floating Leg
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="swapReceiver"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>Swap Receiver</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select curve type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="fixedLeg">
+                                    Fixed Leg
+                                  </SelectItem>
+                                  <SelectItem value="floatingLeg">
+                                    Floating Leg
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex   md:justify-between md:items-center gap-2">
+                      <FormField
+                        control={form.control}
+                        name="swapNotional1"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel className="w-1/2">
+                                {"Notional Fixed"} ({cur})
+                              </FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
-                                  placeholder="Entrer la date"
-                                  type="date"
+                                  placeholder="Entrer le montant"
+                                  type="number"
+                                  step="0.01"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -651,12 +777,12 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
                       <FormField
                         control={form.control}
-                        name="notional"
+                        name="swapNotional2"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
                               <FormLabel className="w-1/2">
-                                {"Notional"} ({cur})
+                                {"Notional Floating"} ({cur})
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -672,58 +798,6 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                         }}
                       />
                     </div>
-                    <div>
-                      <FormField
-                        control={form.control}
-                        name="forcedBondPrice"
-                        render={({ field }) => {
-                          return (
-                            <FormItem className="w-full">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  // onCheckedChange={field.onChange}
-                                  onCheckedChange={() => {
-                                    field.onChange(!field.value);
-                                    setBondPrice(0);
-                                  }}
-                                />
-                              </FormControl>
-                              <Label className="ml-2" htmlFor="isIcc">
-                                Forced Bond Price ?
-                              </Label>
-
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-
-                      {forcedBondPrice && (
-                        <FormField
-                          control={form.control}
-                          name="price"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel className="w-1/2">
-                                  {"Forced Bond Price (%)"}
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer le montant"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      )}
-                    </div>
                   </div>
                   <div className="max-md:hidden">
                     <Separator orientation="vertical" />
@@ -738,7 +812,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Principal Curve Type"}
+                                {"Fixed Curve Type"}
                               </FormLabel>
                               <Select
                                 onValueChange={field.onChange}
@@ -772,7 +846,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Coupon Curve Type"}
+                                {"Floating Curve Type"}
                               </FormLabel>
                               <Select
                                 onValueChange={field.onChange}
@@ -907,7 +981,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Principal Liq. premium (%) "}
+                                {"Fixed Liq. premium (%) "}
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -930,7 +1004,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           return (
                             <FormItem className="w-1/3  max-md:w-full">
                               <FormLabel className="w-1/3">
-                                {"Coupon Liq. premium (%) "}
+                                {"Floating Liq. premium (%) "}
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -1024,12 +1098,21 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           {/*                         <div className="md:flex md:gap-2 max-md:grid max-md:grid-cols-2 max-md:gap-2">
                            */}{" "}
                           <div className="flex max-md:grid w-max space-x-4 p-4">
+                            <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
+                              <UserInputs
+                                inputs={inputs}
+                                setInputs={setInputs}
+                                title="Floating Leg"
+                                label={true}
+                                labelName="Rate"
+                              />
+                            </div>
                             <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
                               {/* <p className="font-semibold">Discount Curve</p> */}
                               <DCurve
                                 disc={disc}
                                 setDisc={setDisc}
-                                title="Dis. Curve Principal"
+                                title="Dis. Curve Fixed"
                               />
                             </div>
                             <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
@@ -1037,13 +1120,13 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                               <DCurve
                                 disc={disc2}
                                 setDisc={setDisc2}
-                                title="Dis. Curve Coupon"
+                                title="Dis. Curve Floating"
                               />
                             </div>
                             {curveType === "zcc" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
                                 <p className="font-semibold text-sm mr-2">
-                                  ZC Curve Principal - <span>{cur}</span>
+                                  ZC Curve Fixed - <span>{cur}</span>
                                 </p>
                                 <ZCCurve zccurve={zcrates} />
                               </div>
@@ -1051,7 +1134,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                             {curveType2 === "zcc2" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
                                 <p className="font-semibold  text-sm mr-2">
-                                  ZC Curve Coupon - <span>{cur2}</span>
+                                  ZC Curve Floating - <span>{cur2}</span>
                                 </p>
                                 <ZCCurve zccurve={zcrates2} />
                               </div>
@@ -1059,7 +1142,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                             {curveType === "yic" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20  ">
                                 <p className="font-semibold  text-sm mr-2">
-                                  Yield Curve Principal
+                                  Yield Curve Fixed
                                 </p>
                                 <YieldCurve yieldcurve={yieldcurve} />
                               </div>
@@ -1067,7 +1150,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                             {curveType2 === "yic2" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20 ">
                                 <p className="font-semibold  text-sm mr-2">
-                                  Yield Curve Coupon
+                                  Yield Curve Floating
                                 </p>
                                 <YieldCurve yieldcurve={yieldcurve2} />
                               </div>
@@ -1077,7 +1160,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <InputCurve
                                   inputCurve={inputCurve}
                                   setInputCurve={setInputCurve}
-                                  title="Input Curve Principal"
+                                  title="Input Curve Fixed"
                                 />
                               </div>
                             )}
@@ -1086,7 +1169,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <InputCurve
                                   inputCurve={inputCurve2}
                                   setInputCurve={setInputCurve2}
-                                  title="Input Curve Coupon"
+                                  title="Input Curve Floating"
                                 />
                               </div>
                             )}
@@ -1097,7 +1180,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <CreditSpread
                                   creditSpread={creditSpread}
                                   setCreditSpread={setCreditSpread}
-                                  title="Principal Credit Spread"
+                                  title="Fixed Credit Spread"
                                 />
                               </div>
                             )}
@@ -1108,7 +1191,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <CreditSpread
                                   creditSpread={creditSpread2}
                                   setCreditSpread={setCreditSpread2}
-                                  title="Coupon Credit Spread"
+                                  title="Floating Credit Spread"
                                 />
                               </div>
                             )}
@@ -1125,7 +1208,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                               <DCurve
                                 disc={disc}
                                 setDisc={setDisc}
-                                title="Dis. Curve Principal"
+                                title="Dis. Curve Fixed"
                               />
                             </div>
                             <div className="border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-[200px]">
@@ -1133,13 +1216,13 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                               <DCurve
                                 disc={disc2}
                                 setDisc={setDisc2}
-                                title="Dis. Curve Coupon"
+                                title="Dis. Curve Floating"
                               />
                             </div>
                             {curveType === "zcc" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
                                 <p className="font-semibold">
-                                  ZC Curve Principal - <span>{cur}</span>
+                                  ZC Curve Fixed - <span>{cur}</span>
                                 </p>
                                 <ZCCurve zccurve={zcrates} />
                               </div>
@@ -1147,7 +1230,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                             {curveType2 === "zcc2" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-[200px] ">
                                 <p className="font-semibold">
-                                  ZC Curve Coupon - <span>{cur2}</span>
+                                  ZC Curve Floating - <span>{cur2}</span>
                                 </p>
                                 <ZCCurve zccurve={zcrates2} />
                               </div>
@@ -1155,7 +1238,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                             {curveType === "yic" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
                                 <p className="font-semibold">
-                                  Yield Curve Principal
+                                  Yield Curve Fixed
                                 </p>
                                 <YieldCurve yieldcurve={yieldcurve} />
                               </div>
@@ -1163,7 +1246,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                             {curveType2 === "yic2" && (
                               <div className=" border rounded-xl p-4 bg-neutral-400/20  md:w-[200px]">
                                 <p className="font-semibold">
-                                  Yield Curve Coupon
+                                  Yield Curve Floating
                                 </p>
                                 <YieldCurve yieldcurve={yieldcurve2} />
                               </div>
@@ -1173,7 +1256,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <InputCurve
                                   inputCurve={inputCurve}
                                   setInputCurve={setInputCurve}
-                                  title="Input Curve Principal"
+                                  title="Input Curve Fixed"
                                 />
                               </div>
                             )}
@@ -1182,7 +1265,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <InputCurve
                                   inputCurve={inputCurve2}
                                   setInputCurve={setInputCurve2}
-                                  title="Input Curve Coupon"
+                                  title="Input Curve Floating"
                                 />
                               </div>
                             )}
@@ -1193,7 +1276,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <CreditSpread
                                   creditSpread={creditSpread}
                                   setCreditSpread={setCreditSpread}
-                                  title="Principal Credit Spread"
+                                  title="Fixed Credit Spread"
                                 />
                               </div>
                             )}
@@ -1204,7 +1287,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 <CreditSpread
                                   creditSpread={creditSpread2}
                                   setCreditSpread={setCreditSpread2}
-                                  title="Coupon Credit Spread"
+                                  title="Floating Credit Spread"
                                 />
                               </div>
                             )}
@@ -1218,6 +1301,59 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                         >
                           {loading ? "Computing ..." : "Compute"}
                         </Button>
+                        <div className="w-fumm pt-4">
+                          {" "}
+                          <div className="flex max-md:flex-col justify-between gap-4">
+                            <div className="max-md:px-4 max-md:pb-4 mt-4 w-full md:flex md:items-center md:justify-around border rounded-xl bg-sky-400/20 dark:bg-sky-400/30">
+                              <div className="flex  justify-between items-center md:items-start gap-8">
+                                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                                  <div className=" text-muted-foreground">
+                                    Swap Price
+                                  </div>
+                                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                                    {(
+                                      (swapValue * 100) /
+                                      swapNotional1
+                                    ).toFixed(2)}
+                                    <span className="text-sm font-normal text-muted-foreground">
+                                      %
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                                  <div className=" text-muted-foreground">
+                                    Swap Value
+                                  </div>
+                                  {cur && (
+                                    <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                                      {new Intl.NumberFormat(undefined, {
+                                        currency: cur,
+                                        style: "currency",
+                                      }).format(+swapValue.toFixed(2))}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex justify-between max-md:flex-col gap-4 max-md:gap-1 max-md:mt-1  w-full max-md:w-full">
+                              <div className="pt-2 md:w-1/2 bg-red-40">
+                                <p className="font-semibold max-md:p-2 max-md:pb-2 max-md:mt-4">
+                                  Cashflows MAP
+                                </p>
+                                <ScrollArea className="flex h-72 w-full p-2 md:px-4 md:pb-4 rounded-lg bg-gray-500/10 dark:bg-teal-400/10 ">
+                                  <LegCashflow
+                                    fixed={fixed}
+                                    floating={floating}
+                                    cur={cur}
+                                  />
+                                </ScrollArea>
+                              </div>
+                              <div className=" h-72 w-full">
+                                <GrapheValue disc={disc} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1230,124 +1366,6 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                 </Button> */}
               </form>
             </Form>
-          </div>
-          <div className="flex max-md:flex-col justify-between gap-4">
-            <div className="w-full pt-4">
-              {bondPrice > 0 && (
-                <div className=" md:flex md:items-center md:justify-around border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
-                  <div className="flex md:flex-col  justify-between items-center md:items-start gap-4">
-                    {!forcedBondPrice && (
-                      <div className="flex gap-8">
-                        <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                          <div className=" text-muted-foreground">
-                            Bond Price
-                          </div>
-                          <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                            {forcedBondPrice
-                              ? bondPrice.toFixed(2)
-                              : (bondPrice * 100).toFixed(2)}
-                            <span className="text-sm font-normal text-muted-foreground">
-                              %
-                            </span>
-                          </div>
-                        </div>
-                        <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
-                          <div className=" text-muted-foreground">Value</div>
-                          <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                            {forcedBondPrice
-                              ? bondPrice.toFixed(2)
-                              : new Intl.NumberFormat(undefined, {
-                                  currency: cur,
-                                  style: "currency",
-                                }).format(+notional.toFixed(2))}
-                            {/*  <span className="text-sm font-normal text-muted-foreground">
-                              {cur}
-                            </span> */}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {show && forcedBondPrice && (
-                      <div className="flex gap-8">
-                        <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                          <div className="text-red-600 text-muted-foreground">
-                            Forced Price
-                          </div>
-                          <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                            {forcedBondPrice
-                              ? bondPrice.toFixed(2)
-                              : (bondPrice * 100).toFixed(2)}
-                            <span className="text-sm font-normal text-muted-foreground">
-                              %
-                            </span>
-                          </div>
-                        </div>
-                        <div className="grid flex-1 auto-rows-min gap-0.5 mt-4 dark:text-yellow-400">
-                          <div className=" text-muted-foreground">Value</div>
-                          <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                            {new Intl.NumberFormat(undefined, {
-                              currency: cur,
-                              style: "currency",
-                            }).format(+notional.toFixed(2))}
-                            {/*     <span className="text-sm font-normal text-muted-foreground">
-                              {cur}
-                            </span> */}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className=" grid flex-1 auto-rows-min gap-0.5 mt-4">
-                      <div className=" text-muted-foreground">
-                        Accrued Interest
-                      </div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {(accruedInterest * 100).toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex md:flex-col justify-between items-center md:items-start gap-4">
-                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                      <div className=" text-muted-foreground">
-                        Yield to Maturity
-                      </div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {(yieldToMaturity * 100).toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                    <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
-                      <div className=" text-muted-foreground">Duration</div>
-                      <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                        {duration ? duration.toFixed(2) : duration}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          Years
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex justify-between max-md:flex-col gap-4 max-md:gap-1 max-md:mt-1  w-full max-md:w-full">
-              <div className="pt-2">
-                <p className="font-semibold max-md:p-2 max-md:pb-2 max-md:mt-4">
-                  Cashflows MAP
-                </p>
-                <ScrollArea className="flex h-72 w-full p-2 md:px-4 md:pb-4 rounded-lg bg-gray-500/10 dark:bg-teal-400/10 ">
-                  <Cashflow cashflow={cashflow} />
-                </ScrollArea>
-              </div>
-              <div className=" h-72 w-full">
-                <GrapheValue disc={disc} />
-              </div>
-            </div>
           </div>
         </div>
 
