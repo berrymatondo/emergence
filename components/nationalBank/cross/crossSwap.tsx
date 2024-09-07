@@ -239,7 +239,13 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
   const fixedCurrency = form.watch("fixedCurrency");
   const floatingCurrency = form.watch("floatingCurrency");
   const valuationDate = form.watch("valuationDate");
+  const swapPayer = form.watch("swapPayer");
   //const label = form.watch("label");
+
+  useEffect(() => {
+    if (swapPayer == "fixedLeg") form.setValue("swapReceiver", "Floating Leg");
+    else form.setValue("swapReceiver", "Fixed Leg");
+  }, [swapPayer]);
 
   useEffect(() => {
     const fetchYC = async (id: any, date: any) => {
@@ -295,7 +301,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
 
       setCur(dat?.code);
 
-      console.log("fixedCurrency", fixedCurrency);
+      // console.log("fixedCurrency", fixedCurrency);
     };
     fetchCur(fixedCurrency);
 
@@ -737,7 +743,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                           );
                         }}
                       />
-                      <FormField
+                      {/*                       <FormField
                         control={form.control}
                         name="swapReceiver"
                         render={({ field }) => {
@@ -763,6 +769,27 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                 </SelectContent>
                               </Select>
 
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      /> */}
+
+                      <FormField
+                        control={form.control}
+                        name="swapReceiver"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className=" w-1/2">
+                              <FormLabel>{"Swap Receiver"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="text"
+                                  disabled
+                                />
+                              </FormControl>
                               <FormMessage />
                             </FormItem>
                           );
@@ -1330,10 +1357,15 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                     Swap Price
                                   </div>
                                   <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                    {(
-                                      (swapValue * 100) /
-                                      swapNotional1
-                                    ).toFixed(2)}
+                                    {swapPayer == "fixedLeg"
+                                      ? (
+                                          (swapValue * 100) /
+                                          swapNotional1
+                                        ).toFixed(2)
+                                      : (
+                                          (-1 * (swapValue * 100)) /
+                                          swapNotional1
+                                        ).toFixed(2)}
                                     <span className="text-sm font-normal text-muted-foreground">
                                       %
                                     </span>
@@ -1345,10 +1377,15 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                                   </div>
                                   {cur && (
                                     <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                      {new Intl.NumberFormat(undefined, {
-                                        currency: cur,
-                                        style: "currency",
-                                      }).format(+swapValue.toFixed(2))}
+                                      {swapPayer == "fixedLeg"
+                                        ? new Intl.NumberFormat(undefined, {
+                                            currency: cur,
+                                            style: "currency",
+                                          }).format(+swapValue.toFixed(2))
+                                        : new Intl.NumberFormat(undefined, {
+                                            currency: cur,
+                                            style: "currency",
+                                          }).format(-1 * +swapValue.toFixed(2))}
                                     </div>
                                   )}
                                 </div>

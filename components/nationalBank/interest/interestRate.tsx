@@ -161,10 +161,15 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
   const defaultCountry = form.watch("defaultCountry");
   const fixedCurrency = form.watch("fixedCurrency");
   const swapPayer = form.watch("swapPayer");
-  const swapReceiver = form.watch("swapReceiver");
+  //const swapReceiver = form.watch("swapReceiver");
   const floatingCurrency = form.watch("floatingCurrency");
   const valuationDate = form.watch("valuationDate");
   //const label = form.watch("label");
+
+  useEffect(() => {
+    if (swapPayer == "fixedLeg") form.setValue("swapReceiver", "Floating Leg");
+    else form.setValue("swapReceiver", "Fixed Leg");
+  }, [swapPayer]);
 
   useEffect(() => {
     /*     const fetchYC = async (id: any) => {
@@ -601,37 +606,46 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                           );
                         }}
                       />
+
                       <FormField
+                        control={form.control}
+                        name="swapReceiver"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className=" w-1/2">
+                              <FormLabel>{"Swap Receiver"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="text"
+                                  disabled
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      {/*                       <FormField
                         control={form.control}
                         name="swapReceiver"
                         render={({ field }) => {
                           return (
                             <FormItem className="w-1/2">
                               <FormLabel>Swap Receiver</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select curve type" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="fixedLeg">
-                                    Fixed Leg
-                                  </SelectItem>
-                                  <SelectItem value="floatingLeg">
-                                    Floating Leg
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Enter the value"
+                                  type="text"
+                                />
+                              </FormControl>
                               <FormMessage />
                             </FormItem>
                           );
                         }}
-                      />
+                      /> */}
                     </div>
                   </div>
                   <div className="max-md:hidden">
@@ -875,7 +889,11 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                       <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                         <div className=" text-muted-foreground">Swap Price</div>
                         <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                          {((swapValue * 100) / swapNotional).toFixed(2)}
+                          {swapPayer == "fixedLeg"
+                            ? ((swapValue * 100) / swapNotional).toFixed(2)
+                            : ((-1 * (swapValue * 100)) / swapNotional).toFixed(
+                                2
+                              )}
                           <span className="text-sm font-normal text-muted-foreground">
                             %
                           </span>
@@ -884,10 +902,15 @@ const InterestRate = ({ countries, currencies }: InterestRateProps) => {
                       <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                         <div className=" text-muted-foreground">Swap Value</div>
                         <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                          {new Intl.NumberFormat(undefined, {
-                            currency: cur,
-                            style: "currency",
-                          }).format(+swapValue.toFixed(2))}
+                          {swapPayer == "fixedLeg"
+                            ? new Intl.NumberFormat(undefined, {
+                                currency: cur,
+                                style: "currency",
+                              }).format(+swapValue.toFixed(2))
+                            : new Intl.NumberFormat(undefined, {
+                                currency: cur,
+                                style: "currency",
+                              }).format(-1 * +swapValue.toFixed(2))}
                           {/*     <span className="text-sm font-normal text-muted-foreground">
                             Years
                           </span> */}

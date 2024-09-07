@@ -168,6 +168,11 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
   //const label = form.watch("label");
 
   useEffect(() => {
+    if (swapPayer == "fixedLeg") form.setValue("swapReceiver", "Floating Leg");
+    else form.setValue("swapReceiver", "Fixed Leg");
+  }, [swapPayer]);
+
+  useEffect(() => {
     /*     const fetchYC = async (id: any) => {
       const resu = await getAllYC(true, +id);
       const data = resu?.data;
@@ -597,7 +602,28 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
                           );
                         }}
                       />
+
                       <FormField
+                        control={form.control}
+                        name="swapReceiver"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className=" w-1/2">
+                              <FormLabel>{"Swap Receiver"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="text"
+                                  disabled
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      {/*                       <FormField
                         control={form.control}
                         name="swapReceiver"
                         render={({ field }) => {
@@ -627,7 +653,7 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
                             </FormItem>
                           );
                         }}
-                      />
+                      /> */}
                     </div>
                   </div>
                   <div className="max-md:hidden">
@@ -870,19 +896,28 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
                       <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                         <div className=" text-muted-foreground">Swap Price</div>
                         <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                          {((swapValue * 100) / swapNotional).toFixed(2)}
-                          <span className="text-sm font-normal text-muted-foreground">
+                          {swapPayer == "fixedLeg"
+                            ? ((swapValue * 100) / swapNotional).toFixed(2)
+                            : ((-1 * (swapValue * 100)) / swapNotional).toFixed(
+                                2
+                              )}
+                          {/*         <span className="text-sm font-normal text-muted-foreground">
                             %
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                       <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                         <div className=" text-muted-foreground">Swap Value</div>
                         <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                          {new Intl.NumberFormat(undefined, {
-                            currency: cur,
-                            style: "currency",
-                          }).format(+swapValue.toFixed(2))}
+                          {swapPayer == "fixedLeg"
+                            ? new Intl.NumberFormat(undefined, {
+                                currency: cur,
+                                style: "currency",
+                              }).format(+swapValue.toFixed(2))
+                            : new Intl.NumberFormat(undefined, {
+                                currency: cur,
+                                style: "currency",
+                              }).format(-1 * +swapValue.toFixed(2))}
                           {/*     <span className="text-sm font-normal text-muted-foreground">
                             Years
                           </span> */}
