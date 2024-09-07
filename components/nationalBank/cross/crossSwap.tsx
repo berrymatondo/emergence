@@ -222,7 +222,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
       curveTypeName: "",
 
       defaultCountry: "1",
-      defaultCountry2: "2",
+      defaultCountry2: "1",
 
       swapPayer: "fixedLeg",
       swapReceiver: "floatingLeg",
@@ -624,6 +624,25 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
                     </div>
 
                     <div className="flex justify-between items-center gap-4">
+                      <FormField
+                        control={form.control}
+                        name="valuationDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>{"Valuation Date "}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la date"
+                                  type="date"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
                       <FormField
                         control={form.control}
                         name="fixedFrequency"
