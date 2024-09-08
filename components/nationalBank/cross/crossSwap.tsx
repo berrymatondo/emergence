@@ -156,7 +156,7 @@ const initialDisc2 = [
   { id: 14, tenor: 20, rate: 0 },
   { id: 15, tenor: 30, rate: 0 },
 ];
-const initialInputs: any[] = [{ id: 1, tenor: 0, rate: 0.0 }];
+const initialInputs: any[] = [{ id: 1, tenor: 0, rate: 2 }];
 
 type CrossSwapProps = {
   countries: any;
@@ -369,7 +369,7 @@ const CrossSwap = ({ countries, currencies }: CrossSwapProps) => {
       values,
       dcurve?.data,
       dcurve2?.data,
-      dcurve?.data
+      inputs
     );
 
     if (dcurvex?.data) {

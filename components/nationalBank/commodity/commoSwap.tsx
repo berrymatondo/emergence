@@ -893,7 +893,7 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
 
                   <div className=" w-full md:flex md:items-center md:justify-around border rounded-xl  p-4 bg-sky-400/20 dark:bg-sky-400/30">
                     <div className="flex  justify-between items-center md:items-start gap-4">
-                      <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
+                      {/*        <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                         <div className=" text-muted-foreground">Swap Price</div>
                         <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                           {swapPayer == "fixedLeg"
@@ -901,11 +901,9 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
                             : ((-1 * (swapValue * 100)) / swapNotional).toFixed(
                                 2
                               )}
-                          {/*         <span className="text-sm font-normal text-muted-foreground">
-                            %
-                          </span> */}
+                          
                         </div>
-                      </div>
+                      </div> */}
                       <div className="grid flex-1 auto-rows-min gap-0.5 mt-4">
                         <div className=" text-muted-foreground">Swap Value</div>
                         <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
