@@ -883,7 +883,7 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex max-md:flex-col gap-4">
                   <Button
                     type="submit"
                     className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"

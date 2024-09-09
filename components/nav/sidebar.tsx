@@ -217,8 +217,8 @@ const ListItems = [
     link: "valorisation",
     icon: <IoStatsChartOutline size={20} />,
     role: "AGENT",
-    tooltip: "Valorisation",
-    subtitle: "Valorisation",
+    tooltip: "Valuation",
+    subtitle: "Valuation",
     subdesc:
       "Utiliser les pricers pour évaluer les obligations et les options.",
     sublinks: [
@@ -246,7 +246,7 @@ const ListItems = [
       {
         id: 10,
         title: "European/American Option",
-        link: "/valorisation/options",
+        link: "//options",
       },
       //{ id: 11, title: "American Option", link: "/valorisation/ao" },
       //  { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
@@ -346,18 +346,18 @@ const ListItems = [
     link: "banque",
     icon: <BsBank size={20} />,
     role: "AGENT",
-    tooltip: "Banque Centrale",
-    subtitle: "Banque Centrale",
+    tooltip: "Central Bank",
+    subtitle: "Central Bank",
     subdesc: "Comparer les taux directeurs et calculer l'inflation anticipée.",
     sublinks: [
       {
         id: 1,
-        title: "Taux directeur",
+        title: "Key Interest Rate",
         link: "/banque/tdir",
       },
       {
         id: 2,
-        title: "Inflation anticipée",
+        title: "Expected Inflation",
         link: "/banque/infa",
       },
 

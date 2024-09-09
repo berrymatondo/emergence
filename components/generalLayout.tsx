@@ -42,7 +42,7 @@ const shorts = [
   {
     id: 1,
     path: "valorisation",
-    name: "Valorisation",
+    name: "Valuation",
     logo: <MdBalance size={30} className="font-thin text-sky-500" />,
     links: [
       { id: 1, title: "Straight/Amortized Bond", link: "/valorisation/simple" },
@@ -68,17 +68,17 @@ const shorts = [
   {
     id: 2,
     path: "banque",
-    name: "Banque",
+    name: "Central Bank",
     logo: <CiBank size={30} className="font-thin text-sky-500" />,
     links: [
       {
         id: 1,
-        title: "Taux directeur",
+        title: "Key Interest Rate",
         link: "/banque/tdir",
       },
       {
         id: 2,
-        title: "Inflation anticipée",
+        title: "Expected Inflation",
         link: "/banque/infa",
       },
 
