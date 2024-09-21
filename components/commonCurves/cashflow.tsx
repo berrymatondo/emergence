@@ -10,8 +10,10 @@ import {
 // Cashflows Maps
 type CashflowProps = {
   cashflow: any;
+  type?: any;
+  curCode?: any;
 };
-const Cashflow = ({ cashflow }: CashflowProps) => {
+const Cashflow = ({ cashflow, type, curCode }: CashflowProps) => {
   return (
     <Table>
       <TableHeader>
@@ -21,9 +23,11 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
           </TableHead>
           <TableHead className="text-center mx-0 pl-0">Gross Payment</TableHead>
 
-          <TableHead className="text-right  mx-0 px-0">
-            Discounted Payment
-          </TableHead>
+          {type != "fin" && (
+            <TableHead className="text-right  mx-0 px-0">
+              Discounted Payment
+            </TableHead>
+          )}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -32,13 +36,30 @@ const Cashflow = ({ cashflow }: CashflowProps) => {
             <TableCell className="font-medium  mx-0 px-0">
               {yc.date.split("-").reverse().join("-")}
             </TableCell>
-            <TableCell className="text-center    mx-0 px-0">
-              {(yc.gross * 100).toFixed(2)} %
-            </TableCell>
+            {type == "fin" && (
+              <TableCell className="text-center    mx-0 px-0">
+                {/*               //  {yc.gross.toFixed(2)}
+                 */}{" "}
+                <span className="text-white font-semibold">
+                  {new Intl.NumberFormat(undefined, {
+                    currency: curCode ? curCode : "USD",
+                    style: "currency",
+                  }).format(+yc.gross?.toFixed(2))}
+                </span>
+              </TableCell>
+            )}
 
-            <TableCell className="text-right  mx-0 px-0">
-              {(yc.discounted * 100).toFixed(2)} %
-            </TableCell>
+            {type != "fin" && (
+              <TableCell className="text-center    mx-0 px-0">
+                {(yc.gross * 100).toFixed(2)} %
+              </TableCell>
+            )}
+
+            {type != "fin" && (
+              <TableCell className="text-right  mx-0 px-0">
+                {(yc.discounted * 100).toFixed(2)} %
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>

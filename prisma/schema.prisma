@@ -272,3 +272,47 @@ model AmortizationCommoSchedule{
   @@map("amortizationcommoschedule")
 }
 
+
+model FinancingOptions{
+  id Int @id @default(autoincrement())
+  code String
+  valuationType String
+  couponBasis String
+  couponRate Float
+  couponFrequency Float
+  maturity Int
+  rating String
+  notional Float
+  maturityDate String
+  issueDate String
+  firstCouponDate String
+  valuationDate String
+  currency String
+  recovering Float
+  modality String
+
+  cma Float @default(0)
+  duration Float @default(0)
+  defProba Float @default(0)
+  refinRisk Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("financingoptions")
+}
+
+
+model Reserve{
+  id Int @id @default(autoincrement())
+  tenor Float
+  value Float
+
+  code String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reserve")
+}
+

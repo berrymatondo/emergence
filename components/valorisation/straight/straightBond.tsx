@@ -65,6 +65,8 @@ import Cashflow from "../../commonCurves/cashflow";
 import DCurve from "../../commonCurves/dCurve";
 import GrapheValue from "../../commonCurves/grapheValue";
 import { StraightSchema } from "@/lib/schemas";
+import OptAnaForm from "@/components/debtAna/optAnaForm";
+import Link from "next/link";
 
 const initialCreditSpread = [
   { id: 1, tenor: 0, rate: 0.0 },
@@ -231,6 +233,14 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const [disc, setDisc] = useState<any>(initialDisc);
   const [loading, setLoading] = useState(false);
   const [notional, setNotional] = useState(0);
+  const [notionalInit, setNotionalInit] = useState(0);
+
+  const [bondMaturityDate, setBondMaturityDate] = useState("");
+  const [issueDate, setIssueDate] = useState("");
+  const [firstCouponDate, setFirstCouponDate] = useState("");
+  const [couponRate, setCouponRate] = useState("");
+  const [couponFrequency, setCouponFrequency] = useState("");
+  const [couponBasis, setCouponBasis] = useState("");
 
   const form = useForm<z.infer<typeof StraightSchema>>({
     resolver: zodResolver(StraightSchema),
@@ -248,7 +258,8 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       couponBasis: "AA",
       //valuationDate: new Date().toISOString().split("T")[0],
       valuationDate: "2024-07-01",
-      notional: "",
+      issueDate: "2022-07-30",
+      notional: "1000000",
       forcedBondPrice: false,
       curveType: "zcc",
       curveTypeName: "",
@@ -262,8 +273,6 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
   const valuationDate = form.watch("valuationDate");
   const defaultCountry = form.watch("defaultCountry");
   const couponCurrency = form.watch("couponCurrency");
-
-  // console.log("valuationDate", valuationDate);
 
   useEffect(() => {
     // Yield Curve
@@ -335,6 +344,19 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       setAccruedInterest(global?.data.accrued_interest);
       setDuration(global?.data.duration);
 
+      setBondMaturityDate(
+        values?.bondMaturityDate ? values.bondMaturityDate.toString() : ""
+      );
+      setIssueDate(values?.issueDate ? values.issueDate.toString() : "");
+      setFirstCouponDate(
+        values?.firstCouponDate ? values.firstCouponDate.toString() : ""
+      );
+      setCouponRate(values?.couponRate ? values.couponRate.toString() : "");
+      setCouponFrequency(
+        values?.couponFrequency ? values.couponFrequency.toString() : ""
+      );
+      setCouponBasis(values?.couponBasis ? values.couponBasis.toString() : "");
+
       if (values?.notional) {
         if (+values?.notional > 0) {
           const tmpVal = (+prix * +values.notional) / 100.0;
@@ -346,6 +368,8 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
       } else {
         setNotional(0);
       }
+
+      setNotionalInit(values?.notional ? +values?.notional : 0);
 
       let cashflowFin = [];
       for (let i = 0; i < global?.data?.cash_flow?.length; i++) {
@@ -625,57 +649,78 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                         }}
                       />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-4">
                       <FormField
                         control={form.control}
-                        name="forcedBondPrice"
+                        name="issueDate"
                         render={({ field }) => {
                           return (
-                            <FormItem className="w-full">
+                            <FormItem className=" w-1/2">
+                              <FormLabel>{"Issue Date"}</FormLabel>
                               <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  // onCheckedChange={field.onChange}
-                                  onCheckedChange={() => {
-                                    field.onChange(!field.value);
-                                    setBondPrice(0);
-                                  }}
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="date"
                                 />
                               </FormControl>
-                              <Label className="ml-2" htmlFor="isIcc">
-                                Forced Bond Price ?
-                              </Label>
-
                               <FormMessage />
                             </FormItem>
                           );
                         }}
                       />
-
-                      {forcedBondPrice && (
+                      <div>
                         <FormField
                           control={form.control}
-                          name="price"
+                          name="forcedBondPrice"
                           render={({ field }) => {
                             return (
-                              <FormItem className="w-1/2">
-                                <FormLabel className="w-1/2">
-                                  {"Forced Bond Price (%)"}
-                                </FormLabel>
+                              <FormItem className="w-full">
                                 <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer le montant"
-                                    type="number"
-                                    step="0.01"
+                                  <Checkbox
+                                    checked={field.value}
+                                    // onCheckedChange={field.onChange}
+                                    onCheckedChange={() => {
+                                      field.onChange(!field.value);
+                                      setBondPrice(0);
+                                    }}
                                   />
                                 </FormControl>
+                                <Label className="ml-2" htmlFor="isIcc">
+                                  Forced Bond Price ?
+                                </Label>
+
                                 <FormMessage />
                               </FormItem>
                             );
                           }}
                         />
-                      )}
+
+                        {forcedBondPrice && (
+                          <FormField
+                            control={form.control}
+                            name="price"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-1/2">
+                                  <FormLabel className="w-1/2">
+                                    {"Forced Bond Price (%)"}
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer le montant"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="max-md:hidden">
@@ -963,6 +1008,43 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                     </span>
                   </div>
                 </div>
+                <Link
+                  className="p-2 rounded-xl bg-yellow-600 text-white"
+                  href={{
+                    pathname: "/anadette/anaopfin",
+                    query: {
+                      couponBasis: couponBasis,
+                      valType: "1",
+                      issueDate: issueDate,
+                      maturityDate: bondMaturityDate,
+                      firstCouponDate: firstCouponDate,
+                      valuationDate: valuationDate,
+                      couponRate: couponRate,
+                      couponFrequency: couponFrequency,
+                      notional: notionalInit,
+                      couponCurrency: couponCurrency,
+                      rating: "2",
+                      recovering: "40",
+                    },
+                  }}
+                >
+                  START ANALYSIS
+                </Link>
+                {/*                 <OptAnaForm
+                  optIn={{
+                    valType: "1",
+                    maturityDate: bondMaturityDate,
+                    firstCouponDate: firstCouponDate,
+                    valuationDate: valuationDate,
+                    couponRate: couponRate,
+                    couponFrequency: couponFrequency,
+                    notional: notional,
+                    couponCurrency: couponCurrency,
+                    rating: "2",
+                    recovering: "40",
+                  }}
+                  currencies={currencies}
+                /> */}
               </div>
             </div>
           )}

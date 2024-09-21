@@ -58,6 +58,7 @@ export const ContactSchema = z.object({
 export const StraightSchema = z.object({
   price: z.string().optional(),
   bondMaturityDate: z.string().optional(),
+  issueDate: z.string().optional(),
   couponCurrency: z.string().optional(),
   couponRate: z.string().optional(),
   couponFrequency: z.string().optional(),
@@ -342,4 +343,47 @@ export const CrossPriceSchema = z.object({
   swapValue: z.string().optional(),
 
   valuationDate: z.string().optional(),
+});
+
+//Financial Options
+export const FinOptSchema = z.object({
+  id: z.number().optional(),
+  code: z.string().optional(),
+  valuationType: z.string().optional(),
+  maturityDate: z.string().optional(),
+  issueDate: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  modality: z.string().optional(),
+  couponBasis: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  maturity: z.string().optional(),
+  notional: z.string().optional(),
+  recovering: z.string().optional(),
+  rating: z.string().optional(),
+  valuationDate: z.string().optional(),
+  currency: z.string().optional(),
+});
+
+//Financial Options
+export const LoadOptSchema = z.object({
+  code: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+});
+
+//Reserve
+export const ReserveSchema = z.object({
+  id: z.number().optional(),
+  tenor: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+  value: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+  code: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+  autoFill: z.boolean(),
+  amount: z.string().optional(),
 });

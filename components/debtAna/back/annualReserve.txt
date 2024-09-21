@@ -1,0 +1,763 @@
+"use client";
+import { MdAdd } from "react-icons/md";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { FinOptSchema } from "@/lib/schemas";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Separator } from "../ui/separator";
+import { Currency } from "@prisma/client";
+import { createFinOpt } from "@/lib/_finActions";
+import { revalidatePath } from "next/cache";
+
+const valuationTypes = [
+  {
+    id: 1,
+    label: "Straight Bond",
+    modality: "Due date",
+    value: "straightbond",
+  },
+  {
+    id: 2,
+    label: "Amortized Bond",
+    modality: "Amortized",
+    value: "amortizedbond",
+  },
+];
+
+const ratings = [
+  { id: 1, label: "AAA" },
+  { id: 2, label: "AA" },
+  { id: 3, label: "A" },
+  { id: 4, label: "B" },
+  { id: 5, label: "BBB" },
+  { id: 6, label: "BB" },
+  { id: 7, label: "B" },
+  { id: 8, label: "CCC/C" },
+];
+
+type AnnualReserveProps = {
+  inputCurve: any;
+  setInputCurve: (el: any) => void;
+  title?: string;
+  currencies?: any;
+};
+
+const AnnualReserve = ({
+  inputCurve,
+  setInputCurve,
+  title,
+  currencies,
+}: AnnualReserveProps) => {
+  console.log("In annu", inputCurve);
+
+  return (
+    <div>
+      <div className="flex items-center justify-center">
+        {/*         {title ? (
+          <p className="font-semibold  text-sm mr-2">{title}</p>
+        ) : (
+          <p className="font-semibold text-sm mr-2">Input Curve</p>
+        )} */}
+        <AddAnnuealReserve
+          inputCurve={inputCurve}
+          openDialog={false}
+          currencies={currencies}
+          setInputCurve={setInputCurve}
+        />
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-left mx-0 px-0">
+              <p className="flex justify-between">
+                <span>Coupon Rate</span>
+                <span> Rate</span>
+              </p>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {inputCurve?.map((ic: any) => (
+            <TableRow key={ic.id}>
+              <TableCell className="text-right  mx-0 px-0">
+                <UpdateAnnuealReserve
+                  inputCurve={inputCurve}
+                  ic={ic}
+                  openDialog={false}
+                  setInputCurve={setInputCurve}
+                  currencies={currencies}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+export default AnnualReserve;
+
+// Add Input
+
+type AddAnnuealReserveProps = {
+  inputCurve: any;
+
+  openDialog: boolean;
+  currencies?: any;
+  setInputCurve: (el: any) => void;
+};
+
+const AddAnnuealReserve = ({
+  inputCurve,
+  openDialog,
+  currencies,
+  setInputCurve,
+}: AddAnnuealReserveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(0);
+  const [rate, setRate] = useState(0);
+  const [openPop, setOpenPop] = useState(false);
+  const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof FinOptSchema>>({
+    resolver: zodResolver(FinOptSchema),
+    defaultValues: {
+      valuationType: "",
+      modality: "",
+      couponRate: "1",
+      maturity: 1,
+      rating: "4",
+      notional: 1000000,
+      valuationDate: "2024-07-01",
+      currency: "1",
+      recovering: 40,
+    },
+  });
+
+  const valuationType = form.watch("valuationType");
+  const currency = form.watch("currency");
+
+  useEffect(() => {
+    var found = valuationTypes.find(
+      (item: any) => item.id.toString() === valuationType
+    );
+    form.setValue("modality", found?.modality);
+  }, [valuationType]);
+
+  const procesForm = async (values: z.infer<typeof FinOptSchema>) => {
+    setLoading(true);
+    console.log("Value:", values.rating);
+
+    inputCurve.push({
+      id: inputCurve.length + 1,
+      valuationType: values.valuationType,
+      modality: values.modality,
+      couponRate: values.couponRate,
+      maturity: values.maturity,
+      notional: values.notional,
+      recovering: values.recovering,
+      rating: values.rating,
+      valuationDate: values.valuationDate,
+      currency: values.currency,
+    });
+
+    inputCurve.sort((a: any, b: any) => a.id - b.id);
+
+    setInputCurve(inputCurve);
+
+    const dcurve = await createFinOpt(values);
+    console.log("DCurve", dcurve?.data);
+
+    revalidatePath("/anadette/anaopfin");
+    console.log("inputCurve", inputCurve);
+
+    setLoading(false);
+    setOpen(false);
+  };
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <MdAdd className="bg-sky-600 rounded-full" size={40} />
+      </AlertDialogTrigger>
+      <AlertDialogContent className=" ">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Add a financing option?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will add a new financing option.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(procesForm)}
+            className="space-y-6 w-full"
+          >
+            <div className="flex flex-col justify-between items-center gap-4">
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="valuationType"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="w-full">
+                        <FormLabel className="text-sky-600">
+                          Valuation Type
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger id="framework">
+                            <SelectValue placeholder="Sélectionner un type de valorisation" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            {valuationTypes?.map((ctr: any) => (
+                              <SelectItem
+                                key={ctr.id}
+                                value={ctr.id.toString()}
+                              >
+                                {ctr.label}{" "}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex gap-4 ">
+                <div className="w-1/2 flex flex-col gap-4 ">
+                  {valuationType && (
+                    <>
+                      {" "}
+                      <div className="flex justify-between items-center gap-4">
+                        <FormField
+                          control={form.control}
+                          name="couponRate"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Coupon Rate (%)"}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="maturity"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>Maturity (years)</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="1"
+                                  />
+                                </FormControl>
+
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      </div>
+                      <div className="flex gap-4">
+                        <FormField
+                          control={form.control}
+                          name="rating"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>Rating</FormLabel>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <SelectTrigger id="framework">
+                                    <SelectValue placeholder="Sélectionner un rating" />
+                                  </SelectTrigger>
+                                  <SelectContent position="popper">
+                                    {ratings?.map((ctr: any) => (
+                                      <SelectItem
+                                        key={ctr.id}
+                                        value={ctr.id.toString()}
+                                      >
+                                        {ctr.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="notional"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Notional"}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
+
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="max-md:hidden">
+                  <Separator orientation="vertical" />
+                </div>
+                {valuationType && (
+                  <div className="w-1/2 flex flex-col gap-4">
+                    <div className="flex justify-between items-center gap-4">
+                      <FormField
+                        control={form.control}
+                        name="valuationDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>{"Valuation Date "}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la date"
+                                  type="date"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="currency"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>Currency</FormLabel>
+
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <SelectTrigger id="framework">
+                                  <SelectValue placeholder="Sélectionner une devise" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                  {currencies?.map((ctr: Currency) => (
+                                    <SelectItem
+                                      key={ctr.id}
+                                      value={ctr.id.toString()}
+                                    >
+                                      {ctr.code} -{" "}
+                                      <span className="text-xs">
+                                        {ctr.name}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex justify-between items-center gap-4">
+                      <FormField
+                        control={form.control}
+                        name="recovering"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>{"Recovering (%)"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="number"
+                                  step="0.01"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="modality"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="w-1/2">
+                              <FormLabel>{"Modality"}</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Entrer la valeur"
+                                  type="text"
+                                  disabled
+                                />
+                              </FormControl>
+
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            {valuationType && (
+              <Button
+                type="submit"
+                className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
+              >
+                {loading ? "Computing ..." : "Compute"}
+              </Button>
+            )}
+          </form>
+        </Form>
+
+        {/*         <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            inputCurve.push({
+              id: inputCurve.length + 1,
+              tenor: +tenor,
+              rate: +rate,
+            });
+
+            inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-2">
+                <Label>Valuation Type</Label>
+                <Popover open={openPop} onOpenChange={setOpenPop}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={openPop}
+                      className="w-[200px] justify-between"
+                    >
+                      {value
+                        ? valuationTypes.find(
+                            (framework) => framework.value === value
+                          )?.label
+                        : "Select framework..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search framework..." />
+                      <CommandList>
+                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandGroup>
+                          {valuationTypes.map((framework) => (
+                            <CommandItem
+                              key={framework.id}
+                              value={framework.value}
+                              onSelect={(currentValue) => {
+                                setValue(
+                                  currentValue === value ? "" : currentValue
+                                );
+                                setOpenPop(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  value === framework.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {framework.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div>
+                <Label>Tenor:</Label>
+                <Input
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpenPop(!openPop);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </form> */}
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+type UpdateAnnuealReserveProps = {
+  inputCurve: any;
+  ic: any;
+  openDialog: boolean;
+  setInputCurve: (el: any) => void;
+  currencies?: any;
+};
+const UpdateAnnuealReserve = ({
+  inputCurve,
+  ic,
+  openDialog,
+  setInputCurve,
+  currencies,
+}: UpdateAnnuealReserveProps) => {
+  const [open, setOpen] = useState(openDialog);
+  const [tenor, setTenor] = useState(ic.couponRate);
+  const [rate, setRate] = useState(ic.rate);
+
+  console.log("inputCurve out", inputCurve);
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex justify-between">
+          <span>{ic?.couponRate}</span>
+          <span>{ic?.rate} %</span>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the input curve data.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const objIndex = inputCurve.findIndex(
+              (obj: any) => obj.id == ic.id
+            );
+
+            inputCurve[objIndex].tenor = +tenor;
+            inputCurve[objIndex].rate = +rate;
+
+            inputCurve.sort((a: any, b: any) => a.tenor - b.tenor);
+
+            setOpen(!open);
+          }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
+              <div>
+                <Label>Coupon Rate:</Label>
+                <Input
+                  value={tenor}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setTenor(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label>Rate:</Label>
+                <Input
+                  value={rate}
+                  type="number"
+                  step="0.01"
+                  onChange={(e: any) => setRate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(!open);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  inputCurve = inputCurve
+                    .filter((el: any) => el.id != ic.id)
+                    .sort((a: any, b: any) => a.tenor - b.tenor);
+
+                  setInputCurve(inputCurve);
+                  console.log("After update: ", inputCurve);
+                  setOpen(!open);
+                }}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </div>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};

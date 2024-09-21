@@ -170,7 +170,7 @@ const CommoSwap = ({ countries, currencies }: InterestRateProps) => {
   useEffect(() => {
     if (swapPayer == "fixedLeg") form.setValue("swapReceiver", "Floating Leg");
     else form.setValue("swapReceiver", "Fixed Leg");
-  }, [swapPayer]);
+  }, [swapPayer, form]);
 
   useEffect(() => {
     /*     const fetchYC = async (id: any) => {

@@ -25,9 +25,10 @@ type DCurveProps = {
   disc: any;
   setDisc: (el: any) => void;
   title?: string;
+  add?: boolean;
 };
 
-const DCurve = ({ disc, setDisc, title }: DCurveProps) => {
+const DCurve = ({ disc, setDisc, title, add }: DCurveProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -36,7 +37,7 @@ const DCurve = ({ disc, setDisc, title }: DCurveProps) => {
         ) : (
           <p className="font-semibold text-sm mr-2">Discount Curve</p>
         )}
-        <AddDisc disc={disc} openDialog={false} />
+        {add != false && <AddDisc disc={disc} openDialog={false} />}
       </div>
       <Table>
         <TableHeader>

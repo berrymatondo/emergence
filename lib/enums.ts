@@ -98,3 +98,29 @@ export const LabelList = [
   "11M",
   "12M",
 ];
+
+export const valuationTypes = [
+  {
+    id: 1,
+    label: "Straight Bond",
+    modality: "Due date",
+    value: "straightbond",
+  },
+  {
+    id: 2,
+    label: "Amortized Bond",
+    modality: "Amortized",
+    value: "amortizedbond",
+  },
+];
+
+export const ratings = [
+  { id: 1, label: "AAA" },
+  { id: 2, label: "AA" },
+  { id: 3, label: "A" },
+  { id: 4, label: "B" },
+  { id: 5, label: "BBB" },
+  { id: 6, label: "BB" },
+  { id: 7, label: "B" },
+  { id: 8, label: "CCC/C" },
+];
