@@ -235,10 +235,8 @@ const OptsList = ({
                   <div className="flex justify-between">
                     {opts
                       ?.sort((a: any, b: any) => a.id - b.id)
-                      .map((ic: any) => (
-                        <div key={ic.id}>
-                          <CashF id={ic.id} />
-                        </div>
+                      .map((icc: any) => (
+                        <CashF key={icc.id} id={icc.id} />
                       ))}
                   </div>
                 </TableCell>
@@ -332,6 +330,8 @@ type CashFProps = {
 const CashF = async ({ id }: CashFProps) => {
   const res = await getCashflowById(id);
   const cf = res?.data;
+  //console.log("cf", cf);
+
   return (
     <ScrollArea className="h-72">
       {/*       <strong>Option - ${id}</strong>
@@ -340,9 +340,23 @@ const CashF = async ({ id }: CashFProps) => {
           {ic.date} -{ic.value}
         </div>
       ))} */}
+      <p className="font-semibold text-center text-sky-400">Cashflow - {id}</p>
 
-      <p className="font-semibold">Cashflow - {id}</p>
-      <Cashflow cashflow={cf} type="fin" curCode="usd" />
+      {/*       <div className="font-medium  mx-0 px-0">{cf?.value}</div>
+      <div className="text-center    mx-0 px-0">
+        <span className="text-white font-semibold">
+          {new Intl.NumberFormat(undefined, {
+            currency: curCode ? curCode : "USD",
+            style: "currency",
+          }).format(+yc.gross?.toFixed(2))}
+        </span>
+      </div> */}
+      {cf?.map((cc: any) => (
+        <div key={cc.id} className="flex justify-between py-2 gap-4 border-b">
+          <div>{cc.date}</div>
+          <div> {cc.value}</div>
+        </div>
+      ))}
     </ScrollArea>
   );
 };
