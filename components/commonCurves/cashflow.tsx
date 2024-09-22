@@ -12,15 +12,22 @@ type CashflowProps = {
   cashflow: any;
   type?: any;
   curCode?: any;
+  fraction?: any;
 };
-const Cashflow = ({ cashflow, type, curCode }: CashflowProps) => {
+const Cashflow = ({ cashflow, type, curCode, fraction }: CashflowProps) => {
+  let cash = [];
+  for (let i = 0; cashflow && i < cashflow.length; i++) {
+    cash.push({
+      date: cashflow[i].date.toString(),
+      gross: cashflow[i].value,
+    });
+  }
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-left mx-0 pl-0 pr-2">
-            Payment Date
-          </TableHead>
+          <TableHead className="text-left mx-0 pl-0 pr-2">Date</TableHead>
           <TableHead className="text-center mx-0 pl-0">Gross Payment</TableHead>
 
           {type != "fin" && (
@@ -31,7 +38,7 @@ const Cashflow = ({ cashflow, type, curCode }: CashflowProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cashflow?.map((yc: any) => (
+        {cash?.map((yc: any) => (
           <TableRow key={yc.id}>
             <TableCell className="font-medium  mx-0 px-0">
               {yc.date.split("-").reverse().join("-")}

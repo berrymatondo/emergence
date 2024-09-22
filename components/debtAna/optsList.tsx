@@ -56,6 +56,8 @@ import { MdAdd, MdDelete, MdUpdate } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DelReserve from "./delReserve";
+import { getCashflowById } from "@/lib/_cashflowActions";
+import Cashflow from "../commonCurves/cashflow";
 
 type FinOptAnaProps = {
   countries?: any;
@@ -163,43 +165,45 @@ const OptsList = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {opts?.map((ic: any) => (
-                <TableRow key={ic.id}>
-                  <TableCell className="text-left font-semibold text-sky-600 mx-0 px-0">
-                    <Link
-                      href={{
-                        pathname: `/anadette/anaopfin/${code}/update/`,
-                        query: { id: ic.id },
-                      }}
-                    >
-                      Option-{ic.id}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {getValuationType(ic.valuationType)}
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {ic.couponRate} %
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {ic.maturity}
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {ic.notional}
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {getCurrency(ic.currency)}
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {getRating(ic.rating)}
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {ic.recovering} %
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
-                    {ic.modality}
-                  </TableCell>
-                  {/*                   <TableCell className="text-right  mx-0 px-0 hover:cursor-pointer">
+              {opts
+                ?.sort((a: any, b: any) => a.id - b.id)
+                .map((ic: any) => (
+                  <TableRow key={ic.id}>
+                    <TableCell className="text-left font-semibold text-sky-600 mx-0 px-0">
+                      <Link
+                        href={{
+                          pathname: `/anadette/anaopfin/${code}/update/`,
+                          query: { id: ic.id },
+                        }}
+                      >
+                        Option-{ic.id}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {getValuationType(ic.valuationType)}
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {ic.couponRate} %
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {ic.maturity}
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {ic.notional}
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {getCurrency(ic.currency)}
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {getRating(ic.rating)}
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {ic.recovering} %
+                    </TableCell>
+                    <TableCell className="text-left mx-0 px-0">
+                      {ic.modality}
+                    </TableCell>
+                    {/*                   <TableCell className="text-right  mx-0 px-0 hover:cursor-pointer">
 
                     <Link
                       href={{
@@ -210,25 +214,33 @@ const OptsList = ({
                       <MdUpdate className="text-yellow-600" size={25} />
                     </Link>
                   </TableCell> */}
-                  <TableCell className="text-left font-semibold text-base mx-0 px-0">
-                    {ic.cma}
-                  </TableCell>
-                  <TableCell className="text-left font-semibold text-base  mx-0 px-0">
-                    {ic.duration.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-left font-semibold text-base mx-0 px-0">
-                    -
-                  </TableCell>
-                  <TableCell className="text-left font-semibold text-base mx-0 px-0">
-                    -
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                      {ic.cma}
+                    </TableCell>
+                    <TableCell className="text-left font-semibold text-base  mx-0 px-0">
+                      {ic.duration.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                      -
+                    </TableCell>
+                    <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                      -
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
             <TableFooter className="bg-yellow-800 w-full">
               <TableRow className="">
-                <TableCell className="bg-red-400 " colSpan={14}>
-                  Total
+                <TableCell className=" " colSpan={14}>
+                  <div className="flex justify-between">
+                    {opts
+                      ?.sort((a: any, b: any) => a.id - b.id)
+                      .map((ic: any) => (
+                        <div key={ic.id}>
+                          <CashF id={ic.id} />
+                        </div>
+                      ))}
+                  </div>
                 </TableCell>
               </TableRow>
             </TableFooter>
@@ -310,5 +322,27 @@ const CustomBreadcrumb = ({ name, code }: { name: string; code?: string }) => {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
+  );
+};
+
+type CashFProps = {
+  id: any;
+};
+
+const CashF = async ({ id }: CashFProps) => {
+  const res = await getCashflowById(id);
+  const cf = res?.data;
+  return (
+    <ScrollArea className="h-72">
+      {/*       <strong>Option - ${id}</strong>
+      {cf?.map((ic: any) => (
+        <div key={ic.id}>
+          {ic.date} -{ic.value}
+        </div>
+      ))} */}
+
+      <p className="font-semibold">Cashflow - {id}</p>
+      <Cashflow cashflow={cf} type="fin" curCode="usd" />
+    </ScrollArea>
   );
 };

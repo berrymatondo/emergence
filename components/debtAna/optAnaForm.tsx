@@ -1027,7 +1027,12 @@ const OptAnaForm = ({
               <div className=" border rounded-xl p-4 bg-gray-500/10 dark:bg-teal-400/10 md:w-1/3 ">
                 <ScrollArea className="flex h-96 gap-4  ">
                   <p className="font-semibold">Cashflow</p>
-                  <Cashflow cashflow={cashflow} type="fin" curCode={curCode} />
+                  <Cashflow
+                    cashflow={cashflow}
+                    type="fin"
+                    curCode={curCode}
+                    fraction={true}
+                  />
                 </ScrollArea>
               </div>
             </div>

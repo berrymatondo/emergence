@@ -20,6 +20,21 @@ export const getCashflowByCode = async (code: string) => {
     };
   } catch (error) {}
 };
+
+export const getCashflowById = async (optId: number) => {
+  try {
+    const cf = await prisma.cashflow.findMany({
+      where: {
+        optId: +optId,
+      },
+    });
+
+    return {
+      success: true,
+      data: cf,
+    };
+  } catch (error) {}
+};
 //getLastReserve
 
 // Add reserve Input
@@ -66,7 +81,7 @@ export const updateCashflow = async (
 
   // Delete existing data for this code
 
-  console.log("optid", optId);
+  //console.log("optid", optId);
 
   if (optId) {
     try {
