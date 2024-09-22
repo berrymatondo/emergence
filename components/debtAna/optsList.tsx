@@ -146,7 +146,8 @@ const OptsList = ({
                   Recovering
                 </TableHead>
                 <TableHead className="text-left mx-0 px-0">Modality</TableHead>
-                <TableHead className="text-left mx-0 px-0">Actions</TableHead>
+                {/*                 <TableHead className="text-left mx-0 px-0">Actions</TableHead>
+                 */}{" "}
                 <TableHead className="text-orange-600 text-left mx-0 px-0">
                   CMA
                 </TableHead>
@@ -165,7 +166,14 @@ const OptsList = ({
               {opts?.map((ic: any) => (
                 <TableRow key={ic.id}>
                   <TableCell className="text-left font-semibold text-sky-600 mx-0 px-0">
-                    Option-{ic.id}
+                    <Link
+                      href={{
+                        pathname: `/anadette/anaopfin/${code}/update/`,
+                        query: { id: ic.id },
+                      }}
+                    >
+                      Option-{ic.id}
+                    </Link>
                   </TableCell>
                   <TableCell className="text-left mx-0 px-0">
                     {getValuationType(ic.valuationType)}
@@ -191,16 +199,8 @@ const OptsList = ({
                   <TableCell className="text-left mx-0 px-0">
                     {ic.modality}
                   </TableCell>
-                  <TableCell className="text-right  mx-0 px-0 hover:cursor-pointer">
-                    {/*                     <OptAnaForm
-                      optIn={ic}
-                      type="U"
-                      currencies={currencies}
-                      openDialog={false}
-                      code={code}
-                      refresh={refresh}
-                      setRefresh={setRefresh}
-                    /> */}
+                  {/*                   <TableCell className="text-right  mx-0 px-0 hover:cursor-pointer">
+
                     <Link
                       href={{
                         pathname: `/anadette/anaopfin/${code}/update/`,
@@ -209,20 +209,27 @@ const OptsList = ({
                     >
                       <MdUpdate className="text-yellow-600" size={25} />
                     </Link>
-                  </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
+                  </TableCell> */}
+                  <TableCell className="text-left font-semibold text-base mx-0 px-0">
                     {ic.cma}
                   </TableCell>
-                  <TableCell className="text-left mx-0 px-0">
+                  <TableCell className="text-left font-semibold text-base  mx-0 px-0">
                     {ic.duration.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                    -
+                  </TableCell>
+                  <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                    -
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
+            <TableFooter className="bg-yellow-800 w-full">
+              <TableRow className="">
+                <TableCell className="bg-red-400 " colSpan={14}>
+                  Total
+                </TableCell>
               </TableRow>
             </TableFooter>
           </Table>

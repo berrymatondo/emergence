@@ -201,7 +201,21 @@ export const updateFinOpt = async (
 };
 
 // Delete
-export const deleteFinOpts = async (id: string) => {
+export const deleteFinOpts = async (id: string, code: string) => {
+  let notEmpty = true;
+  try {
+    const overviews = await prisma.financingOptions.findMany({
+      where: {
+        code: code,
+      },
+    });
+
+    const taille = overviews.length;
+    //console.log("taille: ", taille);
+    if (taille < 2) notEmpty = true;
+  } catch (error) {}
+
+  // Delete the current one
   try {
     const overviews = await prisma.financingOptions.delete({
       where: {
@@ -209,11 +223,31 @@ export const deleteFinOpts = async (id: string) => {
       },
     });
 
+    revalidatePath(`/anadette/anaopfin/${code}`);
+
     return {
       success: true,
       data: overviews,
     };
   } catch (error) {}
+
+  // Empty the reserve if it the last opts we delete
+  if (notEmpty) {
+    try {
+      const overviews = await prisma.reserve.deleteMany({
+        where: {
+          code: code,
+        },
+      });
+
+      revalidatePath(`/anadette/anaopfin/${code}`);
+
+      return {
+        success: true,
+        data: overviews,
+      };
+    } catch (error) {}
+  }
 };
 
 export const computeCMA = async (

@@ -55,6 +55,7 @@ import {
   computeDC,
   computeGeneralValuation,
   createFinOpt,
+  deleteFinOpts,
   updateFinOpt,
 } from "@/lib/_finActions";
 import { Badge } from "../ui/badge";
@@ -85,6 +86,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { Info } from "lucide-react";
+import { updateCashflow } from "@/lib/_cashflowActions";
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -135,9 +137,10 @@ const OptAnaForm = ({
   const [lastData, setLastData] = useState<any>();
   const [refresh, setRefresh] = useState(false);
   const [mat, setMat] = useState(0);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   //console.log("Pathname: ", pathname.split("/")[3]);
-  //console.log("opts:", optIn);
+  //console.log("opts: ", optIn);
 
   /**
  * 
@@ -153,7 +156,7 @@ const OptAnaForm = ({
  */
 
   //console.log("optIn: ", optIn);
-  console.log("refresh:", refresh);
+  //console.log("refresh:", refresh);
 
   const form = useForm<z.infer<typeof FinOptSchema>>({
     resolver: zodResolver(FinOptSchema),
@@ -254,7 +257,7 @@ const OptAnaForm = ({
   // Fetch Last Reserve
   useEffect(() => {
     const fetchLastReserve = async () => {
-      console.log("optIn?.reserve ", optIn?.reserve);
+      // console.log("optIn?.reserve ", optIn?.reserve);
 
       if (optIn?.reserve) {
         const res = await getReserveByCode(optIn?.reserve);
@@ -360,7 +363,7 @@ const OptAnaForm = ({
         title="Financing Options Analysis"
         bred={
           <CustomBreadcrumb
-            name={`Financing Options Analysis: ${pathname.split("/")[3]}`}
+            name={`Financing Options Analysis:${pathname.split("/")[3]}`}
           />
         }
       >
@@ -418,8 +421,8 @@ const OptAnaForm = ({
                       render={({ field }) => {
                         return (
                           <FormItem className="w-full">
-                            <FormLabel className="text-sky-600">
-                              Valuation Type
+                            <FormLabel className="text-sky-400 p-4 text-xl">
+                              {`Option - ${optIn?.id}`}
                             </FormLabel>
                             <Select
                               onValueChange={field.onChange}
@@ -789,7 +792,7 @@ const OptAnaForm = ({
                   <Button
                     type="button"
                     variant="outline"
-                    className="text-red-600 w-full md:w-1/3"
+                    className=" w-full md:w-1/3"
                     onClick={() => {
                       // console.log("ICI");
                       form.reset();
@@ -799,12 +802,54 @@ const OptAnaForm = ({
                   >
                     Cancel
                   </Button>
+                  {!confirmDelete && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="text-red-600 w-full md:w-1/3"
+                      onClick={async () => {
+                        setConfirmDelete(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  )}
+
+                  {confirmDelete && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className=" w-full md:w-1/3 bg-red-600 hover:bg-red-600"
+                      onClick={async () => {
+                        // console.log("optIn?.id", optIn?.id);
+
+                        const res = await deleteFinOpts(
+                          optIn?.id,
+                          form.getValues().code!
+                        );
+
+                        router.push(
+                          `/anadette/anaopfin/${form.getValues().code}`
+                        );
+                        setOpen(false);
+                      }}
+                    >
+                      Confirm Delete
+                    </Button>
+                  )}
+
                   <Button
                     type="button"
                     variant="secondary"
-                    className="w-full md:w-1/3"
+                    className="w-full md:w-1/3 bg-green-600 hover:bg-green-800"
                     onClick={async () => {
                       //console.log("Type", type);
+
+                      const reso = await updateCashflow(
+                        cashflow,
+                        pathname.split("/")[3],
+                        optIn?.id
+                      );
 
                       if (type == "U") {
                         const res = await updateFinOpt(
@@ -1008,7 +1053,14 @@ const CustomBreadcrumb = ({ name }: { name: string }) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator /> */}
         <BreadcrumbItem>
-          <BreadcrumbPage className="font-semibold">{name}</BreadcrumbPage>
+          <BreadcrumbLink
+            className="text-sky-600"
+            href={`/anadette/anaopfin/${name.split(":")[1]}`}
+          >
+            {name}
+          </BreadcrumbLink>
+          {/*           <BreadcrumbPage href={} className="font-semibold">{name}</BreadcrumbPage>
+           */}{" "}
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

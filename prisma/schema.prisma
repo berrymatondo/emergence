@@ -316,3 +316,18 @@ model Reserve{
   @@map("reserve")
 }
 
+
+model cashflow{
+  id Int @id @default(autoincrement())
+  date Float
+  value Float
+
+  code String
+  optId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cashflow")
+}
+

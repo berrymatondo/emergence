@@ -387,3 +387,19 @@ export const ReserveSchema = z.object({
   autoFill: z.boolean(),
   amount: z.string().optional(),
 });
+
+//Reserve
+export const cashflowSchema = z.object({
+  id: z.number().optional(),
+  date: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+  value: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+  code: z.string().min(1, {
+    message: "This field is mandatory",
+  }),
+  autoFill: z.boolean(),
+  amount: z.string().optional(),
+});

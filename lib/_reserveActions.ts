@@ -178,31 +178,54 @@ export const getLastReserve = async () => {
 export const duplicateReserve = async (code: string, reserve: any) => {
   //console.log("reserve ", reserve);
 
-  let reserves = [];
-  for (let i = 0; i < reserve.length; i++) {
-    reserves.push({
-      tenor: +reserve[i].tenor,
-      value: +reserve[i].value,
-      code: code,
-    });
-  }
-
-  //console.log("reserves ", reserves);
-
-  let user: any;
-
+  let usr: any;
+  let create = false;
   try {
-    user = await prisma.reserve.createMany({
-      data: reserves,
+    usr = await prisma.reserve.findMany({
+      where: {
+        code: code,
+      },
     });
 
-    revalidatePath(`/anadette/anaopfin/${code}`);
+    if (usr.length < 1) {
+      create = true;
+    }
 
-    return {
+    /*     return {
       success: true,
-      data: user,
-    };
+      data: usr,
+    }; */
   } catch (error) {
     return { success: false, error };
+  }
+
+  if (create) {
+    let reserves = [];
+    for (let i = 0; i < reserve.length; i++) {
+      reserves.push({
+        tenor: +reserve[i].tenor,
+        value: +reserve[i].value,
+        code: code,
+      });
+    }
+
+    //console.log("reserves ", reserves);
+
+    let user: any;
+
+    try {
+      user = await prisma.reserve.createMany({
+        data: reserves,
+      });
+
+      revalidatePath(`/anadette/anaopfin/${code}`);
+
+      return {
+        success: true,
+        data: user,
+      };
+    } catch (error) {
+      return { success: false, error };
+    }
   }
 };
