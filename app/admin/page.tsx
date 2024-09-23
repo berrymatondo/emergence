@@ -6,6 +6,7 @@ const AdminPage = () => {
     <div className="flex flex-col gap-2">
       <Link href="/admin/users">Users</Link>
       <Link href="/admin/countries">Countries</Link>
+      <Link href="/admin/matrix">Matrices</Link>
     </div>
   );
 };

@@ -388,18 +388,47 @@ export const ReserveSchema = z.object({
   amount: z.string().optional(),
 });
 
-//Reserve
-export const cashflowSchema = z.object({
+//Transition MAtrix
+export const transMatrixSchema = z.object({
   id: z.number().optional(),
-  date: z.string().min(1, {
-    message: "This field is mandatory",
-  }),
-  value: z.string().min(1, {
-    message: "This field is mandatory",
-  }),
-  code: z.string().min(1, {
-    message: "This field is mandatory",
-  }),
-  autoFill: z.boolean(),
-  amount: z.string().optional(),
+  label: z.string().optional(),
+  AAA: z.string().optional(),
+  AA: z.string().optional(),
+  A: z.string().optional(),
+  BBB: z.string().optional(),
+  BB: z.string().optional(),
+  B: z.string().optional(),
+  CCC_C: z.string().optional(),
+  D: z.string().optional(),
+  NR: z.string().optional(),
+});
+
+//Default MAtrix
+export const defMatrixSchema = z.object({
+  id: z.number().optional(),
+  y1: z.string().optional(),
+  y2: z.string().optional(),
+  y3: z.string().optional(),
+  y4: z.string().optional(),
+  y5: z.string().optional(),
+  y6: z.string().optional(),
+  y7: z.string().optional(),
+  y8: z.string().optional(),
+  y9: z.string().optional(),
+  y10: z.string().optional(),
+});
+
+//Implicite MAtrix
+export const impMatrixSchema = z.object({
+  id: z.number().optional(),
+  label: z.string().optional(),
+  AAA: z.string().optional(),
+  AA: z.string().optional(),
+  A: z.string().optional(),
+  BBB: z.string().optional(),
+  BB: z.string().optional(),
+  B: z.string().optional(),
+  CCC_C: z.string().optional(),
+  D: z.string().optional(),
+  NR: z.string().optional(),
 });

@@ -331,3 +331,66 @@ model cashflow{
   @@map("cashflow")
 }
 
+
+model TransitionMatrix{
+  id Int @id @default(autoincrement())
+  label String @unique
+  AAA Float
+  AA Float
+  A Float
+  BBB Float
+  BB Float
+  B Float
+  CCC_C Float
+  D Float
+  NR Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transitionMatrix")
+}
+
+
+model DefaultMatrix{
+  id Int @id @default(autoincrement())
+  label String @unique
+  y1 Float
+  y2 Float
+  y3 Float
+  y4 Float
+  y5 Float
+  y6 Float
+  y7 Float
+  y8 Float
+  y9 Float
+  y10 Float
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("defaultMatrix")
+}
+
+
+
+model ImpliciteMatrix{
+  id Int @id @default(autoincrement())
+  label String @unique
+  AAA Float
+  AA Float
+  A Float
+  BBB Float
+  BB Float
+  B Float
+  CCC_C Float
+  D Float
+  NR Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("impliciteMatrix")
+}
+
