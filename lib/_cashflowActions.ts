@@ -2,9 +2,6 @@
 import prisma from "./prisma";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { cashflowSchema } from "./schemas";
-
-type Inputs = z.infer<typeof cashflowSchema>;
 
 export const getCashflowByCode = async (code: string) => {
   try {
