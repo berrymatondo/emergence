@@ -65,6 +65,7 @@ type FinOptAnaProps = {
   opts?: any;
   reserve?: any;
   currencies?: any;
+  curCode?: any;
 };
 
 const OptsList = ({
@@ -73,6 +74,7 @@ const OptsList = ({
   opts,
   reserve,
   currencies,
+  curCode,
 }: FinOptAnaProps) => {
   /*   const [opts, setOpts] = useState(optss);
   const [reserve, setReserve] = useState(reserveIn);
@@ -229,14 +231,18 @@ const OptsList = ({
                   </TableRow>
                 ))}
             </TableBody>
-            <TableFooter className="bg-yellow-800 w-full">
+            <TableFooter className="bg-yellow-950  w-full">
               <TableRow className="">
                 <TableCell className=" " colSpan={14}>
                   <div className="flex justify-between">
                     {opts
                       ?.sort((a: any, b: any) => a.id - b.id)
                       .map((icc: any) => (
-                        <CashF key={icc.id} id={icc.id} />
+                        <CashF
+                          key={icc.id}
+                          id={icc.id}
+                          curCode={getCurrency(icc.currency)}
+                        />
                       ))}
                   </div>
                 </TableCell>
@@ -325,15 +331,16 @@ const CustomBreadcrumb = ({ name, code }: { name: string; code?: string }) => {
 
 type CashFProps = {
   id: any;
+  curCode: any;
 };
 
-const CashF = async ({ id }: CashFProps) => {
+const CashF = async ({ id, curCode }: CashFProps) => {
   const res = await getCashflowById(id);
   const cf = res?.data;
   //console.log("cf", cf);
 
   return (
-    <ScrollArea className="h-72">
+    <div>
       {/*       <strong>Option - ${id}</strong>
       {cf?.map((ic: any) => (
         <div key={ic.id}>
@@ -351,12 +358,20 @@ const CashF = async ({ id }: CashFProps) => {
           }).format(+yc.gross?.toFixed(2))}
         </span>
       </div> */}
-      {cf?.map((cc: any) => (
-        <div key={cc.id} className="flex justify-between py-2 gap-4 border-b">
-          <div>{cc.date}</div>
-          <div> {cc.value}</div>
-        </div>
-      ))}
-    </ScrollArea>
+      <ScrollArea className="h-72">
+        {cf?.map((cc: any) => (
+          <div key={cc.id} className="flex justify-between py-2 gap-4 border-b">
+            <div>{cc.date}</div>
+            <div>
+              {" "}
+              {new Intl.NumberFormat(undefined, {
+                currency: curCode ? curCode : "USD",
+                style: "currency",
+              }).format(+cc.value?.toFixed(2))}
+            </div>
+          </div>
+        ))}
+      </ScrollArea>
+    </div>
   );
 };
