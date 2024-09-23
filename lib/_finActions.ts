@@ -103,7 +103,7 @@ export const createFinOpt = async (
       // revalidatePath("/anadette/anaopfin/1726025930243");
       revalidatePath(`/anadette/anaopfin/${code}`);
 
-      // return { success: true, data: user };
+      return { success: true, data: user };
     } catch (error) {
       return { success: false, error };
     }

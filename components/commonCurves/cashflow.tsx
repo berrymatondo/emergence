@@ -15,13 +15,18 @@ type CashflowProps = {
   fraction?: any;
 };
 const Cashflow = ({ cashflow, type, curCode, fraction }: CashflowProps) => {
+  //console.log("cashflow ", cashflow);
+
   let cash = [];
   for (let i = 0; cashflow && i < cashflow.length; i++) {
     cash.push({
       date: cashflow[i].date.toString(),
-      gross: cashflow[i].value,
+      gross: cashflow[i].gross,
+      discounted: cashflow[i].discounted,
     });
   }
+
+  console.log("cash ", cash);
 
   return (
     <Table>

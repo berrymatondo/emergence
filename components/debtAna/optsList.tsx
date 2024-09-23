@@ -217,7 +217,12 @@ const OptsList = ({
                     </Link>
                   </TableCell> */}
                     <TableCell className="text-left font-semibold text-base mx-0 px-0">
-                      {ic.cma}
+                      {new Intl.NumberFormat(undefined, {
+                        currency: getCurrency(ic.currency)
+                          ? getCurrency(ic.currency)
+                          : "USD",
+                        style: "currency",
+                      }).format(+ic.cma?.toFixed(2))}
                     </TableCell>
                     <TableCell className="text-left font-semibold text-base  mx-0 px-0">
                       {ic.duration.toFixed(2)}
@@ -242,6 +247,7 @@ const OptsList = ({
                           key={icc.id}
                           id={icc.id}
                           curCode={getCurrency(icc.currency)}
+                          code={code}
                         />
                       ))}
                   </div>
@@ -332,12 +338,13 @@ const CustomBreadcrumb = ({ name, code }: { name: string; code?: string }) => {
 type CashFProps = {
   id: any;
   curCode: any;
+  code: any;
 };
 
-const CashF = async ({ id, curCode }: CashFProps) => {
+const CashF = async ({ id, curCode, code }: CashFProps) => {
   const res = await getCashflowById(id);
   const cf = res?.data;
-  //console.log("cf", cf);
+  // console.log("cf", cf);
 
   return (
     <div>
@@ -347,7 +354,15 @@ const CashF = async ({ id, curCode }: CashFProps) => {
           {ic.date} -{ic.value}
         </div>
       ))} */}
-      <p className="font-semibold text-center text-sky-400">Cashflow - {id}</p>
+      <Link
+        href={{
+          pathname: `/anadette/anaopfin/${code}/update/`,
+          query: { id: id },
+        }}
+        className="font-semibold text-center text-sky-400"
+      >
+        Option-{id}
+      </Link>
 
       {/*       <div className="font-medium  mx-0 px-0">{cf?.value}</div>
       <div className="text-center    mx-0 px-0">

@@ -104,6 +104,8 @@ export const updateCashflow = async (
       };
     } catch (error) {}
   } else {
+    //console.log("cashflow", cashflow);
+
     if (cashflow) createCashflow(cashflow, code, optId);
   }
 

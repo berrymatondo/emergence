@@ -845,13 +845,13 @@ const OptAnaForm = ({
                     onClick={async () => {
                       //console.log("Type", type);
 
-                      const reso = await updateCashflow(
-                        cashflow,
-                        pathname.split("/")[3],
-                        optIn?.id
-                      );
-
                       if (type == "U") {
+                        const reso = await updateCashflow(
+                          cashflow,
+                          pathname.split("/")[3],
+                          optIn?.id
+                        );
+
                         const res = await updateFinOpt(
                           form.getValues(),
                           cma,
@@ -867,6 +867,15 @@ const OptAnaForm = ({
                           duration,
                           defProba,
                           refinRisk
+                        );
+
+                        // console.log("lgoo", res);
+                        // if (res?.data) console.log("lgoot", res?.data);
+
+                        const reso = await updateCashflow(
+                          cashflow,
+                          pathname.split("/")[3],
+                          res?.data?.id
                         );
 
                         const rs = await duplicateReserve(
