@@ -1,4 +1,6 @@
 import GeneralLayout from "@/components/generalLayout";
+import DefMatrix from "@/components/matrix/defMatrix";
+import ImpMatrix from "@/components/matrix/impMatrix";
 import TransMatrix from "@/components/matrix/transMatrix";
 import {
   Breadcrumb,
@@ -16,9 +18,15 @@ const MatrixPage = () => {
       title="Matrices"
       bred={<CustomBreadcrumb name="All matrices" />}
     >
-      <div className="max-md:px-1 md:flex gap-4 w-full ">
-        <div className="bg-gray-500/10 dark:bg-teal-200/10 w-3/4  max-md:w-full  p-4 rounded-xl">
+      <div className="max-md:px-1 md:grid grid-cols-2 gap-4 w-full ">
+        <div className="bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full  p-4 rounded-xl">
           <TransMatrix />
+        </div>
+        <div className="bg-gray-500/10 dark:bg-teal-200/10   max-md:w-full  p-4 rounded-xl">
+          <DefMatrix />
+        </div>
+        <div className="bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full  p-4 rounded-xl">
+          <ImpMatrix />
         </div>
       </div>
     </GeneralLayout>

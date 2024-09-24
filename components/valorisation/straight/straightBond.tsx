@@ -904,17 +904,25 @@ const StraightBond = ({ countries, currencies }: StraightBondProps) => {
                     </div>
                   </div>
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
-                >
-                  {loading ? "Computing ..." : "Compute"}
-                </Button>
+                {zcrates?.length > 0 && (
+                  <Button
+                    type="submit"
+                    className="w-full hover:bg-sky-800 bg-sky-600 text-white uppercase"
+                  >
+                    {loading ? "Computing ..." : "Compute"}
+                  </Button>
+                )}
               </form>
             </Form>
           </div>
 
-          {bondPrice > 0 && (
+          {zcrates?.length < 1 && (
+            <p className="text-center text-red-600 p-4">
+              No zero coupon found for the chosen valuation date{" "}
+            </p>
+          )}
+
+          {zcrates?.length > 0 && bondPrice > 0 && (
             <div className="md:flex md:items-center md:justify-around border rounded-xl mt-4 p-4 bg-sky-400/20 dark:bg-sky-400/30">
               <div className="flex md:flex-col  justify-between items-center md:items-start gap-4">
                 {!forcedBondPrice && (

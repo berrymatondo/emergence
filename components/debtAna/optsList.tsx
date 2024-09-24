@@ -361,7 +361,7 @@ const CashF = async ({ id, curCode, code }: CashFProps) => {
         }}
         className="font-semibold text-center text-sky-400"
       >
-        Option-{id}
+        Cashflow Option-{id}
       </Link>
 
       {/*       <div className="font-medium  mx-0 px-0">{cf?.value}</div>

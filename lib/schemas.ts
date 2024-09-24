@@ -406,6 +406,7 @@ export const transMatrixSchema = z.object({
 //Default MAtrix
 export const defMatrixSchema = z.object({
   id: z.number().optional(),
+  label: z.string().optional(),
   y1: z.string().optional(),
   y2: z.string().optional(),
   y3: z.string().optional(),

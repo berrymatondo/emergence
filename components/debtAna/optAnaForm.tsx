@@ -892,7 +892,8 @@ const OptAnaForm = ({
                   >
                     Save
                   </Button>
-                  {lastData?.length > 0 &&
+                  {zcrates?.length > 0 &&
+                    lastData?.length > 0 &&
                     lastData.length >= Math.floor(+mat) && (
                       <Button
                         type="submit"
@@ -916,6 +917,21 @@ const OptAnaForm = ({
                           <p>
                             2. In your batch, ensure to have coherence between
                             the Reserves and the maturity
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+
+                  {zcrates?.length < 1 && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info size={40} className="text-yellow-500" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-center text-red-600 p-4">
+                            No zero coupon found for the chosen valuation date{" "}
                           </p>
                         </TooltipContent>
                       </Tooltip>
