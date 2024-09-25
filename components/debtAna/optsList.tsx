@@ -58,6 +58,9 @@ import Link from "next/link";
 import DelReserve from "./delReserve";
 import { getCashflowById } from "@/lib/_cashflowActions";
 import Cashflow from "../commonCurves/cashflow";
+import { Button } from "../ui/button";
+import TOTO from "./toto";
+import Toto from "./toto";
 
 type FinOptAnaProps = {
   countries?: any;
@@ -118,6 +121,11 @@ const OptsList = ({
     return found?.label;
   };
 
+  const toto = [
+    { name: "George Washington", birthday: "1732-02-22" },
+    { name: "John Adams", birthday: "1735-10-19" },
+  ];
+
   return (
     <GeneralLayout
       title="Financing Options Analysis"
@@ -125,11 +133,6 @@ const OptsList = ({
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-3/4  max-md:w-full  p-4 rounded-xl">
-          {/*           <MdAdd
-            className="bg-sky-600 rounded-full hover:cursor-pointer"
-            size={40}
-            onClick={() => router.push(`/anadette/anaopfin/${code}/new`)}
-          /> */}
           <Table>
             <TableHeader>
               <TableRow>
@@ -255,6 +258,7 @@ const OptsList = ({
               </TableRow>
             </TableFooter>
           </Table>
+          {opts.length > 0 && <Toto opts={opts} code={code} />}
         </div>
 
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-1/4  max-md:w-full  p-4 rounded-xl">
