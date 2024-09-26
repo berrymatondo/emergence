@@ -74,6 +74,7 @@ export const createFinOpt = async (
 
       //console.log("SESSION", session);
       //const userTmp: any = session?.user;
+      //  console.log("modality", modality);
 
       user = await prisma.financingOptions.create({
         data: {
@@ -160,6 +161,8 @@ export const updateFinOpt = async (
 
       //console.log("SESSION", session);
       //const userTmp: any = session?.user;
+
+      //console.log("modality", modality);
 
       const usr = await prisma.financingOptions.update({
         where: {

@@ -18,6 +18,7 @@ import {
   CouponFreqList,
   CurrencyList,
   LabelList,
+  ModalityTypes,
   ratings,
   valuationTypes,
 } from "@/lib/enums";
@@ -52,15 +53,11 @@ import { computeCMA, createFinOpt, getFinOpts } from "@/lib/_finActions";
 import OptAnaForm from "./optAnaForm";
 import ReserveForm from "./reserveForm";
 import { deleteReserve, getReserveByCode } from "@/lib/_reserveActions";
-import { MdAdd, MdDelete, MdUpdate } from "react-icons/md";
-import { useRouter } from "next/navigation";
+import { MdAdd, MdAutoGraph, MdDelete, MdUpdate } from "react-icons/md";
 import Link from "next/link";
 import DelReserve from "./delReserve";
 import { getCashflowById } from "@/lib/_cashflowActions";
-import Cashflow from "../commonCurves/cashflow";
-import { Button } from "../ui/button";
-import TOTO from "./toto";
-import Toto from "./toto";
+import Exp from "./exp";
 
 type FinOptAnaProps = {
   countries?: any;
@@ -111,6 +108,11 @@ const OptsList = ({
     return found?.label;
   };
 
+  const getModality = (id: any) => {
+    const found = ModalityTypes.find((v) => v.id === +id);
+    return found?.name;
+  };
+
   const getCurrency = (id: any) => {
     const found = currencies?.find((v: any) => v.id === +id);
     return found?.code;
@@ -129,7 +131,13 @@ const OptsList = ({
   return (
     <GeneralLayout
       title="Financing Options Analysis"
-      bred={<CustomBreadcrumb name="Financing Options Analysis" code={code} />}
+      bred={
+        <CustomBreadcrumb
+          name="Financing Options Analysis"
+          code={code}
+          opts={opts}
+        />
+      }
     >
       <div className="max-md:px-1 md:flex gap-4 w-full ">
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-3/4  max-md:w-full  p-4 rounded-xl">
@@ -155,17 +163,20 @@ const OptsList = ({
                 <TableHead className="text-left mx-0 px-0">Modality</TableHead>
                 {/*                 <TableHead className="text-left mx-0 px-0">Actions</TableHead>
                  */}{" "}
-                <TableHead className="text-orange-600 text-left mx-0 px-0">
+                <TableHead className="bg-sky-900 rounded-tl-lg pl-2 text-orange-600 text-left mx-0">
                   CMA
                 </TableHead>
-                <TableHead className="text-orange-600 text-left mx-0 px-0">
+                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
                   Duration
                 </TableHead>
-                <TableHead className="text-orange-600 text-left mx-0 px-0">
+                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
                   Default probability
                 </TableHead>
-                <TableHead className="text-orange-600 text-left mx-0 px-0">
+                <TableHead className="bg-sky-900 rounded-tr-lg text-orange-600 text-left mx-0 px-0">
                   Financing Risk
+                </TableHead>
+                <TableHead className=" text-orange-600 text-left mx-0 pl-2">
+                  Actions
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -206,7 +217,7 @@ const OptsList = ({
                       {ic.recovering} %
                     </TableCell>
                     <TableCell className="text-left mx-0 px-0">
-                      {ic.modality}
+                      {getModality(ic.modality)}
                     </TableCell>
                     {/*                   <TableCell className="text-right  mx-0 px-0 hover:cursor-pointer">
 
@@ -219,7 +230,7 @@ const OptsList = ({
                       <MdUpdate className="text-yellow-600" size={25} />
                     </Link>
                   </TableCell> */}
-                    <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                    <TableCell className="text-white bg-sky-900 pl-2 text-left font-semibold text-base mx-0">
                       {new Intl.NumberFormat(undefined, {
                         currency: getCurrency(ic.currency)
                           ? getCurrency(ic.currency)
@@ -227,14 +238,24 @@ const OptsList = ({
                         style: "currency",
                       }).format(+ic.cma?.toFixed(2))}
                     </TableCell>
-                    <TableCell className="text-left font-semibold text-base  mx-0 px-0">
+                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base  mx-0 px-0">
                       {ic.duration.toFixed(2)}
                     </TableCell>
-                    <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base mx-0 px-0">
                       -
                     </TableCell>
-                    <TableCell className="text-left font-semibold text-base mx-0 px-0">
+                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base mx-0 px-0">
                       -
+                    </TableCell>
+                    <TableCell className="pl-2  text-left font-semibold text-base mx-0">
+                      <Link
+                        href={{
+                          pathname: `/anadette/anaopfin/${code}/analysis/${ic.id}`,
+                          query: { id: ic.id },
+                        }}
+                      >
+                        <MdAutoGraph size={25} className="text-yellow-600" />
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -258,7 +279,8 @@ const OptsList = ({
               </TableRow>
             </TableFooter>
           </Table>
-          {opts.length > 0 && <Toto opts={opts} code={code} />}
+          {/*           {opts.length > 0 && <Toto opts={opts} code={code} />}
+           */}{" "}
         </div>
 
         <div className="bg-gray-500/10 dark:bg-teal-200/10 w-1/4  max-md:w-full  p-4 rounded-xl">
@@ -317,7 +339,15 @@ const OptsList = ({
 
 export default OptsList;
 
-const CustomBreadcrumb = ({ name, code }: { name: string; code?: string }) => {
+const CustomBreadcrumb = ({
+  name,
+  code,
+  opts,
+}: {
+  name: string;
+  code?: string;
+  opts: any;
+}) => {
   return (
     <Breadcrumb className=" p-2 ">
       <BreadcrumbList>
@@ -329,10 +359,11 @@ const CustomBreadcrumb = ({ name, code }: { name: string; code?: string }) => {
             <BreadcrumbLink href="/zones">Zones</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator /> */}
-        <BreadcrumbItem>
+        <BreadcrumbItem className="w-full flex justify-between">
           <BreadcrumbPage className="font-semibold">
             {name}: <strong className="text-lg text-sky-700">{code}</strong>
           </BreadcrumbPage>
+          {opts.length > 0 && <Exp opts={opts} code={code ? code : ""} />}
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -379,7 +410,10 @@ const CashF = async ({ id, curCode, code }: CashFProps) => {
       </div> */}
       <ScrollArea className="h-72">
         {cf?.map((cc: any) => (
-          <div key={cc.id} className="flex justify-between py-2 gap-4 border-b">
+          <div
+            key={cc.id}
+            className="text-white  flex justify-between py-2 gap-4 border-b"
+          >
             <div>{cc.date}</div>
             <div>
               {" "}

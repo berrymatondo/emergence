@@ -8,7 +8,7 @@ type TotoPros = {
   code: string;
 };
 
-export default function Toto({ opts, code }: TotoPros) {
+export default function Exp({ opts, code }: TotoPros) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   //console.log("opts", opts);

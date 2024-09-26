@@ -103,14 +103,25 @@ export const valuationTypes = [
   {
     id: 1,
     label: "Straight Bond",
-    modality: "Due date",
+    modality: 1,
     value: "straightbond",
   },
   {
     id: 2,
     label: "Amortized Bond",
-    modality: "Amortized",
+    modality: 2,
     value: "amortizedbond",
+  },
+];
+
+export const ModalityTypes = [
+  {
+    id: 1,
+    name: "Due date",
+  },
+  {
+    id: 2,
+    name: "Amortized",
   },
 ];
 

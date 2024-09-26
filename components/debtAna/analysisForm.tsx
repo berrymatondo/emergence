@@ -31,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { FinOptSchema } from "@/lib/schemas";
 import { Separator } from "../ui/separator";
 import { Currency } from "@prisma/client";
 import {
@@ -95,6 +94,14 @@ import {
 import { Info } from "lucide-react";
 import { updateCashflow } from "@/lib/_cashflowActions";
 import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { AnaFinOptSchema } from "@/lib/schemas";
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -122,7 +129,7 @@ type OptAnaFormProps = {
   code?: any;
   valType?: any;
 };
-const OptAnaForm = ({
+const AnalysisForm = ({
   optIn,
   type,
   openDialog,
@@ -148,7 +155,7 @@ const OptAnaForm = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   //console.log("Pathname: ", pathname.split("/")[3]);
-  //console.log("opts: ", optIn);
+  console.log("opts:", optIn);
 
   /**
  * 
@@ -166,8 +173,8 @@ const OptAnaForm = ({
   //console.log("optIn: ", optIn);
   //console.log("refresh:", refresh);
 
-  const form = useForm<z.infer<typeof FinOptSchema>>({
-    resolver: zodResolver(FinOptSchema),
+  const form = useForm<z.infer<typeof AnaFinOptSchema>>({
+    resolver: zodResolver(AnaFinOptSchema),
     defaultValues: {
       id: optIn?.id ? +optIn?.id : 0,
       code: pathname.split("/")[3],
@@ -178,7 +185,6 @@ const OptAnaForm = ({
       modality: valuationTypes
         .find((va: any) => va.id == (optIn?.valType ? optIn?.valType : "1"))
         ?.modality.toString(),
-      //modality: optIn?.modality ? optIn.modality.toString() : "1",
       couponBasis: optIn?.couponBasis ? optIn.couponBasis.toString() : "AA",
       couponRate: optIn?.couponRate ? optIn.couponRate.toString() : "1",
       maturity: optIn?.maturity ? optIn?.maturity.toString() : "1",
@@ -190,6 +196,7 @@ const OptAnaForm = ({
       valuationDate: optIn?.valuationDate as string,
       currency: optIn?.couponCurrency ? optIn?.couponCurrency.toString() : "1",
       recovering: optIn?.recovering ? optIn?.recovering.toString() : "40",
+      duration: optIn?.duration ? optIn?.duration.toFixed(2).toString() : "0",
     },
   });
 
@@ -213,6 +220,7 @@ const OptAnaForm = ({
     form.setValue("notional", optIn?.notional?.toString());
     //form.setValue("valuationDate", optIn?.valuationDate.toString());
     //form.setValue("currency", optIn?.couponCurrency.toString());
+    form.setValue("duration", optIn?.duration?.toFixed(2).toString());
     form.setValue("recovering", optIn?.recovering?.toString());
   }, [optIn, form]);
 
@@ -228,8 +236,6 @@ const OptAnaForm = ({
       issueDate ? issueDate : "0"
     );
 
-    //console.log("mati", mati);
-
     form.setValue("maturity", Math.floor(+mati).toString());
     setMat(Math.floor(+mati));
   }, [maturityDate, issueDate]);
@@ -242,6 +248,8 @@ const OptAnaForm = ({
   }, [valuationType]);
 
   useEffect(() => {
+    console.log("log");
+
     // Fetch ZC Rates
     const fetchZC = async (id: any, date: any) => {
       //  console.log("id", id, date);
@@ -258,6 +266,8 @@ const OptAnaForm = ({
     const fetchCur = async (currency: any) => {
       const resu = await getCurrency(+currency);
       const dat = resu?.data;
+
+      console.log("dat?.code", dat?.code);
 
       setCurCode(dat?.code ? dat?.code : "");
     };
@@ -298,7 +308,7 @@ const OptAnaForm = ({
     return (years / 365).toFixed(2);
   };
 
-  const procesForm = async (values: z.infer<typeof FinOptSchema>) => {
+  const procesForm = async (values: z.infer<typeof AnaFinOptSchema>) => {
     setLoading(true);
 
     //const dcurve = await createFinOpt(values, code);
@@ -370,15 +380,17 @@ const OptAnaForm = ({
   return (
     <div>
       <GeneralLayout
-        title="Financing Options Analysis"
+        title="Evaluation of a Financing Option"
         bred={
           <CustomBreadcrumb
             name={`Financing Options Analysis:${pathname.split("/")[3]}`}
           />
         }
       >
+        {/*         {JSON.stringify(optIn)}
+         */}{" "}
         <div className="max-md:px-1 md:flex gap-4 w-full ">
-          <div className="bg-gray-500/10 dark:bg-teal-200/10 w-1/2  max-md:w-full  p-4 rounded-xl">
+          <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full  p-4 rounded-xl">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(procesForm)}
@@ -431,10 +443,19 @@ const OptAnaForm = ({
                       render={({ field }) => {
                         return (
                           <FormItem className="w-full">
-                            <FormLabel className="text-sky-400 p-4 text-xl">
+                            <FormLabel
+                              onClick={() =>
+                                router.push(
+                                  `/anadette/anaopfin/${
+                                    pathname.split("/")[3]
+                                  }/update?id=${optIn?.id}`
+                                )
+                              }
+                              className="hover:cursor-pointer text-sky-400 p-4 text-xl"
+                            >
                               {`Option - ${optIn?.id}`}
                             </FormLabel>
-                            <Select
+                            {/*                             <Select
                               onValueChange={field.onChange}
                               defaultValue={field.value}
                             >
@@ -451,7 +472,7 @@ const OptAnaForm = ({
                                   </SelectItem>
                                 ))}
                               </SelectContent>
-                            </Select>
+                            </Select> */}
 
                             <FormMessage />
                           </FormItem>
@@ -460,96 +481,50 @@ const OptAnaForm = ({
                     />
                   </div>
                   <div className="flex gap-4 ">
-                    <div className="w-1/2 flex flex-col gap-4 ">
-                      <>
-                        <div className="flex justify-between items-center gap-4">
-                          <FormField
-                            control={form.control}
-                            name="maturityDate"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>{"Maturity Date "}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la date"
-                                      type="date"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
+                    <div className=" w-full flex flex-col gap-4 ">
+                      <div className="flex justify-between items-center gap-4">
+                        <FormField
+                          control={form.control}
+                          name="couponRate"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Coupon Rate (%)"}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="maturity"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>Maturity (years)</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="1"
+                                  />
+                                </FormControl>
 
-                          <FormField
-                            control={form.control}
-                            name="firstCouponDate"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>{"First Coupon Date "}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la date"
-                                      type="date"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        </div>
-                        <div className="flex justify-between items-center gap-4">
-                          <FormField
-                            control={form.control}
-                            name="couponRate"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>{"Coupon Rate (%)"}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la valeur"
-                                      type="number"
-                                      step="0.01"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="maturity"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>Maturity (years)</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la valeur"
-                                      type="number"
-                                      step="1"
-                                      disabled
-                                    />
-                                  </FormControl>
-
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        </div>
-                        <div className="flex gap-4">
-                          <FormField
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        {/*                           <FormField
                             control={form.control}
                             name="rating"
                             render={({ field }) => {
@@ -579,56 +554,58 @@ const OptAnaForm = ({
                                 </FormItem>
                               );
                             }}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="notional"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>{"Notional"}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la valeur"
-                                      type="number"
-                                      step="0.01"
-                                    />
-                                  </FormControl>
-
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        </div>
-                      </>
-                    </div>
-                    <div className="max-md:hidden">
-                      <Separator orientation="vertical" />
-                    </div>
-                    <div className="w-1/2 flex flex-col gap-4">
-                      <div className="flex justify-between items-center gap-4">
+                          /> */}
                         <FormField
                           control={form.control}
-                          name="valuationDate"
+                          name="notional"
                           render={({ field }) => {
                             return (
                               <FormItem className="w-1/2">
-                                <FormLabel>{"Valuation Date "}</FormLabel>
+                                <FormLabel>{"Notional"}</FormLabel>
                                 <FormControl>
                                   <Input
                                     {...field}
-                                    placeholder="Entrer la date"
-                                    type="date"
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
                                   />
                                 </FormControl>
+
                                 <FormMessage />
                               </FormItem>
                             );
                           }}
                         />
+                        <FormField
+                          control={form.control}
+                          name="couponFrequency"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>Coupon Frequency</FormLabel>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <SelectTrigger id="framework">
+                                    <SelectValue placeholder="Select a frequency" />
+                                  </SelectTrigger>
+                                  <SelectContent position="popper">
+                                    {Object.values(CouponFreqList)?.map(
+                                      (ur: any) => (
+                                        <SelectItem key={ur} value={ur}>
+                                          {ur}
+                                        </SelectItem>
+                                      )
+                                    )}
+                                  </SelectContent>
+                                </Select>
 
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
                         <FormField
                           control={form.control}
                           name="currency"
@@ -664,30 +641,6 @@ const OptAnaForm = ({
                             );
                           }}
                         />
-                      </div>
-
-                      <div className="flex justify-between items-center gap-4">
-                        <FormField
-                          control={form.control}
-                          name="recovering"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Recovering (%)"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-
                         <FormField
                           control={form.control}
                           name="modality"
@@ -695,10 +648,17 @@ const OptAnaForm = ({
                             return (
                               <FormItem className="w-1/2">
                                 <FormLabel>{"Modality"}</FormLabel>
+                                {/*                               <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="text"
+                                  />
+                                </FormControl>
+ */}
                                 <Select
                                   onValueChange={field.onChange}
                                   defaultValue={field.value}
-                                  disabled={true}
                                 >
                                   <SelectTrigger id="framework">
                                     <SelectValue placeholder="Select a modality" />
@@ -714,24 +674,130 @@ const OptAnaForm = ({
                                     ))}
                                   </SelectContent>
                                 </Select>
-                                {/*                                 <FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        {/*                       </div>
+                    </div>
+                    <div className="max-md:hidden">
+                      <Separator orientation="vertical" />
+                    </div> */}
+                        {/*                     <div className="w-1/2 flex flex-col gap-4">
+                      <div className="flex justify-between items-center gap-4">
+                      */}{" "}
+                        <FormField
+                          control={form.control}
+                          name="couponRate"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Issue Price (%)"}</FormLabel>
+                                <FormControl>
                                   <Input
                                     {...field}
                                     placeholder="Entrer la valeur"
-                                    type="text"
-                                    disabled
+                                    type="number"
+                                    step="0.01"
                                   />
-                                </FormControl> */}
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="couponRate"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Observed Price (%)"}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        {/*                       </div>
+                      <div className="flex justify-between items-center gap-4">
+                     */}{" "}
+                        <FormField
+                          control={form.control}
+                          name="duration"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Duration"}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
 
                                 <FormMessage />
                               </FormItem>
                             );
                           }}
                         />
-                      </div>
+                        <FormField
+                          control={form.control}
+                          name="recovering"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>
+                                  {"Default Probability (%)"}
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="recovering"
+                          render={({ field }) => {
+                            return (
+                              <FormItem className="w-1/2">
+                                <FormLabel>{"Refinancing Risk (%)"}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                        {/*                       </div>
 
                       <div className="flex justify-between items-center gap-4">
-                        <FormField
+                     */}{" "}
+                        {/*                         <FormField
                           control={form.control}
                           name="issueDate"
                           render={({ field }) => {
@@ -749,70 +815,7 @@ const OptAnaForm = ({
                               </FormItem>
                             );
                           }}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="couponFrequency"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>Coupon Frequency</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <SelectTrigger id="framework">
-                                    <SelectValue placeholder="Select a frequency" />
-                                  </SelectTrigger>
-                                  <SelectContent position="popper">
-                                    {Object.values(CouponFreqList)?.map(
-                                      (ur: any) => (
-                                        <SelectItem key={ur} value={ur}>
-                                          {ur}
-                                        </SelectItem>
-                                      )
-                                    )}
-                                  </SelectContent>
-                                </Select>
-
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      </div>
-                      <div className="flex justify-between items-center gap-4">
-                        <FormField
-                          control={form.control}
-                          name="couponBasis"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>Coupon Basis</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <SelectTrigger id="framework">
-                                    <SelectValue placeholder="Select a coupon basis" />
-                                  </SelectTrigger>
-                                  <SelectContent position="popper">
-                                    {Object.values(CouponBasisList)?.map(
-                                      (ur: any) => (
-                                        <SelectItem key={ur} value={ur}>
-                                          {ur}
-                                        </SelectItem>
-                                      )
-                                    )}
-                                  </SelectContent>
-                                </Select>
-
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
+                        /> */}
                       </div>
                     </div>
                   </div>
@@ -831,7 +834,7 @@ const OptAnaForm = ({
                   >
                     Cancel
                   </Button>
-                  {!confirmDelete && (
+                  {/*                   {!confirmDelete && (
                     <Button
                       type="button"
                       variant="secondary"
@@ -842,15 +845,14 @@ const OptAnaForm = ({
                     >
                       Delete
                     </Button>
-                  )}
+                  )} */}
 
-                  {confirmDelete && (
+                  {/*                   {confirmDelete && (
                     <Button
                       type="button"
                       variant="secondary"
                       className=" w-full md:w-1/3 bg-red-600 hover:bg-red-600"
                       onClick={async () => {
-                        // console.log("optIn?.id", optIn?.id);
 
                         const res = await deleteFinOpts(
                           optIn?.id,
@@ -865,14 +867,13 @@ const OptAnaForm = ({
                     >
                       Confirm Delete
                     </Button>
-                  )}
+                  )} */}
 
-                  <Button
+                  {/*                   <Button
                     type="button"
                     variant="secondary"
                     className="w-full md:w-1/3 bg-green-600 hover:bg-green-800"
                     onClick={async () => {
-                      //console.log("Type", type);
 
                       if (type == "U") {
                         const reso = await updateCashflow(
@@ -898,8 +899,7 @@ const OptAnaForm = ({
                           refinRisk
                         );
 
-                        // console.log("lgoo", res);
-                        // if (res?.data) console.log("lgoot", res?.data);
+
 
                         const reso = await updateCashflow(
                           cashflow,
@@ -920,18 +920,16 @@ const OptAnaForm = ({
                     }}
                   >
                     Save
+                  </Button> */}
+
+                  <Button
+                    type="submit"
+                    className=" w-full md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
+                  >
+                    {loading ? "Computing ..." : "Compute"}
                   </Button>
-                  {zcrates?.length > 0 &&
-                    lastData?.length > 0 &&
-                    lastData.length >= Math.floor(+mat) && (
-                      <Button
-                        type="submit"
-                        className=" w-full md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
-                      >
-                        {loading ? "Computing ..." : "Compute"}
-                      </Button>
-                    )}
-                  {lastData?.length < 1 && (
+
+                  {/*                 {lastData?.length < 1 && (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -951,8 +949,8 @@ const OptAnaForm = ({
                       </Tooltip>
                     </TooltipProvider>
                   )}
-
-                  {zcrates?.length < 1 && (
+ */}
+                  {/*                   {zcrates?.length < 1 && (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -965,153 +963,55 @@ const OptAnaForm = ({
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                  )}
+                  )} */}
                 </div>
               </form>
             </Form>
           </div>
+        </div>
+        <div className="flex justify-between mt-8">
+          <Card x-chunk="dashboard-07-chunk-5" className="w-1/3">
+            <CardHeader>
+              <CardTitle>General Recommendations</CardTitle>
+              <CardDescription>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
+                quis saepe corrupti dolore possimus, dolorum accusantium odit
+                nemo id? Soluta dicta porro culpa earum non magnam similique
+                delectus ipsum consequuntur.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div></div>
+              {/*               <Button size="sm" variant="secondary">
+                Archive Product
+              </Button> */}
+            </CardContent>
+          </Card>
 
-          <div className="flex flex-col w-1/2 gap-2">
-            <div className="flex gap-2 bg-gray-500/10 dark:bg-teal-200/10 w-full rounded-xl p-4">
-              <div className="bg-gray-500/10 dark:bg-teal-200/10 w-1/2 rounded-xl p-4">
-                <p className="text-orange-600">
-                  CMA:{" "}
-                  <span className="text-white font-semibold">
-                    {new Intl.NumberFormat(undefined, {
-                      currency: curCode ? curCode : "USD",
-                      style: "currency",
-                    }).format(+cma?.toFixed(2))}
-                  </span>
-                </p>
-                <p className="text-orange-600">
-                  Duration:{" "}
-                  <span className="text-white font-semibold">
-                    {duration.toFixed(2)}
-                  </span>
-                </p>
-              </div>
-              <div className="bg-gray-500/10 dark:bg-teal-200/10 w-1/2 rounded-xl p-4">
-                <p className="text-orange-600">Default Probability:</p>
-                <p className="text-orange-600">Credit Risk:</p>
-              </div>
-              <div className="hover:cursor-pointer hover:bg-slate-800 bg-slate-900 flex justify-center items-center p-4 rounded-lg">
-                {optIn?.id && (
-                  <Link
-                    href={{
-                      pathname: `/anadette/anaopfin/${
-                        pathname.split("/")[3]
-                      }/analysis/${optIn?.id}`,
-                      query: { id: optIn?.id },
-                    }}
-                  >
-                    <MdAutoGraph size={25} className="text-yellow-600" />
-                  </Link>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-2 w-full">
-              <>
-                <div className=" border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                  <ScrollArea className="h-96">
-                    <p className="font-semibold">Reserves</p>
-                    {/*                     <ReserveForm
-                      code={optIn?.reserve}
-                      openDialog={false}
-                      refresh={refresh}
-                      setRefresh={setRefresh}
-                      type="A"
-                    /> */}
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="text-left mx-0 px-0">
-                            <p className="flex justify-between">
-                              <span>Tenor</span>
-                            </p>
-                          </TableHead>
-                          <TableHead className="text-right mx-0 px-0">
-                            Value
-                          </TableHead>
-
-                          {/*   <TableHead className="text-left mx-0 px-0">
-                            Actions
-                          </TableHead> */}
-                        </TableRow>
-                      </TableHeader>
-
-                      <TableBody>
-                        {lastData?.map((ic: any) => (
-                          <TableRow key={ic.id}>
-                            <TableCell className="text-left mx-0 px-0">
-                              {ic.tenor}
-                            </TableCell>
-                            <TableCell className="text-right  mx-0 px-0">
-                              <span className="text-white font-semibold">
-                                {new Intl.NumberFormat(undefined, {
-                                  currency: curCode ? curCode : "USD",
-                                  style: "currency",
-                                }).format(+ic.value?.toFixed(2))}
-                              </span>
-                            </TableCell>
-
-                            {/*               <TableCell className="flex  items-center gap-4 text-right  mx-0 px-0 hover:cursor-pointer">
-                                                         <ReserveForm
-                                code={optIn?.reserve}
-                                openDialog={false}
-                                type="U"
-                                reserveIn={ic}
-                                refresh={refresh}
-                                setRefresh={setRefresh}
-                              />
-                              <DelReserve
-                                id={ic.id}
-                                refresh={refresh}
-                                setRefresh={setRefresh}
-                                code={code}
-                              /> 
-                            </TableCell> */}
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </ScrollArea>
-                </div>
-              </>
-              {/*               <div className=" border rounded-xl p-4 bg-sky-400/20 dark:bg-sky-400/30 md:w-1/3">
-                <ScrollArea className="flex h-96 gap-4">
-                  <DCurve disc={disc} setDisc={setDisc} add={false} />
-                </ScrollArea>
-              </div> */}
-
-              <div className=" border rounded-xl p-4 bg-neutral-400/20 md:w-1/3 ">
-                <ScrollArea className="flex h-96 gap-4">
-                  <p className="font-semibold">
-                    ZC Curve - <span>{curCode}</span>
-                  </p>
-                  <ZCCurve zccurve={zcrates} />
-                </ScrollArea>
-              </div>
-
-              <div className=" border rounded-xl p-4 bg-gray-500/10 dark:bg-teal-400/10 md:w-1/3 ">
-                <ScrollArea className="flex h-96 gap-4  ">
-                  <p className="font-semibold">Cashflow</p>
-                  <Cashflow
-                    cashflow={cashflow}
-                    type="fin"
-                    curCode={curCode}
-                    fraction={true}
-                  />
-                </ScrollArea>
-              </div>
-            </div>
-          </div>
+          <Card x-chunk="dashboard-07-chunk-5" className="w-1/3">
+            <CardHeader>
+              <CardTitle>Default Probability Recommendations </CardTitle>
+              <CardDescription>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi
+                assumenda doloremque quod, aut molestiae quibusdam perspiciatis
+                ea. Odio, incidunt quas reiciendis accusantium itaque voluptate,
+                ipsa temporibus facilis quisquam expedita corrupti.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div></div>
+              {/*               <Button size="sm" variant="secondary">
+                Archive Product
+              </Button> */}
+            </CardContent>
+          </Card>
         </div>
       </GeneralLayout>
     </div>
   );
 };
 
-export default OptAnaForm;
+export default AnalysisForm;
 
 const CustomBreadcrumb = ({ name }: { name: string }) => {
   return (

@@ -433,3 +433,24 @@ export const impMatrixSchema = z.object({
   D: z.string().optional(),
   NR: z.string().optional(),
 });
+
+//Financial Options
+export const AnaFinOptSchema = z.object({
+  id: z.number().optional(),
+  code: z.string().optional(),
+  valuationType: z.string().optional(),
+  maturityDate: z.string().optional(),
+  issueDate: z.string().optional(),
+  firstCouponDate: z.string().optional(),
+  modality: z.string().optional(),
+  couponBasis: z.string().optional(),
+  couponRate: z.string().optional(),
+  couponFrequency: z.string().optional(),
+  maturity: z.string().optional(),
+  notional: z.string().optional(),
+  recovering: z.string().optional(),
+  rating: z.string().optional(),
+  valuationDate: z.string().optional(),
+  currency: z.string().optional(),
+  duration: z.string().optional(),
+});
