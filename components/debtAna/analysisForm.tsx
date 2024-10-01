@@ -926,7 +926,7 @@ const AnalysisForm = ({
                     type="submit"
                     className=" w-full md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
                   >
-                    {loading ? "Computing ..." : "Compute"}
+                    {loading ? "Evaluating ..." : "Evaluate"}
                   </Button>
 
                   {/*                 {lastData?.length < 1 && (

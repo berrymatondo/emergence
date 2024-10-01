@@ -131,6 +131,7 @@ const OptAnaForm = ({
   valType,
 }: OptAnaFormProps) => {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(openDialog);
   const router = useRouter();
   const pathname = usePathname();
@@ -204,8 +205,14 @@ const OptAnaForm = ({
       "modality",
       valuationTypes.find((va: any) => va.id == optIn?.valType)?.modality
     ); */
-    form.setValue("modality", optIn?.modality.toString());
-    form.setValue("couponRate", optIn?.couponRate.toString());
+    //form.setValue("modality", optIn?.modality.toString());
+    form.setValue(
+      "modality",
+      valuationTypes
+        .find((va: any) => va.id == (optIn?.valType ? optIn?.valType : "1"))
+        ?.modality.toString()
+    ),
+      form.setValue("couponRate", optIn?.couponRate.toString());
     form.setValue("couponBasis", optIn?.couponBasis.toString());
 
     form.setValue("maturity", optIn?.maturity?.toString());
@@ -432,7 +439,9 @@ const OptAnaForm = ({
                         return (
                           <FormItem className="w-full">
                             <FormLabel className="text-sky-400 p-4 text-xl">
-                              {`Option - ${optIn?.id}`}
+                              {/*                               {`Option - ${optIn?.id}`}
+                               */}{" "}
+                              {optIn.id ? `Option - ${optIn.id}` : "Draft"}
                             </FormLabel>
                             <Select
                               onValueChange={field.onChange}
@@ -874,6 +883,7 @@ const OptAnaForm = ({
                     onClick={async () => {
                       //console.log("Type", type);
 
+                      setSaving(true);
                       if (type == "U") {
                         const reso = await updateCashflow(
                           cashflow,
@@ -913,13 +923,14 @@ const OptAnaForm = ({
                         );
                       }
 
+                      setSaving(false);
                       router.push(
                         `/anadette/anaopfin/${form.getValues().code}`
                       );
                       setOpen(false);
                     }}
                   >
-                    Save
+                    {saving ? "Saving ..." : "Save"}
                   </Button>
                   {zcrates?.length > 0 &&
                     lastData?.length > 0 &&
@@ -994,8 +1005,8 @@ const OptAnaForm = ({
                 <p className="text-orange-600">Default Probability:</p>
                 <p className="text-orange-600">Credit Risk:</p>
               </div>
-              <div className="hover:cursor-pointer hover:bg-slate-800 bg-slate-900 flex justify-center items-center p-4 rounded-lg">
-                {optIn?.id && (
+              {optIn?.id && (
+                <div className="hover:cursor-pointer hover:bg-slate-800 bg-slate-900 flex justify-center items-center p-4 rounded-lg">
                   <Link
                     href={{
                       pathname: `/anadette/anaopfin/${
@@ -1006,8 +1017,8 @@ const OptAnaForm = ({
                   >
                     <MdAutoGraph size={25} className="text-yellow-600" />
                   </Link>
-                )}
-              </div>
+                </div>
+              )}
             </div>
             <div className="flex gap-2 w-full">
               <>
