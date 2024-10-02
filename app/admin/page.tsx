@@ -7,6 +7,7 @@ const AdminPage = () => {
       <Link href="/admin/users">Users</Link>
       <Link href="/admin/countries">Countries</Link>
       <Link href="/admin/matrix">Matrices</Link>
+      <Link href="/admin/batches">Batches</Link>
     </div>
   );
 };

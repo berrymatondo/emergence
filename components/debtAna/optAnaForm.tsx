@@ -332,7 +332,7 @@ const OptAnaForm = ({
     // console.log("dcurve", dcurve?.data);
 
     const global = await computeGeneralValuation(values, dcurve?.data);
-    //if (global?.data) console.log("global", global?.data);
+    // if (global?.data) console.log("global", global?.data);
 
     if (global?.data) setDuration(global?.data.duration);
 
@@ -881,7 +881,7 @@ const OptAnaForm = ({
                     variant="secondary"
                     className="w-full md:w-1/3 bg-green-600 hover:bg-green-800"
                     onClick={async () => {
-                      //console.log("Type", type);
+                      console.log("Duration", duration);
 
                       setSaving(true);
                       if (type == "U") {

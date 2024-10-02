@@ -101,7 +101,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { AnaFinOptSchema } from "@/lib/schemas";
+import { anaEvaSchema, AnaFinOptSchema } from "@/lib/schemas";
+import { getDefaultProba, getGeneralReco } from "@/lib/_analysisActions";
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -153,6 +154,8 @@ const AnalysisForm = ({
   const [refresh, setRefresh] = useState(false);
   const [mat, setMat] = useState(0);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [defReco, setDefReco] = useState("");
+  const [genReco, setGenReco] = useState("");
 
   //console.log("Pathname: ", pathname.split("/")[3]);
   console.log("opts:", optIn);
@@ -197,6 +200,8 @@ const AnalysisForm = ({
       currency: optIn?.couponCurrency ? optIn?.couponCurrency.toString() : "1",
       recovering: optIn?.recovering ? optIn?.recovering.toString() : "40",
       duration: optIn?.duration ? optIn?.duration.toFixed(2).toString() : "0",
+      defProba: optIn?.defProba ? optIn?.defProba.toString() : "8",
+      refinRisk: optIn?.refinRisk ? optIn?.refinRisk.toString() : "5",
     },
   });
 
@@ -308,69 +313,19 @@ const AnalysisForm = ({
     return (years / 365).toFixed(2);
   };
 
-  const procesForm = async (values: z.infer<typeof AnaFinOptSchema>) => {
+  const procesForm = async (values: z.infer<typeof anaEvaSchema>) => {
     setLoading(true);
 
-    //const dcurve = await createFinOpt(values, code);
+    //console.log("values", values);
+
+    const risk = values.refinRisk ? +values.refinRisk : 0;
+    const defProbaf = await getDefaultProba(risk / 100);
+    if (defProbaf?.data) setDefReco(defProbaf.data);
+
+    const refinRisk = await getGeneralReco(values); //const dcurve = await createFinOpt(values, code);
+    if (refinRisk?.data) setGenReco(refinRisk.data);
 
     //console.log("type", type);
-
-    //console.log("Values  ", values, type);
-
-    /*     const mati = getYears(
-      values?.maturityDate ? values?.maturityDate : "0",
-      values?.issueDate ? values?.issueDate : "0"
-    );
-
-    console.log("mati", mati); */
-
-    /*     if (type == "U") {
-      const res = await updateFinOpt(values);
-    } else {
-      const res = await createFinOpt(values);
-    }
- */
-    const dcurve = await computeDC(values, disc, zcrates);
-    if (dcurve?.data) setDisc(dcurve?.data);
-    // console.log("dcurve", dcurve?.data);
-
-    const global = await computeGeneralValuation(values, dcurve?.data);
-    //if (global?.data) console.log("global", global?.data);
-
-    if (global?.data) setDuration(global?.data.duration);
-
-    const val = values?.notional ? +values?.notional : 0;
-    const first = values.firstCouponDate ? values.firstCouponDate : "";
-    // console.log("VAL", val);
-
-    let cashflowFin = [];
-    for (let i = 0; i < global?.data?.cash_flow?.length; i++) {
-      cashflowFin.push({
-        gross: val + val * +global?.data?.cash_flow[i],
-        date: getYears(
-          global?.data?.date[i].split("/").reverse().join("-"),
-          first
-        ),
-        discounted: global?.data?.discounted_cash_flow[i],
-      });
-    }
-    //console.log("cashflowFin", cashflowFin);
-
-    setCashflow(cashflowFin);
-
-    //console.log("lastData", lastData);
-
-    // COMPUTE DMA
-    const CMA = await computeCMA(
-      values?.maturity,
-      cashflowFin,
-      lastData,
-      zcrates
-    );
-
-    //console.log("CMA DATA", CMA?.data);
-
-    if (CMA) setCma(CMA?.data);
 
     setLoading(false);
     // router.push(`/anadette/anaopfin/${values.code}`);
@@ -753,7 +708,7 @@ const AnalysisForm = ({
                         />
                         <FormField
                           control={form.control}
-                          name="recovering"
+                          name="defProba"
                           render={({ field }) => {
                             return (
                               <FormItem className="w-1/2">
@@ -775,7 +730,7 @@ const AnalysisForm = ({
                         />
                         <FormField
                           control={form.control}
-                          name="recovering"
+                          name="refinRisk"
                           render={({ field }) => {
                             return (
                               <FormItem className="w-1/2">
@@ -970,41 +925,39 @@ const AnalysisForm = ({
           </div>
         </div>
         <div className="flex justify-between mt-8">
-          <Card x-chunk="dashboard-07-chunk-5" className="w-1/3">
-            <CardHeader>
-              <CardTitle>General Recommendations</CardTitle>
-              <CardDescription>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-                quis saepe corrupti dolore possimus, dolorum accusantium odit
-                nemo id? Soluta dicta porro culpa earum non magnam similique
-                delectus ipsum consequuntur.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div></div>
-              {/*               <Button size="sm" variant="secondary">
+          {genReco && (
+            <Card x-chunk="dashboard-07-chunk-5" className="w-2/5">
+              <CardHeader>
+                <CardTitle className="text-sky-600">
+                  General Recommendations
+                </CardTitle>
+                <CardDescription>{genReco}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div></div>
+                {/*               <Button size="sm" variant="secondary">
                 Archive Product
               </Button> */}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
-          <Card x-chunk="dashboard-07-chunk-5" className="w-1/3">
-            <CardHeader>
-              <CardTitle>Default Probability Recommendations </CardTitle>
-              <CardDescription>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi
-                assumenda doloremque quod, aut molestiae quibusdam perspiciatis
-                ea. Odio, incidunt quas reiciendis accusantium itaque voluptate,
-                ipsa temporibus facilis quisquam expedita corrupti.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div></div>
-              {/*               <Button size="sm" variant="secondary">
+          {defReco && (
+            <Card x-chunk="dashboard-07-chunk-5" className="w-2/5">
+              <CardHeader>
+                <CardTitle className="text-sky-600">
+                  Default Probability Recommendations{" "}
+                </CardTitle>
+                <CardDescription>{defReco}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div></div>
+                {/*               <Button size="sm" variant="secondary">
                 Archive Product
               </Button> */}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </GeneralLayout>
     </div>

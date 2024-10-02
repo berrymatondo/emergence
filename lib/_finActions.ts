@@ -7,6 +7,17 @@ import { z } from "zod";
 
 type Inputs = z.infer<typeof FinOptSchema>;
 
+export const getAllFinOpts = async () => {
+  try {
+    const overviews = await prisma.financingOptions.findMany({});
+
+    return {
+      success: true,
+      data: overviews,
+    };
+  } catch (error) {}
+};
+
 export const getFinOpts = async (code: string) => {
   try {
     const overviews = await prisma.financingOptions.findMany({
