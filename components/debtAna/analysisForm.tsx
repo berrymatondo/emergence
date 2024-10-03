@@ -440,70 +440,128 @@ const AnalysisForm = ({
                       <div className="flex max-md:flex-col justify-between items-center gap-4">
                         {/*                         <div className="">
                          */}{" "}
-                        <FormField
-                          control={form.control}
-                          name="couponRate"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Coupon Rate (%)"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="maturity"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>Maturity (years)</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="1"
-                                  />
-                                </FormControl>
-
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        {/*                         </div>
-                         */}{" "}
-                        {/*                           <FormField
+                        <div className="flex w-full gap-4">
+                          <FormField
                             control={form.control}
-                            name="rating"
+                            name="couponRate"
                             render={({ field }) => {
                               return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>Rating</FormLabel>
+                                <FormItem className="w-full">
+                                  <FormLabel>{"Coupon Rate (%)"}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="maturity"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>Maturity (years)</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="1"
+                                    />
+                                  </FormControl>
+
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="flex w-full gap-4">
+                          <FormField
+                            control={form.control}
+                            name="notional"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>{"Notional"}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="couponFrequency"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>Coupon Frequency</FormLabel>
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
                                   >
                                     <SelectTrigger id="framework">
-                                      <SelectValue placeholder="Sélectionner un rating" />
+                                      <SelectValue placeholder="Select a frequency" />
                                     </SelectTrigger>
                                     <SelectContent position="popper">
-                                      {ratings?.map((ctr: any) => (
+                                      {Object.values(CouponFreqList)?.map(
+                                        (ur: any) => (
+                                          <SelectItem key={ur} value={ur}>
+                                            {ur}
+                                          </SelectItem>
+                                        )
+                                      )}
+                                    </SelectContent>
+                                  </Select>
+
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="flex w-full gap-4">
+                          <FormField
+                            control={form.control}
+                            name="currency"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>Currency</FormLabel>
+
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                  >
+                                    <SelectTrigger id="framework">
+                                      <SelectValue placeholder="Sélectionner une devise" />
+                                    </SelectTrigger>
+                                    <SelectContent position="popper">
+                                      {currencies?.map((ctr: Currency) => (
                                         <SelectItem
                                           key={ctr.id}
                                           value={ctr.id.toString()}
                                         >
-                                          {ctr.label}
+                                          {ctr.code} -{" "}
+                                          <span className="text-xs">
+                                            {ctr.name}
+                                          </span>
                                         </SelectItem>
                                       ))}
                                     </SelectContent>
@@ -513,101 +571,15 @@ const AnalysisForm = ({
                                 </FormItem>
                               );
                             }}
-                          /> */}
-                        <FormField
-                          control={form.control}
-                          name="notional"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Notional"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="couponFrequency"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>Coupon Frequency</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <SelectTrigger id="framework">
-                                    <SelectValue placeholder="Select a frequency" />
-                                  </SelectTrigger>
-                                  <SelectContent position="popper">
-                                    {Object.values(CouponFreqList)?.map(
-                                      (ur: any) => (
-                                        <SelectItem key={ur} value={ur}>
-                                          {ur}
-                                        </SelectItem>
-                                      )
-                                    )}
-                                  </SelectContent>
-                                </Select>
-
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="currency"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>Currency</FormLabel>
-
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <SelectTrigger id="framework">
-                                    <SelectValue placeholder="Sélectionner une devise" />
-                                  </SelectTrigger>
-                                  <SelectContent position="popper">
-                                    {currencies?.map((ctr: Currency) => (
-                                      <SelectItem
-                                        key={ctr.id}
-                                        value={ctr.id.toString()}
-                                      >
-                                        {ctr.code} -{" "}
-                                        <span className="text-xs">
-                                          {ctr.name}
-                                        </span>
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="modality"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Modality"}</FormLabel>
-                                {/*                               <FormControl>
+                          />
+                          <FormField
+                            control={form.control}
+                            name="modality"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full ">
+                                  <FormLabel>{"Modality"}</FormLabel>
+                                  {/*                               <FormControl>
                                   <Input
                                     {...field}
                                     placeholder="Entrer la valeur"
@@ -615,143 +587,141 @@ const AnalysisForm = ({
                                   />
                                 </FormControl>
  */}
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <SelectTrigger id="framework">
-                                    <SelectValue placeholder="Select a modality" />
-                                  </SelectTrigger>
-                                  <SelectContent position="popper">
-                                    {ModalityTypes?.map((ctr: any) => (
-                                      <SelectItem
-                                        key={ctr.id}
-                                        value={ctr.id.toString()}
-                                      >
-                                        {ctr.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        {/*                       </div>
-                    </div>
-                    <div className="max-md:hidden">
-                      <Separator orientation="vertical" />
-                    </div> */}
-                        {/*                     <div className="w-1/2 flex flex-col gap-4">
-                      <div className="flex justify-between items-center gap-4">
-                      */}{" "}
-                        <FormField
-                          control={form.control}
-                          name="couponRate"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Issue Price (%)"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="couponRate"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Observed Price (%)"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        {/*                       </div>
-                      <div className="flex justify-between items-center gap-4">
-                     */}{" "}
-                        <FormField
-                          control={form.control}
-                          name="duration"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Duration"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                  >
+                                    <SelectTrigger id="framework">
+                                      <SelectValue placeholder="Select a modality" />
+                                    </SelectTrigger>
+                                    <SelectContent position="popper">
+                                      {ModalityTypes?.map((ctr: any) => (
+                                        <SelectItem
+                                          key={ctr.id}
+                                          value={ctr.id.toString()}
+                                        >
+                                          {ctr.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="flex w-full gap-4">
+                          <FormField
+                            control={form.control}
+                            name="couponRate"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>{"Issue Price (%)"}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="couponRate"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>{"Observed Price (%)"}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="flex w-full gap-4">
+                          <FormField
+                            control={form.control}
+                            name="duration"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>{"Duration"}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
 
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="defProba"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>
-                                  {"Default Probability (%)"}
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="refinRisk"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="w-1/2">
-                                <FormLabel>{"Refinancing Risk (%)"}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Entrer la valeur"
-                                    type="number"
-                                    step="0.01"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="defProba"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-full">
+                                  <FormLabel>
+                                    {"Default Probability (%)"}
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="flex w-full gap-4">
+                          <FormField
+                            control={form.control}
+                            name="refinRisk"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="w-1/2">
+                                  <FormLabel>
+                                    {"Refinancing Risk (%)"}
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      placeholder="Entrer la valeur"
+                                      type="number"
+                                      step="0.01"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        </div>
                         {/*                       </div>
 
                       <div className="flex justify-between items-center gap-4">
@@ -779,11 +749,11 @@ const AnalysisForm = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-4 max-md:flex-col  justify-between pt-8">
+                <div className="flex gap-4   justify-between pt-8">
                   <Button
                     type="button"
                     variant="outline"
-                    className=" w-full md:w-1/3"
+                    className=" w-full md:w-1/3 max-md:w-1/2"
                     onClick={() => {
                       // console.log("ICI");
                       form.reset();
@@ -883,7 +853,7 @@ const AnalysisForm = ({
 
                   <Button
                     type="submit"
-                    className=" w-full md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
+                    className=" w-full max-md:w-1/2 md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
                   >
                     {loading ? "Evaluating ..." : "Evaluate"}
                   </Button>
