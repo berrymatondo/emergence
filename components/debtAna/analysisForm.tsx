@@ -158,7 +158,7 @@ const AnalysisForm = ({
   const [genReco, setGenReco] = useState("");
 
   //console.log("Pathname: ", pathname.split("/")[3]);
-  console.log("opts:", optIn);
+  //console.log("opts:", optIn);
 
   /**
  * 
@@ -253,7 +253,7 @@ const AnalysisForm = ({
   }, [valuationType]);
 
   useEffect(() => {
-    console.log("log");
+    // console.log("log");
 
     // Fetch ZC Rates
     const fetchZC = async (id: any, date: any) => {
@@ -272,7 +272,7 @@ const AnalysisForm = ({
       const resu = await getCurrency(+currency);
       const dat = resu?.data;
 
-      console.log("dat?.code", dat?.code);
+      //  console.log("dat?.code", dat?.code);
 
       setCurCode(dat?.code ? dat?.code : "");
     };
@@ -345,7 +345,7 @@ const AnalysisForm = ({
         {/*         {JSON.stringify(optIn)}
          */}{" "}
         <div className="max-md:px-1 md:flex gap-4 w-full ">
-          <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full  p-4 rounded-xl">
+          <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full max-md:px-2 md:p-4 rounded-xl">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(procesForm)}
@@ -435,9 +435,11 @@ const AnalysisForm = ({
                       }}
                     />
                   </div>
-                  <div className="flex gap-4 ">
+                  <div className="max-md:w-full flex gap-4">
                     <div className=" w-full flex flex-col gap-4 ">
-                      <div className="flex justify-between items-center gap-4">
+                      <div className="flex max-md:flex-col justify-between items-center gap-4">
+                        {/*                         <div className="">
+                         */}{" "}
                         <FormField
                           control={form.control}
                           name="couponRate"
@@ -479,6 +481,8 @@ const AnalysisForm = ({
                             );
                           }}
                         />
+                        {/*                         </div>
+                         */}{" "}
                         {/*                           <FormField
                             control={form.control}
                             name="rating"
@@ -775,7 +779,7 @@ const AnalysisForm = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-4  justify-between pt-8">
+                <div className="flex gap-4 max-md:flex-col  justify-between pt-8">
                   <Button
                     type="button"
                     variant="outline"
@@ -924,9 +928,9 @@ const AnalysisForm = ({
             </Form>
           </div>
         </div>
-        <div className="flex justify-between mt-8">
+        <div className="flex max-md:flex-col gap-2 justify-between mt-8">
           {genReco && (
-            <Card x-chunk="dashboard-07-chunk-5" className="w-2/5">
+            <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
               <CardHeader>
                 <CardTitle className="text-sky-600">
                   General Recommendations
@@ -943,7 +947,7 @@ const AnalysisForm = ({
           )}
 
           {defReco && (
-            <Card x-chunk="dashboard-07-chunk-5" className="w-2/5">
+            <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
               <CardHeader>
                 <CardTitle className="text-sky-600">
                   Default Probability Recommendations{" "}

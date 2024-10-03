@@ -441,6 +441,9 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
           <DropdownMenuItem onClick={() => router.push("/admin/users")}>
             <span>Users</span>
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/admin/batches")}>
+            <span>Batches</span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {/*       <MdMenu onClick={() => setExpended(!expended)} size={30} />
