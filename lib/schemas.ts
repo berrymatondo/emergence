@@ -455,13 +455,17 @@ export const AnaFinOptSchema = z.object({
   duration: z.string().optional(),
   defProba: z.string().optional(),
   refinRisk: z.string().optional(),
+  issuePrice: z.string().optional(),
+  obsPrice: z.string().optional(),
 });
 
 //Analysis Evaluation
 export const anaEvaSchema = z.object({
-  prix_obligation: z.string().optional(),
+  /*   prix_obligation: z.string().optional(),
+   */ issuePrice: z.string().optional(),
   duration: z.string().optional(),
-  prix_moyen: z.string().optional(),
+  /*   prix_moyen: z.string().optional(),
+   */ obsPrice: z.string().optional(),
   /*   probabilite_defaut: z.string().optional(),
   risque_refinancement: z.string().optional(), */
   defProba: z.string().optional(),

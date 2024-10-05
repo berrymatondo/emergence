@@ -170,6 +170,9 @@ const OptsList = ({
                   Duration
                 </TableHead>
                 <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
+                  Price
+                </TableHead>
+                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
                   Default probability
                 </TableHead>
                 <TableHead className="bg-sky-900 rounded-tr-lg text-orange-600 text-left mx-0 px-0">
@@ -240,6 +243,9 @@ const OptsList = ({
                     </TableCell>
                     <TableCell className="text-white bg-sky-900 text-left font-semibold text-base  mx-0 px-0">
                       {ic.duration.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base  mx-0 px-0">
+                      {ic.bondPrice.toFixed(2)}
                     </TableCell>
                     <TableCell className="text-white bg-sky-900 text-left font-semibold text-base mx-0 px-0">
                       -

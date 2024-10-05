@@ -147,7 +147,7 @@ const AnalysisForm = ({
   const [curCode, setCurCode] = useState("");
   const [cashflow, setCashflow] = useState<any>();
   const [cma, setCma] = useState(0);
-  const [duration, setDuration] = useState(0);
+  //const [duration, setDuration] = useState(0);
   const [defProba, setDefProba] = useState(0);
   const [refinRisk, setRefinRisk] = useState(0);
   const [lastData, setLastData] = useState<any>();
@@ -158,7 +158,7 @@ const AnalysisForm = ({
   const [genReco, setGenReco] = useState("");
 
   //console.log("Pathname: ", pathname.split("/")[3]);
-  //console.log("opts:", optIn);
+  console.log("opts: ", optIn);
 
   /**
  * 
@@ -199,6 +199,10 @@ const AnalysisForm = ({
       valuationDate: optIn?.valuationDate as string,
       currency: optIn?.couponCurrency ? optIn?.couponCurrency.toString() : "1",
       recovering: optIn?.recovering ? optIn?.recovering.toString() : "40",
+      issuePrice: optIn?.bondPrice
+        ? optIn?.bondPrice.toFixed(2).toString()
+        : "0",
+      obsPrice: optIn?.bondPrice ? optIn?.bondPrice.toFixed(2).toString() : "0",
       duration: optIn?.duration ? optIn?.duration.toFixed(2).toString() : "0",
       defProba: optIn?.defProba ? optIn?.defProba.toString() : "8",
       refinRisk: optIn?.refinRisk ? optIn?.refinRisk.toString() : "5",
@@ -225,6 +229,8 @@ const AnalysisForm = ({
     form.setValue("notional", optIn?.notional?.toString());
     //form.setValue("valuationDate", optIn?.valuationDate.toString());
     //form.setValue("currency", optIn?.couponCurrency.toString());
+    form.setValue("issuePrice", optIn?.bondPrice?.toFixed(2).toString());
+    form.setValue("obsPrice", optIn?.bondPrice?.toFixed(2).toString());
     form.setValue("duration", optIn?.duration?.toFixed(2).toString());
     form.setValue("recovering", optIn?.recovering?.toString());
   }, [optIn, form]);
@@ -316,7 +322,7 @@ const AnalysisForm = ({
   const procesForm = async (values: z.infer<typeof anaEvaSchema>) => {
     setLoading(true);
 
-    //console.log("values", values);
+    console.log("values", values);
 
     const risk = values.refinRisk ? +values.refinRisk : 0;
     const defProbaf = await getDefaultProba(risk / 100);
@@ -454,6 +460,7 @@ const AnalysisForm = ({
                                       placeholder="Entrer la valeur"
                                       type="number"
                                       step="0.01"
+                                      disabled
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -474,6 +481,7 @@ const AnalysisForm = ({
                                       placeholder="Entrer la valeur"
                                       type="number"
                                       step="1"
+                                      disabled
                                     />
                                   </FormControl>
 
@@ -497,6 +505,7 @@ const AnalysisForm = ({
                                       placeholder="Entrer la valeur"
                                       type="number"
                                       step="0.01"
+                                      disabled
                                     />
                                   </FormControl>
 
@@ -515,6 +524,7 @@ const AnalysisForm = ({
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
+                                    disabled
                                   >
                                     <SelectTrigger id="framework">
                                       <SelectValue placeholder="Select a frequency" />
@@ -548,6 +558,7 @@ const AnalysisForm = ({
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
+                                    disabled
                                   >
                                     <SelectTrigger id="framework">
                                       <SelectValue placeholder="Sélectionner une devise" />
@@ -590,6 +601,7 @@ const AnalysisForm = ({
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
+                                    disabled
                                   >
                                     <SelectTrigger id="framework">
                                       <SelectValue placeholder="Select a modality" />
@@ -614,7 +626,7 @@ const AnalysisForm = ({
                         <div className="flex w-full gap-4">
                           <FormField
                             control={form.control}
-                            name="couponRate"
+                            name="issuePrice"
                             render={({ field }) => {
                               return (
                                 <FormItem className="w-full">
@@ -634,7 +646,7 @@ const AnalysisForm = ({
                           />
                           <FormField
                             control={form.control}
-                            name="couponRate"
+                            name="obsPrice"
                             render={({ field }) => {
                               return (
                                 <FormItem className="w-full">
@@ -653,7 +665,7 @@ const AnalysisForm = ({
                             }}
                           />
                         </div>
-                        <div className="flex w-full gap-4">
+                        <div className=" flex w-full gap-4">
                           <FormField
                             control={form.control}
                             name="duration"
@@ -698,53 +710,26 @@ const AnalysisForm = ({
                             }}
                           />
                         </div>
-                        <div className="flex w-full gap-4">
-                          <FormField
-                            control={form.control}
-                            name="refinRisk"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel>
-                                    {"Refinancing Risk (%)"}
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la valeur"
-                                      type="number"
-                                      step="0.01"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        </div>
-                        {/*                       </div>
-
-                      <div className="flex justify-between items-center gap-4">
-                     */}{" "}
-                        {/*                         <FormField
+                        <FormField
                           control={form.control}
-                          name="issueDate"
+                          name="refinRisk"
                           render={({ field }) => {
                             return (
                               <FormItem className="w-1/2">
-                                <FormLabel>{"Issue Date "}</FormLabel>
+                                <FormLabel>{"Refinancing Risk (%)"}</FormLabel>
                                 <FormControl>
                                   <Input
                                     {...field}
-                                    placeholder="Entrer la date"
-                                    type="date"
+                                    placeholder="Entrer la valeur"
+                                    type="number"
+                                    step="0.01"
                                   />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
                             );
                           }}
-                        /> */}
+                        />
                       </div>
                     </div>
                   </div>

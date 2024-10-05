@@ -40,7 +40,7 @@ export const getDefaultProba = async (probabilite_defaut: any) => {
 
 // General recommandation
 export const getGeneralReco = async (data: Inputs) => {
-  console.log("ici");
+  console.log("ici", data);
 
   let headersList = {
     Accept: "*/*",
@@ -50,17 +50,17 @@ export const getGeneralReco = async (data: Inputs) => {
   //const result = anaEvaSchema.safeParse(data);
 
   //if (result.success) {
-  const { duration, defProba, refinRisk } = data;
+  const { issuePrice, obsPrice, duration, defProba, refinRisk } = data;
 
   //console.log("DAta", data);
 
-  const prix_obligation = "1.02";
-  const prix_moyen = "1.01";
+  //const prix_obligation = "1.02";
+  // const prix_moyen = "1.01";
   //console.log("ici", data);
 
   let bodyContent = JSON.stringify({
-    prix_obligation: prix_obligation ? +prix_obligation : 0,
-    prix_moyen: prix_moyen ? +prix_moyen : 0,
+    prix_obligation: issuePrice ? +issuePrice : 0,
+    prix_moyen: obsPrice ? +obsPrice : 0,
     duration: duration ? +duration : 0,
     probabilite_defaut: defProba ? +defProba / 100 : 0,
     risque_refinancement: refinRisk ? +refinRisk / 100 : 0,

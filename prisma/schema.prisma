@@ -292,6 +292,7 @@ model FinancingOptions{
   modality String
 
   cma Float @default(0)
+  bondPrice Float @default(0)
   duration Float @default(0)
   defProba Float @default(0)
   refinRisk Float @default(0)

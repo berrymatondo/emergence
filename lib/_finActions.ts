@@ -52,6 +52,7 @@ export const createFinOpt = async (
   data: Inputs,
   lastData: any,
   cma: number,
+  bondPrice: number,
   duration: number,
   defProba: number,
   refinRisk: number
@@ -105,6 +106,7 @@ export const createFinOpt = async (
           valuationDate: valuationDate as string,
           currency: currency as string,
           cma: cma ? +cma : 0,
+          bondPrice: bondPrice ? +bondPrice : 0,
           duration: duration ? +duration : 0,
           defProba: defProba ? +defProba : 0,
           refinRisk: refinRisk ? +refinRisk : 0,
@@ -132,6 +134,7 @@ export const createFinOpt = async (
 export const updateFinOpt = async (
   data: Inputs,
   cma: number,
+  bondPrice: number,
   duration: number,
   defProba: number,
   refinRisk: number
@@ -194,6 +197,7 @@ export const updateFinOpt = async (
           couponFrequency: couponFrequency ? +couponFrequency : 1,
           currency: currency as string,
           cma: cma ? +cma : 0,
+          bondPrice: bondPrice ? +bondPrice : 0,
           duration: duration ? +duration : 0,
           defProba: defProba ? +defProba : 0,
           refinRisk: refinRisk ? +refinRisk : 0,

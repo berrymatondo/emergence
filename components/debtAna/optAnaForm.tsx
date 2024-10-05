@@ -140,6 +140,7 @@ const OptAnaForm = ({
   const [curCode, setCurCode] = useState("");
   const [cashflow, setCashflow] = useState<any>();
   const [cma, setCma] = useState(0);
+  const [bondPrice, setBondPrice] = useState(0);
   const [duration, setDuration] = useState(0);
   const [defProba, setDefProba] = useState(0);
   const [refinRisk, setRefinRisk] = useState(0);
@@ -332,9 +333,14 @@ const OptAnaForm = ({
     // console.log("dcurve", dcurve?.data);
 
     const global = await computeGeneralValuation(values, dcurve?.data);
-    // if (global?.data) console.log("global", global?.data);
+    // if (global?.data) console.log("global", global?.data.price);
 
-    if (global?.data) setDuration(global?.data.duration);
+    //setBondPrice(global?.data.price);
+
+    if (global?.data) {
+      setBondPrice(global?.data.price);
+      setDuration(global?.data.duration);
+    }
 
     const val = values?.notional ? +values?.notional : 0;
     const first = values.firstCouponDate ? values.firstCouponDate : "";
@@ -881,7 +887,7 @@ const OptAnaForm = ({
                     variant="secondary"
                     className="w-full md:w-1/3 bg-green-600 hover:bg-green-800"
                     onClick={async () => {
-                      console.log("Duration", duration);
+                      // console.log("Duration", duration);
 
                       setSaving(true);
                       if (type == "U") {
@@ -894,6 +900,7 @@ const OptAnaForm = ({
                         const res = await updateFinOpt(
                           form.getValues(),
                           cma,
+                          bondPrice,
                           duration,
                           defProba,
                           refinRisk
@@ -903,6 +910,7 @@ const OptAnaForm = ({
                           form.getValues(),
                           lastData,
                           cma,
+                          bondPrice,
                           duration,
                           defProba,
                           refinRisk
@@ -998,6 +1006,12 @@ const OptAnaForm = ({
                   Duration:{" "}
                   <span className="text-white font-semibold">
                     {duration.toFixed(2)}
+                  </span>
+                </p>
+                <p className="text-orange-600">
+                  Issue Price:{" "}
+                  <span className="text-white font-semibold">
+                    {bondPrice.toFixed(2)}
                   </span>
                 </p>
               </div>
