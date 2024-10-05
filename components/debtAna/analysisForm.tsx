@@ -630,7 +630,9 @@ const AnalysisForm = ({
                             render={({ field }) => {
                               return (
                                 <FormItem className="w-full">
-                                  <FormLabel>{"Issue Price (%)"}</FormLabel>
+                                  <FormLabel className="text-orange-600 font-bold">
+                                    {"Issue Price (%)"}
+                                  </FormLabel>
                                   <FormControl>
                                     <Input
                                       {...field}
@@ -650,7 +652,9 @@ const AnalysisForm = ({
                             render={({ field }) => {
                               return (
                                 <FormItem className="w-full">
-                                  <FormLabel>{"Observed Price (%)"}</FormLabel>
+                                  <FormLabel className="text-orange-600 font-bold">
+                                    {"Observed Price (%)"}
+                                  </FormLabel>
                                   <FormControl>
                                     <Input
                                       {...field}
@@ -672,7 +676,9 @@ const AnalysisForm = ({
                             render={({ field }) => {
                               return (
                                 <FormItem className="w-full">
-                                  <FormLabel>{"Duration"}</FormLabel>
+                                  <FormLabel className="text-orange-600 font-bold">
+                                    {"Duration"}
+                                  </FormLabel>
                                   <FormControl>
                                     <Input
                                       {...field}
@@ -693,8 +699,8 @@ const AnalysisForm = ({
                             render={({ field }) => {
                               return (
                                 <FormItem className="w-full">
-                                  <FormLabel>
-                                    {"Default Probability (%)"}
+                                  <FormLabel className="text-orange-600 font-bold">
+                                    {"Def. Probability (%)"}
                                   </FormLabel>
                                   <FormControl>
                                     <Input
@@ -716,7 +722,9 @@ const AnalysisForm = ({
                           render={({ field }) => {
                             return (
                               <FormItem className="w-1/2">
-                                <FormLabel>{"Refinancing Risk (%)"}</FormLabel>
+                                <FormLabel className="text-orange-600 font-bold">
+                                  {"Refin. Risk (%)"}
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     {...field}
