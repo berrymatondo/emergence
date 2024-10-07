@@ -645,44 +645,18 @@ export const computeDefProba = async (
   } catch (error) {}
 };
 
+//
 //Refin Risk
-export const computeRefRisk = async (
-  maturity: any,
-  cashflow: any,
-  reserve: any,
-  rateCurve: any
-) => {
+export const computeRefRisk = async (defProb: any) => {
   let headersList = {
     Accept: "*/*",
     "Content-Type": "application/json",
   };
 
-  //console.log("cashflow", cashflow);
-  //console.log("reserve ", reserve);
-  //console.log("rateCurve", rateCurve);
-
-  let cash_flow = [];
-  for (let i = 0; i < cashflow.length; i++) {
-    cash_flow.push([+cashflow[i].date, +cashflow[i].gross]);
-  }
-
-  let reserves = [];
-  for (let i = 0; i < reserve.length; i++) {
-    reserves.push([+reserve[i].tenor, +reserve[i].value]);
-  }
-
-  //console.log("reserves", reserves);
-
-  let rate_curve = [];
-  for (let i = 0; i < rateCurve.length; i++) {
-    rate_curve.push([rateCurve[i].tenor, +(rateCurve[i].rate / 100)]);
-  }
+  console.log("defProb", defProb);
 
   let bodyContent = JSON.stringify({
-    maturite: +maturity,
-    cash_flows: cash_flow,
-    reserves: reserves,
-    rate_curve: rate_curve,
+    probabiliteDefaut: +defProb,
   });
 
   //console.log("bodyContent ", bodyContent);

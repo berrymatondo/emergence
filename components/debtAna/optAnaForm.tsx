@@ -415,7 +415,7 @@ const OptAnaForm = ({
     const imp = await getAllImpMatrix();
     //console.log("imp", imp);
 
-    //console.log("ZC Curve", zcrates);
+    console.log("ZC Curve", zcrates);
 
     const defP = await computeDefProba(
       values?.maturity,
@@ -429,22 +429,19 @@ const OptAnaForm = ({
       imp
     );
 
-    // console.log("DefP DATA", defP?.data);
+    console.log("DefP DATA", defP?.data);
 
-    if (defP) setDefProba(defP?.data);
+    if (defP?.data) {
+      setDefProba(defP?.data);
 
-    // COMPUTE FIN RISK
-    /* 
-    const refR = await computeRefRisk(
-      values?.maturity,
-      cashflowFin,
-      lastData,
-      zcrates
-    );
+      // COMPUTE FIN RISK
 
-    console.log("RefR DATA", refR?.data);
+      const refR = await computeRefRisk(defP?.data);
 
-    if (refR) setRefinRisk(refR?.data); */
+      console.log("RefR DATA", refR?.data);
+
+      if (refR?.data) setRefinRisk(refR?.data);
+    }
   };
 
   return (
@@ -1089,7 +1086,12 @@ const OptAnaForm = ({
                     {defProba * 100}
                   </span>
                 </p>
-                <p className="text-orange-600">Credit Risk:</p>
+                <p className="text-orange-600">
+                  Credit Risk:{" "}
+                  <span className="text-white font-semibold">
+                    {refinRisk * 100}
+                  </span>
+                </p>
               </div>
               {optIn?.id && (
                 <div className="hover:cursor-pointer hover:bg-slate-800 bg-slate-900 flex justify-center items-center p-4 rounded-lg">
