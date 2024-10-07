@@ -146,45 +146,53 @@ const OptsList = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-left mx-0 px-0">Option</TableHead>
-                <TableHead className="text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                  Option
+                </TableHead>
+                <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   <p className="flex justify-between">
                     <span>Valution Type</span>
                   </p>
                 </TableHead>
-                <TableHead className="text-left mx-0 px-0">
+                <TableHead className="text-left max-md:px-2 mx-0 px-0">
                   Coupon Rate
                 </TableHead>
-                <TableHead className="text-left mx-0 px-0">Maturity</TableHead>
-                <TableHead className="text-left mx-0 px-0">Notional</TableHead>
-                <TableHead className="text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                  Maturity
+                </TableHead>
+                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                  Notional
+                </TableHead>
+                <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Currency
                 </TableHead>
-                <TableHead className="text-left mx-0 px-0">Rating</TableHead>
-                <TableHead className="text-left mx-0 px-0">
+                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                  Rating
+                </TableHead>
+                <TableHead className="text-left max-md:px-2 mx-0 px-0">
                   Recovering
                 </TableHead>
-                <TableHead className="text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Modality
                 </TableHead>
                 {/*                 <TableHead className="text-left mx-0 px-0">Actions</TableHead>
                  */}{" "}
-                <TableHead className="bg-sky-900 rounded-tl-lg pl-2 text-orange-600 text-left mx-0 max-md:hidden">
+                <TableHead className="bg-sky-900 rounded-tl-lg pl-2 text-orange-600 text-left max-md:px-2 mx-0 max-md:hidden">
                   CMA
                 </TableHead>
-                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="bg-sky-900 text-orange-600 text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Duration
                 </TableHead>
-                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="bg-sky-900 text-orange-600 text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Price
                 </TableHead>
-                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="bg-sky-900 text-orange-600 text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Def. probability
                 </TableHead>
-                <TableHead className="bg-sky-900 rounded-tr-lg text-orange-600 text-left mx-0 px-0 max-md:hidden">
+                <TableHead className="bg-sky-900 rounded-tr-lg text-orange-600 text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Fin. Risk
                 </TableHead>
-                <TableHead className=" text-orange-600 text-left mx-0 pl-2">
+                <TableHead className=" text-orange-600 text-left max-md:px-2 mx-0 pl-2">
                   Actions
                 </TableHead>
               </TableRow>
