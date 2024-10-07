@@ -19,16 +19,17 @@ const BatchesList = async () => {
 
   return (
     <div>
-      <ScrollArea className="h-96 bg-gray-500/10 dark:bg-teal-200/10   max-md:w-full  p-4 rounded-xl">
+      <ScrollArea className="h-96   max-md:w-full rounded-xl">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="text-left mx-0 px-0">
                 <p className="flex justify-between">
-                  <span>Label</span>
+                  <span>Batch Number</span>
                 </p>
               </TableHead>
-              <TableHead className="text-left mx-0 px-0">Actions</TableHead>
+              {/*               <TableHead className="text-left mx-0 px-0">Actions</TableHead>
+               */}{" "}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -41,10 +42,10 @@ const BatchesList = async () => {
                     {ic.AAA}
                   </TableCell> */}
 
-                <TableCell className="flex  items-center gap-4 text-right  mx-0 px-0 hover:cursor-pointer">
-                  {/*                     <TransMatrixForm openDialog={false} type="U" transIn={ic} />
-                    <DelTransMatrix id={ic.id} /> */}
-                </TableCell>
+                {/*                 <TableCell className="flex  items-center gap-4 text-right  mx-0 px-0 hover:cursor-pointer">
+                     <TransMatrixForm openDialog={false} type="U" transIn={ic} />
+                    <DelTransMatrix id={ic.id} /> 
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>

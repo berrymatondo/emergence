@@ -369,7 +369,7 @@ type MobileMenuProps = {
   userSession: any;
 };
 const MobileMenu = ({ userSession }: MobileMenuProps) => {
-  // console.log("userSession:", userSession);
+  console.log("userSession:", userSession);
   const [expended, setExpended] = useState(false);
   const router = useRouter();
 
@@ -434,16 +434,22 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub> */}
-          <DropdownMenuLabel className="text-orange-500 flex gap-2">
-            <MdLock size={20} /> <span>Espace Admin</span>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => router.push("/admin/users")}>
-            <span>Users</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/admin/batches")}>
-            <span>Batches</span>
-          </DropdownMenuItem>
+          {userSession?.user.role == "ADMIN" && (
+            <DropdownMenuLabel className="text-orange-500 flex gap-2">
+              <MdLock size={20} /> <span>Espace Admin</span>
+            </DropdownMenuLabel>
+          )}
+          {userSession?.user.role == "ADMIN" && <DropdownMenuSeparator />}
+          {userSession?.user.role == "ADMIN" && (
+            <DropdownMenuItem onClick={() => router.push("/admin/users")}>
+              <span>Users</span>
+            </DropdownMenuItem>
+          )}
+          {userSession?.user.role == "ADMIN" && (
+            <DropdownMenuItem onClick={() => router.push("/admin/batches")}>
+              <span>Batches</span>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       {/*       <MdMenu onClick={() => setExpended(!expended)} size={30} />

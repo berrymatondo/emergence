@@ -1,8 +1,5 @@
 import BatchesList from "@/components/debtAna/batches/batchesList";
 import GeneralLayout from "@/components/generalLayout";
-import DefMatrix from "@/components/matrix/defMatrix";
-import ImpMatrix from "@/components/matrix/impMatrix";
-import TransMatrix from "@/components/matrix/transMatrix";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,7 +13,7 @@ import React from "react";
 const BatchesPage = () => {
   return (
     <GeneralLayout
-      title="Matrices"
+      title="Batches"
       bred={<CustomBreadcrumb name="All batches" />}
     >
       <div className="max-md:px-1 md:grid grid-cols-2 gap-4 w-full ">

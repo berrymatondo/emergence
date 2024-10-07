@@ -89,6 +89,10 @@ export const createFinOpt = async (
       //const userTmp: any = session?.user;
       //  console.log("modality", modality);
 
+      /*       console.log("duration:", duration);
+      console.log("defProba:", defProba);
+      console.log("refinRisk:", refinRisk); */
+
       user = await prisma.financingOptions.create({
         data: {
           valuationType: valuationType as string,
@@ -178,6 +182,10 @@ export const updateFinOpt = async (
       //const userTmp: any = session?.user;
 
       //console.log("modality", modality);
+
+      /*       console.log("duration:", duration);
+      console.log("defProba:", defProba);
+      console.log("refinRisk:", refinRisk); */
 
       const usr = await prisma.financingOptions.update({
         where: {

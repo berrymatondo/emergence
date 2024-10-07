@@ -123,10 +123,12 @@ const OptsList = ({
     return found?.label;
   };
 
-  const toto = [
+  /*   const toto = [
     { name: "George Washington", birthday: "1732-02-22" },
     { name: "John Adams", birthday: "1735-10-19" },
-  ];
+  ]; */
+
+  //console.log("opts", opts);
 
   return (
     <GeneralLayout
@@ -145,7 +147,7 @@ const OptsList = ({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-left mx-0 px-0">Option</TableHead>
-                <TableHead className="text-left mx-0 px-0">
+                <TableHead className="text-left mx-0 px-0 max-md:hidden">
                   <p className="flex justify-between">
                     <span>Valution Type</span>
                   </p>
@@ -155,28 +157,32 @@ const OptsList = ({
                 </TableHead>
                 <TableHead className="text-left mx-0 px-0">Maturity</TableHead>
                 <TableHead className="text-left mx-0 px-0">Notional</TableHead>
-                <TableHead className="text-left mx-0 px-0">Currency</TableHead>
+                <TableHead className="text-left mx-0 px-0 max-md:hidden">
+                  Currency
+                </TableHead>
                 <TableHead className="text-left mx-0 px-0">Rating</TableHead>
                 <TableHead className="text-left mx-0 px-0">
                   Recovering
                 </TableHead>
-                <TableHead className="text-left mx-0 px-0">Modality</TableHead>
+                <TableHead className="text-left mx-0 px-0 max-md:hidden">
+                  Modality
+                </TableHead>
                 {/*                 <TableHead className="text-left mx-0 px-0">Actions</TableHead>
                  */}{" "}
-                <TableHead className="bg-sky-900 rounded-tl-lg pl-2 text-orange-600 text-left mx-0">
+                <TableHead className="bg-sky-900 rounded-tl-lg pl-2 text-orange-600 text-left mx-0 max-md:hidden">
                   CMA
                 </TableHead>
-                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
+                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0 max-md:hidden">
                   Duration
                 </TableHead>
-                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
+                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0 max-md:hidden">
                   Price
                 </TableHead>
-                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0">
-                  Default probability
+                <TableHead className="bg-sky-900 text-orange-600 text-left mx-0 px-0 max-md:hidden">
+                  Def. probability
                 </TableHead>
-                <TableHead className="bg-sky-900 rounded-tr-lg text-orange-600 text-left mx-0 px-0">
-                  Financing Risk
+                <TableHead className="bg-sky-900 rounded-tr-lg text-orange-600 text-left mx-0 px-0 max-md:hidden">
+                  Fin. Risk
                 </TableHead>
                 <TableHead className=" text-orange-600 text-left mx-0 pl-2">
                   Actions
@@ -198,7 +204,7 @@ const OptsList = ({
                         Option-{ic.id}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-left mx-0 px-0">
+                    <TableCell className="text-left mx-0 px-0 max-md:hidden">
                       {getValuationType(ic.valuationType)}
                     </TableCell>
                     <TableCell className="text-left mx-0 px-0">
@@ -210,7 +216,7 @@ const OptsList = ({
                     <TableCell className="text-left mx-0 px-0">
                       {ic.notional}
                     </TableCell>
-                    <TableCell className="text-left mx-0 px-0">
+                    <TableCell className="text-left mx-0 px-0 max-md:hidden">
                       {getCurrency(ic.currency)}
                     </TableCell>
                     <TableCell className="text-left mx-0 px-0">
@@ -219,7 +225,7 @@ const OptsList = ({
                     <TableCell className="text-left mx-0 px-0">
                       {ic.recovering} %
                     </TableCell>
-                    <TableCell className="text-left mx-0 px-0">
+                    <TableCell className="text-left mx-0 px-0 max-md:hidden">
                       {getModality(ic.modality)}
                     </TableCell>
                     {/*                   <TableCell className="text-right  mx-0 px-0 hover:cursor-pointer">
@@ -233,7 +239,7 @@ const OptsList = ({
                       <MdUpdate className="text-yellow-600" size={25} />
                     </Link>
                   </TableCell> */}
-                    <TableCell className="text-white bg-sky-900 pl-2 text-left font-semibold text-base mx-0">
+                    <TableCell className="text-white bg-sky-900 pl-2 text-left font-semibold text-base mx-0 max-md:hidden">
                       {new Intl.NumberFormat(undefined, {
                         currency: getCurrency(ic.currency)
                           ? getCurrency(ic.currency)
@@ -241,17 +247,17 @@ const OptsList = ({
                         style: "currency",
                       }).format(+ic.cma?.toFixed(2))}
                     </TableCell>
-                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base  mx-0 px-0">
+                    <TableCell className="text-white bg-sky-900 text-center font-semibold text-base  mx-0 px-0 max-md:hidden">
                       {ic.duration.toFixed(2)}
                     </TableCell>
-                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base  mx-0 px-0">
+                    <TableCell className="text-white bg-sky-900 text-center font-semibold text-base  mx-0 px-0 max-md:hidden">
                       {ic.bondPrice.toFixed(2)}
                     </TableCell>
-                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base mx-0 px-0">
-                      -
+                    <TableCell className="text-white bg-sky-900 text-center font-semibold text-base mx-0 px-0 max-md:hidden">
+                      {(ic.defProba * 100).toFixed(4)}
                     </TableCell>
-                    <TableCell className="text-white bg-sky-900 text-left font-semibold text-base mx-0 px-0">
-                      -
+                    <TableCell className="text-white bg-sky-900 text-center font-semibold text-base mx-0 px-0 max-md:hidden">
+                      {(ic.refinRisk * 100).toFixed(4)}
                     </TableCell>
                     <TableCell className="pl-2  text-left font-semibold text-base mx-0">
                       <Link
@@ -266,21 +272,24 @@ const OptsList = ({
                   </TableRow>
                 ))}
             </TableBody>
-            <TableFooter className="bg-yellow-950  w-full">
+            <TableFooter className="bg-yellow-950  w-full  ">
               <TableRow className="">
                 <TableCell className=" " colSpan={14}>
-                  <div className="flex justify-between">
-                    {opts
-                      ?.sort((a: any, b: any) => a.id - b.id)
-                      .map((icc: any) => (
-                        <CashF
-                          key={icc.id}
-                          id={icc.id}
-                          curCode={getCurrency(icc.currency)}
-                          code={code}
-                        />
-                      ))}
-                  </div>
+                  <ScrollArea className="max-md:w-96 whitespace-nowrap">
+                    <div className="flex justify-between max-md:w-max">
+                      {opts
+                        ?.sort((a: any, b: any) => a.id - b.id)
+                        .map((icc: any) => (
+                          <CashF
+                            key={icc.id}
+                            id={icc.id}
+                            curCode={getCurrency(icc.currency)}
+                            code={code}
+                          />
+                        ))}
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
                 </TableCell>
               </TableRow>
             </TableFooter>
