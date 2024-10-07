@@ -10,7 +10,11 @@ type Inputs2 = z.infer<typeof impMatrixSchema>;
 
 export const getAllTransMatrix = async () => {
   try {
-    const reserves = await prisma.transitionMatrix.findMany({});
+    const reserves = await prisma.transitionMatrix.findMany({
+      orderBy: {
+        order: "asc",
+      },
+    });
 
     return {
       success: true,
@@ -21,7 +25,11 @@ export const getAllTransMatrix = async () => {
 
 export const getAllImpMatrix = async () => {
   try {
-    const reserves = await prisma.impliciteMatrix.findMany({});
+    const reserves = await prisma.impliciteMatrix.findMany({
+      orderBy: {
+        order: "asc",
+      },
+    });
 
     return {
       success: true,
@@ -32,7 +40,11 @@ export const getAllImpMatrix = async () => {
 
 export const getAllDefMatrix = async () => {
   try {
-    const reserves = await prisma.defaultMatrix.findMany({});
+    const reserves = await prisma.defaultMatrix.findMany({
+      orderBy: {
+        order: "asc",
+      },
+    });
 
     return {
       success: true,

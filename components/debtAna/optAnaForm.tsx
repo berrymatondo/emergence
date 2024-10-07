@@ -60,7 +60,9 @@ import { TbXxx } from "react-icons/tb";
 import {
   computeCMA,
   computeDC,
+  computeDefProba,
   computeGeneralValuation,
+  computeRefRisk,
   createFinOpt,
   deleteFinOpts,
   updateFinOpt,
@@ -95,6 +97,11 @@ import {
 import { Info } from "lucide-react";
 import { updateCashflow } from "@/lib/_cashflowActions";
 import Link from "next/link";
+import {
+  getAllDefMatrix,
+  getAllImpMatrix,
+  getAllTransMatrix,
+} from "@/lib/_matrix";
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -229,6 +236,7 @@ const OptAnaForm = ({
   const valuationType = form.watch("valuationType");
   const currency = form.watch("currency");
   const valuationDate = form.watch("valuationDate");
+  // const rating = form.watch("rating");
 
   useEffect(() => {
     const mati = getYears(
@@ -248,6 +256,11 @@ const OptAnaForm = ({
     )?.modality;
     form.setValue("modality", mati ? mati.toString() : "1");
   }, [valuationType]);
+
+  /*   useEffect(() => {
+    const rat = ratings.find((va: any) => va.id == rating)?.id;
+    form.setValue("rating", rat ? rat.toString() : "1");
+  }, [rating]); */
 
   useEffect(() => {
     // Fetch ZC Rates
@@ -378,6 +391,60 @@ const OptAnaForm = ({
     setLoading(false);
     // router.push(`/anadette/anaopfin/${values.code}`);
     // setOpen(false);
+
+    // COMPUTE DEFAULT PROBALITE
+
+    /*     console.log("Maturity", values?.maturity);
+    console.log("rating", values?.rating);
+    console.log("ratings", ratings);
+
+    console.log(
+      "Rating ",
+      ratings
+        .find((va: any) => va.id == (values?.rating ? +values?.rating : 1))
+        ?.label.toString()
+    );
+    console.log("cashflow", cashflow);
+    console.log("reserve", lastData); */
+    const trans = await getAllTransMatrix();
+    //console.log("trans", trans);
+
+    const def = await getAllDefMatrix();
+    //console.log("def", def);
+
+    const imp = await getAllImpMatrix();
+    //console.log("imp", imp);
+
+    //console.log("ZC Curve", zcrates);
+
+    const defP = await computeDefProba(
+      values?.maturity,
+      values?.rating,
+      values?.recovering,
+      cashflowFin,
+      lastData,
+      zcrates,
+      trans,
+      def,
+      imp
+    );
+
+    // console.log("DefP DATA", defP?.data);
+
+    if (defP) setDefProba(defP?.data);
+
+    // COMPUTE FIN RISK
+    /* 
+    const refR = await computeRefRisk(
+      values?.maturity,
+      cashflowFin,
+      lastData,
+      zcrates
+    );
+
+    console.log("RefR DATA", refR?.data);
+
+    if (refR) setRefinRisk(refR?.data); */
   };
 
   return (
@@ -1016,7 +1083,12 @@ const OptAnaForm = ({
                 </p>
               </div>
               <div className="bg-gray-500/10 dark:bg-teal-200/10 w-1/2 rounded-xl p-4">
-                <p className="text-orange-600">Default Probability:</p>
+                <p className="text-orange-600">
+                  Default Probability:{" "}
+                  <span className="text-white font-semibold">
+                    {defProba * 100}
+                  </span>
+                </p>
                 <p className="text-orange-600">Credit Risk:</p>
               </div>
               {optIn?.id && (

@@ -15,7 +15,7 @@ import DelDefMatrix from "./delDefMatrix";
 const DefMatrix = async () => {
   const imp = await getAllDefMatrix();
 
-  console.log("Def", imp);
+  //console.log("Def", imp);
 
   return (
     <div>

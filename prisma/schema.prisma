@@ -335,6 +335,7 @@ model cashflow{
 
 model TransitionMatrix{
   id Int @id @default(autoincrement())
+    order Int @default(0)
   label String @unique
   AAA Float
   AA Float
@@ -355,6 +356,7 @@ model TransitionMatrix{
 
 model DefaultMatrix{
   id Int @id @default(autoincrement())
+    order Int @default(0)
   label String @unique
   y1 Float
   y2 Float
@@ -378,6 +380,7 @@ model DefaultMatrix{
 
 model ImpliciteMatrix{
   id Int @id @default(autoincrement())
+  order Int @default(0)
   label String @unique
   AAA Float
   AA Float
