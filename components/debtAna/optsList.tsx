@@ -146,7 +146,7 @@ const OptsList = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                <TableHead className="text-left max-md:pr-2 mx-0 px-0">
                   Option
                 </TableHead>
                 <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
@@ -154,25 +154,25 @@ const OptsList = ({
                     <span>Valution Type</span>
                   </p>
                 </TableHead>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                <TableHead className="text-left max-md:pr-2 mx-0 px-0">
                   Coupon Rate
                 </TableHead>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                <TableHead className="text-left max-md:pr-2 mx-0 px-0">
                   Maturity
                 </TableHead>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                <TableHead className="text-left max-md:pr-2 mx-0 px-0">
                   Notional
                 </TableHead>
                 <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Currency
                 </TableHead>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
                   Rating
                 </TableHead>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0">
+                <TableHead className="text-left max-md:pr-2 mx-0 px-0">
                   Recovering
                 </TableHead>
-                <TableHead className="text-left max-md:px-2 mx-0 px-0 max-md:hidden">
+                <TableHead className="text-left max-md:pr-2 mx-0 px-0 max-md:hidden">
                   Modality
                 </TableHead>
                 {/*                 <TableHead className="text-left mx-0 px-0">Actions</TableHead>
@@ -227,7 +227,7 @@ const OptsList = ({
                     <TableCell className="text-left mx-0 px-0 max-md:hidden">
                       {getCurrency(ic.currency)}
                     </TableCell>
-                    <TableCell className="text-left mx-0 px-0">
+                    <TableCell className="text-left mx-0 px-0 max-md:hidden">
                       {getRating(ic.rating)}
                     </TableCell>
                     <TableCell className="text-left mx-0 px-0">
@@ -417,7 +417,7 @@ const CashF = async ({ id, curCode, code }: CashFProps) => {
           pathname: `/anadette/anaopfin/${code}/update/`,
           query: { id: id },
         }}
-        className="font-semibold text-center text-sky-400"
+        className="font-semibold text-center text-sky-400 mr-2"
       >
         Cashflow Option-{id}
       </Link>
@@ -435,7 +435,7 @@ const CashF = async ({ id, curCode, code }: CashFProps) => {
         {cf?.map((cc: any) => (
           <div
             key={cc.id}
-            className="text-white  flex justify-between py-2 gap-4 border-b"
+            className="text-white  flex justify-between py-2 gap-2 border-b mr-2"
           >
             <div>{cc.date}</div>
             <div>

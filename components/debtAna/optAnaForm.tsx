@@ -1006,7 +1006,7 @@ const OptAnaForm = ({
                   </Button>
                   {zcrates?.length > 0 &&
                     lastData?.length > 0 &&
-                    lastData.length >= Math.floor(+mat) && (
+                    lastData?.length >= Math.floor(+mat) && (
                       <Button
                         type="submit"
                         className=" w-full md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
@@ -1014,26 +1014,48 @@ const OptAnaForm = ({
                         {loading ? "Computing ..." : "Compute"}
                       </Button>
                     )}
-                  {lastData?.length < 1 && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info size={40} className="text-yellow-500" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>To be able to compute:</p>
-                          <p>
-                            1. Save your analysis (This will drive you to your
-                            batch)
-                          </p>
-                          <p>
-                            2. In your batch, ensure to have coherence between
-                            the Reserves and the maturity
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                  {lastData?.length < 1 ||
+                    (Math.floor(+mat) > lastData?.length && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info size={40} className="text-yellow-500" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="underline">To be able to compute:</p>
+
+                            <p>
+                              1. In your batch, ensure to have{" "}
+                              <strong className="text-orange-600">
+                                coherence
+                              </strong>{" "}
+                              between the Reserves and the maturity
+                            </p>
+                            <p className="flex flex-col">
+                              Currently:{" "}
+                              <span>
+                                Reserves contains{" "}
+                                <strong className="text-orange-600">
+                                  {lastData?.length} entries
+                                </strong>
+                              </span>
+                              <span>
+                                Maturity contains{" "}
+                                <strong className="text-orange-600">
+                                  {Math.floor(+mat)} entries (years)
+                                </strong>
+                              </span>
+                            </p>
+
+                            <p>
+                              2. Adapt the value of the maturity (Maturity Date
+                              - Issue Date) or the value of Reserves (via the
+                              linked batch)
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
 
                   {zcrates?.length < 1 && (
                     <TooltipProvider>
@@ -1075,7 +1097,7 @@ const OptAnaForm = ({
                 <p className="text-orange-600">
                   Issue Price:{" "}
                   <span className="text-white font-semibold">
-                    {bondPrice.toFixed(2)}
+                    {(bondPrice * 100).toFixed(2)}
                   </span>
                 </p>
               </div>
@@ -1087,7 +1109,7 @@ const OptAnaForm = ({
                   </span>
                 </p>
                 <p className="text-orange-600">
-                  Credit Risk:{" "}
+                  Refinancing Risk:{" "}
                   <span className="text-white font-semibold">
                     {refinRisk * 100}
                   </span>

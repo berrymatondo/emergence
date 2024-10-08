@@ -200,9 +200,11 @@ const AnalysisForm = ({
       currency: optIn?.couponCurrency ? optIn?.couponCurrency.toString() : "1",
       recovering: optIn?.recovering ? optIn?.recovering.toString() : "40",
       issuePrice: optIn?.bondPrice
-        ? optIn?.bondPrice.toFixed(2).toString()
+        ? (optIn?.bondPrice * 100).toFixed(2).toString()
         : "0",
-      obsPrice: optIn?.bondPrice ? optIn?.bondPrice.toFixed(2).toString() : "0",
+      obsPrice: optIn?.bondPrice
+        ? (optIn?.bondPrice * 100).toFixed(2).toString()
+        : "0",
       duration: optIn?.duration ? optIn?.duration.toFixed(2).toString() : "0",
       defProba: optIn?.defProba ? (+optIn?.defProba * 100).toString() : "8",
       refinRisk: optIn?.refinRisk ? (+optIn?.refinRisk * 100).toString() : "5",
@@ -229,8 +231,8 @@ const AnalysisForm = ({
     form.setValue("notional", optIn?.notional?.toString());
     //form.setValue("valuationDate", optIn?.valuationDate.toString());
     //form.setValue("currency", optIn?.couponCurrency.toString());
-    form.setValue("issuePrice", optIn?.bondPrice?.toFixed(2).toString());
-    form.setValue("obsPrice", optIn?.bondPrice?.toFixed(2).toString());
+    form.setValue("issuePrice", (optIn?.bondPrice * 100).toFixed(2).toString());
+    form.setValue("obsPrice", (optIn?.bondPrice * 100).toFixed(2).toString());
     form.setValue("duration", optIn?.duration?.toFixed(2).toString());
     form.setValue("recovering", optIn?.recovering?.toString());
   }, [optIn, form]);
@@ -653,7 +655,7 @@ const AnalysisForm = ({
                               return (
                                 <FormItem className="w-full">
                                   <FormLabel className="text-orange-600 font-bold">
-                                    {"Observed Price (%)"}
+                                    {"Benchmark Price (%)"}
                                   </FormLabel>
                                   <FormControl>
                                     <Input
