@@ -8,6 +8,7 @@ const UpdateOptPage = async ({
 }: {
   searchParams: {
     id: string;
+    index: string;
   };
 }) => {
   const currencies = await getAllCurrencies();
@@ -15,7 +16,12 @@ const UpdateOptPage = async ({
 
   return (
     <div>
-      <OptAnaForm currencies={currencies?.data} optIn={opt?.data} type="U" />
+      <OptAnaForm
+        currencies={currencies?.data}
+        optIn={opt?.data}
+        type="U"
+        index={searchParams.index}
+      />
     </div>
   );
 };

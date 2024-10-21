@@ -200,16 +200,16 @@ const OptsList = ({
             <TableBody>
               {opts
                 ?.sort((a: any, b: any) => a.id - b.id)
-                .map((ic: any) => (
+                .map((ic: any, index: number) => (
                   <TableRow key={ic.id}>
                     <TableCell className="text-left font-semibold text-sky-600 mx-0 px-0">
                       <Link
                         href={{
                           pathname: `/anadette/anaopfin/${code}/update/`,
-                          query: { id: ic.id },
+                          query: { id: ic.id, index: index + 1 },
                         }}
                       >
-                        Option-{ic.id}
+                        Option-{index + 1}
                       </Link>
                     </TableCell>
                     <TableCell className="text-left mx-0 px-0 max-md:hidden">
@@ -287,12 +287,13 @@ const OptsList = ({
                     <div className="flex justify-between max-md:w-max">
                       {opts
                         ?.sort((a: any, b: any) => a.id - b.id)
-                        .map((icc: any) => (
+                        .map((icc: any, index: number) => (
                           <CashF
                             key={icc.id}
                             id={icc.id}
                             curCode={getCurrency(icc.currency)}
                             code={code}
+                            index={index}
                           />
                         ))}
                     </div>
@@ -397,9 +398,10 @@ type CashFProps = {
   id: any;
   curCode: any;
   code: any;
+  index: any;
 };
 
-const CashF = async ({ id, curCode, code }: CashFProps) => {
+const CashF = async ({ id, curCode, code, index }: CashFProps) => {
   const res = await getCashflowById(id);
   const cf = res?.data;
   // console.log("cf", cf);
@@ -415,11 +417,11 @@ const CashF = async ({ id, curCode, code }: CashFProps) => {
       <Link
         href={{
           pathname: `/anadette/anaopfin/${code}/update/`,
-          query: { id: id },
+          query: { id: id, index: index + 1 },
         }}
         className="font-semibold text-center text-sky-400 mr-2"
       >
-        Cashflow Option-{id}
+        Cashflow Option-{index + 1}
       </Link>
 
       {/*       <div className="font-medium  mx-0 px-0">{cf?.value}</div>

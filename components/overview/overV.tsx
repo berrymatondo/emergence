@@ -133,7 +133,7 @@ export default function OverView({
       title={"General Overview"}
       bred={<CustomBreadcrumb name="General Overview" />}
     >
-      <div className="gap-2 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="gap-2 grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 ">
         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
           x-chunk="charts-01-chunk-3"
@@ -249,7 +249,7 @@ export default function OverView({
           </CardContent>
         </Card>
         <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full"
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-1"
         >
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
@@ -410,204 +410,7 @@ export default function OverView({
             </ChartContainer>
           </CardContent>
         </Card>
-        {/*    <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col  max-md:w-full"
-          x-chunk="charts-01-chunk-1"
-        >
-          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-            <div>
-              <div className="flex justify-between items-center text-orange-400">
-                <Badge className="bg-orange-500 text-white">USDCDF</Badge>
-                <span className="dark:text-white">
-                  today:{" "}
-                  <strong>{newTab[newTab.length - 1].usdcdf.toFixed(1)}</strong>
-                </span>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="flex flex-1 items-center">
-            <ChartContainer
-              config={{
-                usdcdf: {
-                  label: "USDCDF",
-                  color: "hsl(var(--chart-3))",
-                },
-              }}
-              className="w-full"
-            >
-              <LineChart
-                accessibilityLayer
-                margin={{
-                  left: 14,
-                  right: 14,
-                  top: 10,
-                }}
-                data={newTab}
-              >
-                <CartesianGrid
-                  strokeDasharray="4 4"
-                  vertical={false}
-                  stroke="hsl(var(--muted-foreground))"
-                  strokeOpacity={0.5}
-                />
-                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-                <XAxis
-                  dataKey="dateOut"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <Line
-                  dataKey="usdcdf"
-                  type="linear"
-                  fill="var(--color-usdcdf)"
-                  stroke="var(--color-usdcdf)"
-                  strokeWidth={1}
-                  activeDot={{
-                    r: 4,
-                  }}
-                  dot={false}
-                />
 
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      indicator="line"
-                      labelFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        });
-                      }}
-                    />
-                  }
-                  cursor={false}
-                />
-              </LineChart>
-            </ChartContainer>
-          </CardContent>
-        </Card> */}
-        <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full"
-          x-chunk="charts-01-chunk-7"
-        >
-          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
-            <div className="flex justify-between items-center text-orange-400">
-              <Badge className="bg-orange-500 text-white">USDCDF</Badge>
-              <span className="dark:text-white">
-                today:{" "}
-                <strong className="text-2xl">
-                  {newTab[newTab.length - 1].usdcdf.toFixed(1)}
-                </strong>
-              </span>
-            </div>
-          </CardHeader>
-          <CardContent className="flex flex-1 items-center">
-            <ChartContainer
-              /*               config={{
-                time: {
-                  label: "Rate",
-                  color: "hsl(var(--chart-2))",
-                },
-              }} */
-              config={{
-                usdcdf: {
-                  label: "USDCDF",
-                  color: "hsl(var(--chart-3))",
-                },
-              }}
-              className="w-full"
-            >
-              <AreaChart
-                /*                 accessibilityLayer
-                data={newBCC}
-                margin={{
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                }} */
-                accessibilityLayer
-                margin={{
-                  left: 14,
-                  right: 14,
-                  top: 10,
-                }}
-                data={newTab}
-              >
-                <CartesianGrid
-                  strokeDasharray="4 4"
-                  vertical={false}
-                  stroke="hsl(var(--muted-foreground))"
-                  strokeOpacity={0.5}
-                />
-
-                <XAxis
-                  dataKey="dateOut"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                {/*        <YAxis
-                  dataKey="rate"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={4}
-                /> */}
-                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-
-                <defs>
-                  <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--color-usdcdf)"
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--color-usdcdf)"
-                      stopOpacity={0.1}
-                    />
-                  </linearGradient>
-                </defs>
-                <Area
-                  /*                   dataKey="usdcdf"
-                  type="natural"
-                  fill="url(#fillTime)"
-                  fillOpacity={0.4}
-                  stroke="var(--color-usdcdf)" */
-
-                  dataKey="usdcdf"
-                  type="linear"
-                  fill="url(#fillTime)"
-                  stroke="var(--color-usdcdf)"
-                  strokeWidth={1}
-                  activeDot={{
-                    r: 4,
-                  }}
-                  dot={false}
-                  fillOpacity={0.4}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                  formatter={(value) => (
-                    <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                      Rate
-                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                        {value}
-                        <span className="font-normal text-muted-foreground">
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                />
-              </AreaChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
           x-chunk="charts-01-chunk-5"
@@ -761,6 +564,126 @@ export default function OverView({
           </CardContent>
         </Card>
         <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
+          x-chunk="charts-01-chunk-7"
+        >
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+            <div className="flex justify-between items-center text-orange-400">
+              <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+              <span className="dark:text-white">
+                today:{" "}
+                <strong className="text-2xl">
+                  {newTab[newTab.length - 1].usdcdf.toFixed(1)}
+                </strong>
+              </span>
+            </div>
+          </CardHeader>
+          <CardContent className="flex flex-1 items-center">
+            <ChartContainer
+              /*               config={{
+                time: {
+                  label: "Rate",
+                  color: "hsl(var(--chart-2))",
+                },
+              }} */
+              config={{
+                usdcdf: {
+                  label: "USDCDF",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="w-full"
+            >
+              <AreaChart
+                /*                 accessibilityLayer
+                data={newBCC}
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }} */
+                accessibilityLayer
+                margin={{
+                  left: 14,
+                  right: 14,
+                  top: 10,
+                }}
+                data={newTab}
+              >
+                <CartesianGrid
+                  strokeDasharray="4 4"
+                  vertical={false}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeOpacity={0.5}
+                />
+
+                <XAxis
+                  dataKey="dateOut"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                {/*        <YAxis
+                  dataKey="rate"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={4}
+                /> */}
+                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+
+                <defs>
+                  <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-usdcdf)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-usdcdf)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  /*                   dataKey="usdcdf"
+                  type="natural"
+                  fill="url(#fillTime)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-usdcdf)" */
+
+                  dataKey="usdcdf"
+                  type="linear"
+                  fill="url(#fillTime)"
+                  stroke="var(--color-usdcdf)"
+                  strokeWidth={1}
+                  activeDot={{
+                    r: 4,
+                  }}
+                  dot={false}
+                  fillOpacity={0.4}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                  formatter={(value) => (
+                    <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
+                      Rate
+                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                        {value}
+                        <span className="font-normal text-muted-foreground">
+                          %
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full"
           x-chunk="charts-01-chunk-7"
         >
@@ -840,7 +763,8 @@ export default function OverView({
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card
+
+        {/*         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
           x-chunk="charts-01-chunk-2"
         >
@@ -1062,7 +986,7 @@ export default function OverView({
               </div>
             </div>
           </CardFooter>
-        </Card>
+        </Card> */}
       </div>
     </GeneralLayout>
   );

@@ -128,6 +128,7 @@ type OptAnaFormProps = {
   openDialog?: any;
   code?: any;
   valType?: any;
+  index?: any;
 };
 const OptAnaForm = ({
   optIn,
@@ -136,6 +137,7 @@ const OptAnaForm = ({
   currencies,
   code,
   valType,
+  index,
 }: OptAnaFormProps) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -157,7 +159,7 @@ const OptAnaForm = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   //console.log("Pathname: ", pathname.split("/")[3]);
-  //console.log("opts: ", optIn);
+  console.log("opts: ", optIn);
 
   /**
  * 
@@ -511,7 +513,9 @@ const OptAnaForm = ({
                             <FormLabel className="text-sky-400 p-4 text-xl">
                               {/*                               {`Option - ${optIn?.id}`}
                                */}{" "}
-                              {optIn.id ? `Option - ${optIn.id}` : "Draft"}
+                              {/*                               {optIn.id ? `Option - ${optIn.id}` : "Draft"}
+                               */}{" "}
+                              {optIn.id ? `Option - ${index}` : "Draft"}
                             </FormLabel>
                             <Select
                               onValueChange={field.onChange}
@@ -1091,13 +1095,13 @@ const OptAnaForm = ({
                 <p className="text-orange-600">
                   Duration:{" "}
                   <span className="text-white font-semibold">
-                    {duration.toFixed(2)}
+                    {duration.toFixed(2)} Years
                   </span>
                 </p>
                 <p className="text-orange-600">
                   Issue Price:{" "}
                   <span className="text-white font-semibold">
-                    {(bondPrice * 100).toFixed(2)}
+                    {(bondPrice * 100).toFixed(2)} %
                   </span>
                 </p>
               </div>
@@ -1105,13 +1109,13 @@ const OptAnaForm = ({
                 <p className="text-orange-600">
                   Default Probability:{" "}
                   <span className="text-white font-semibold">
-                    {defProba * 100}
+                    {(defProba * 100).toFixed(2)} %
                   </span>
                 </p>
                 <p className="text-orange-600">
                   Refinancing Risk:{" "}
                   <span className="text-white font-semibold">
-                    {refinRisk * 100}
+                    {(refinRisk * 100).toFixed(2)} %
                   </span>
                 </p>
               </div>
