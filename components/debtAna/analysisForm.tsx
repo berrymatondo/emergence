@@ -206,8 +206,12 @@ const AnalysisForm = ({
         ? (optIn?.bondPrice * 100).toFixed(2).toString()
         : "0",
       duration: optIn?.duration ? optIn?.duration.toFixed(2).toString() : "0",
-      defProba: optIn?.defProba ? (+optIn?.defProba * 100).toString() : "8",
-      refinRisk: optIn?.refinRisk ? (+optIn?.refinRisk * 100).toString() : "5",
+      defProba: optIn?.defProba
+        ? (+optIn?.defProba * 100).toFixed(5).toString()
+        : "8",
+      refinRisk: optIn?.refinRisk
+        ? (+optIn?.refinRisk * 100).toFixed(5).toString()
+        : "5",
     },
   });
 
