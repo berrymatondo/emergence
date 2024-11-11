@@ -158,7 +158,7 @@ const AnalysisForm = ({
   const [genReco, setGenReco] = useState("");
 
   //console.log("Pathname: ", pathname.split("/")[3]);
-  console.log("opts: ", optIn);
+  //console.log("opts: ", optIn);
 
   /**
  * 
@@ -324,7 +324,7 @@ const AnalysisForm = ({
   const procesForm = async (values: z.infer<typeof anaEvaSchema>) => {
     setLoading(true);
 
-    console.log("values", values);
+    //console.log("values", values);
 
     const risk = values.refinRisk ? +values.refinRisk : 0;
     const defProbaf = await getDefaultProba(risk / 100);
@@ -346,7 +346,11 @@ const AnalysisForm = ({
         title="Evaluation of a Financing Option"
         bred={
           <CustomBreadcrumb
-            name={`Financing Options Analysis:${pathname.split("/")[3]}`}
+            name={
+              optIn
+                ? `Financing Options Analysis:${pathname.split("/")[3]}`
+                : ""
+            }
           />
         }
       >
@@ -409,14 +413,16 @@ const AnalysisForm = ({
                             <FormLabel
                               onClick={() =>
                                 router.push(
-                                  `/anadette/anaopfin/${
-                                    pathname.split("/")[3]
-                                  }/update?id=${optIn?.id}`
+                                  optIn
+                                    ? `/anadette/anaopfin/${
+                                        pathname.split("/")[3]
+                                      }/update?id=${optIn?.id}`
+                                    : "evaopfin"
                                 )
                               }
                               className="hover:cursor-pointer text-sky-400 p-4 text-xl"
                             >
-                              {`Option - ${optIn?.id}`}
+                              {optIn ? `Option - ${optIn?.id}` : "Draft"}
                             </FormLabel>
                             {/*                             <Select
                               onValueChange={field.onChange}
@@ -462,7 +468,7 @@ const AnalysisForm = ({
                                       placeholder="Entrer la valeur"
                                       type="number"
                                       step="0.01"
-                                      disabled
+                                      disabled={optIn ? true : false}
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -483,7 +489,7 @@ const AnalysisForm = ({
                                       placeholder="Entrer la valeur"
                                       type="number"
                                       step="1"
-                                      disabled
+                                      disabled={optIn ? true : false}
                                     />
                                   </FormControl>
 
@@ -507,7 +513,7 @@ const AnalysisForm = ({
                                       placeholder="Entrer la valeur"
                                       type="number"
                                       step="0.01"
-                                      disabled
+                                      disabled={optIn ? true : false}
                                     />
                                   </FormControl>
 
@@ -526,7 +532,7 @@ const AnalysisForm = ({
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    disabled
+                                    disabled={optIn ? true : false}
                                   >
                                     <SelectTrigger id="framework">
                                       <SelectValue placeholder="Select a frequency" />
@@ -560,7 +566,7 @@ const AnalysisForm = ({
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    disabled
+                                    disabled={optIn ? true : false}
                                   >
                                     <SelectTrigger id="framework">
                                       <SelectValue placeholder="Sélectionner une devise" />
@@ -603,7 +609,7 @@ const AnalysisForm = ({
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    disabled
+                                    disabled={optIn ? true : false}
                                   >
                                     <SelectTrigger id="framework">
                                       <SelectValue placeholder="Select a modality" />
@@ -950,9 +956,11 @@ const CustomBreadcrumb = ({ name }: { name: string }) => {
         <BreadcrumbItem>
           <BreadcrumbLink
             className="text-sky-600"
-            href={`/anadette/anaopfin/${name.split(":")[1]}`}
+            href={
+              name ? `/anadette/anaopfin/${name.split(":")[1]}` : "evaopfin"
+            }
           >
-            {name}
+            {name ? name : " Draft"}
           </BreadcrumbLink>
           {/*           <BreadcrumbPage href={} className="font-semibold">{name}</BreadcrumbPage>
            */}{" "}

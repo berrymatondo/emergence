@@ -40,7 +40,7 @@ export const getDefaultProba = async (probabilite_defaut: any) => {
 
 // General recommandation
 export const getGeneralReco = async (data: Inputs) => {
-  console.log("ici", data);
+  //console.log("ici", data);
 
   let headersList = {
     Accept: "*/*",
@@ -59,8 +59,8 @@ export const getGeneralReco = async (data: Inputs) => {
   //console.log("ici", data);
 
   let bodyContent = JSON.stringify({
-    prix_obligation: issuePrice ? +issuePrice : 0,
-    prix_moyen: obsPrice ? +obsPrice : 0,
+    prix_obligation: issuePrice ? +issuePrice / 100 : 0,
+    prix_moyen: obsPrice ? +obsPrice / 100 : 0,
     duration: duration ? +duration : 0,
     probabilite_defaut: defProba ? +defProba / 100 : 0,
     risque_refinancement: refinRisk ? +refinRisk / 100 : 0,

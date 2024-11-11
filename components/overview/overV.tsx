@@ -248,7 +248,7 @@ export default function OverView({
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card
+        {/*         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-1"
         >
@@ -280,27 +280,6 @@ export default function OverView({
               </div>
             </div>
             <div>
-              {/*            <div className="text-green-400 max-md:flex max-md:flex-col">
-                <span className="text-xs">AVG Afr. Yield Curve</span>
-                <div className="flex items-end">
-                  <Badge className="bg-green-600 text-white mt-1 text-3xl">
-                    {newYC[0].africaChange}
-                  </Badge>
-                  <span
-                    className={`pl-2 ${
-                      newYC[0].africa < newYC[1].africa
-                        ? "text-red-500"
-                        : "text-green-600"
-                    }`}
-                  >
-                    {newYC[0].africa > newYC[1].africa ? "+" : ""}
-                    {(
-                      ((newYC[0].africa - newYC[1].africa) * 100) /
-                      newYC[1].rdc
-                    ).toFixed(2)}
-                  </span>
-                </div>
-              </div> */}
               <div className="flex gap-2 items-center">
                 <div className="w-2 h-12 bg-green-600"></div>
                 <div className="flex flex-col justify-between">
@@ -358,7 +337,7 @@ export default function OverView({
                   stroke="hsl(var(--muted-foreground))"
                   strokeOpacity={0.5}
                 />
-                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                <YAxis hide domain={["dataMin - 5", "dataMax + 5"]} />
                 <XAxis
                   dataKey="date"
                   tickLine={false}
@@ -409,7 +388,7 @@ export default function OverView({
               </LineChart>
             </ChartContainer>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
@@ -580,12 +559,6 @@ export default function OverView({
           </CardHeader>
           <CardContent className="flex flex-1 items-center">
             <ChartContainer
-              /*               config={{
-                time: {
-                  label: "Rate",
-                  color: "hsl(var(--chart-2))",
-                },
-              }} */
               config={{
                 usdcdf: {
                   label: "USDCDF",
@@ -595,14 +568,6 @@ export default function OverView({
               className="w-full"
             >
               <AreaChart
-                /*                 accessibilityLayer
-                data={newBCC}
-                margin={{
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                }} */
                 accessibilityLayer
                 margin={{
                   left: 14,
