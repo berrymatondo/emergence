@@ -259,13 +259,13 @@ const OptsList = ({
                       {ic.duration.toFixed(2)} Years
                     </TableCell>
                     <TableCell className="text-white bg-sky-900 text-center font-semibold text-base  mx-0 px-0 max-md:hidden">
-                      {ic.bondPrice.toFixed(2)} %
+                      {(ic.bondPrice * 100).toFixed(2)} %
                     </TableCell>
                     <TableCell className="text-white bg-sky-900 text-center font-semibold text-base mx-0 px-0 max-md:hidden">
-                      {(ic.defProba * 100).toFixed(4)}
+                      {(ic.defProba * 100).toFixed(4)} %
                     </TableCell>
                     <TableCell className="text-white bg-sky-900 text-center font-semibold text-base mx-0 px-0 max-md:hidden">
-                      {(ic.refinRisk * 100).toFixed(4)}
+                      {(ic.refinRisk * 100).toFixed(4)} %
                     </TableCell>
                     <TableCell className="pl-2  text-left font-semibold text-base mx-0">
                       <Link
