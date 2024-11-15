@@ -248,7 +248,7 @@ export default function OverView({
             </ChartContainer>
           </CardContent>
         </Card>
-        {/*         <Card
+        <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-1"
         >
@@ -388,7 +388,7 @@ export default function OverView({
               </LineChart>
             </ChartContainer>
           </CardContent>
-        </Card> */}
+        </Card>
 
         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"

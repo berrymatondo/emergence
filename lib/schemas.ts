@@ -471,3 +471,22 @@ export const anaEvaSchema = z.object({
   defProba: z.string().optional(),
   refinRisk: z.string().optional(),
 });
+
+//Financial Options
+export const AnaCroissancechema = z.object({
+  id: z.number().optional(),
+  code: z.string().optional(),
+  tInternational: z.string().optional(),
+  creditSpread: z.string().optional(),
+  tInterieur: z.string().optional(),
+  infNationale: z.string().optional(),
+  infMondiale: z.string().optional(),
+  soldePrim: z.string().optional(),
+  exportations: z.string().optional(),
+  importations: z.string().optional(),
+  rendement: z.string().optional(),
+  invest: z.string().optional(),
+  debtExterne: z.string().optional(),
+  debtInterne: z.string().optional(),
+  variation: z.string().optional(),
+});

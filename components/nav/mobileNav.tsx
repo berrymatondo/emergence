@@ -369,7 +369,7 @@ type MobileMenuProps = {
   userSession: any;
 };
 const MobileMenu = ({ userSession }: MobileMenuProps) => {
-  console.log("userSession:", userSession);
+  //console.log("userSession:", userSession);
   const [expended, setExpended] = useState(false);
   const router = useRouter();
 

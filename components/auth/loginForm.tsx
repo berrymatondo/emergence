@@ -60,8 +60,8 @@ const LoginForm = () => {
     if (result?.error) {
       toast.error(result?.error.toString());
     }
-    console.log("result registerForm:", result);
-    console.log("result registerForm:", result?.success);
+    //console.log("result registerForm:", result);
+    //console.log("result registerForm:", result?.success);
 
     /*     if (result?.success) {
       //console.log({ data: result.data });
