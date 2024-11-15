@@ -910,41 +910,6 @@ const SouDetForm = ({
             </Card>
           )}
         </div>
-        <div className="max-md:px-1 md:flex gap-4 w-full  mt-4 ">
-          <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full max-md:px-2 md:p-4 rounded-xl">
-            <p className="text-center text-sky-400 font-semibold text-xl">
-              {"Analyse des paramètres de la croissance économique"}
-            </p>
-            <div className="flex flex-col gap-2">
-              {!compTxInternational && (
-                <Label
-                  className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
-                  onClick={() => setCompTxInternational(true)}
-                >
-                  {"Tx international"}
-                </Label>
-              )}
-              {compTxInternational && (
-                <div className=" flex gap-2">
-                  <Badge
-                    className="bg-gray-400"
-                    onClick={() => setCompTxInternational(false)}
-                  >
-                    Cancel
-                  </Badge>
-                  <Badge className="text-white bg-sky-600">Compute</Badge>
-                </div>
-              )}
-              <Input
-                className="text-center text-2xl"
-                step="0.01"
-                type="number"
-                value={valTxInternational}
-                disabled={compTxInternational}
-              />
-            </div>
-          </div>
-        </div>
       </GeneralLayout>
     </div>
   );
