@@ -879,6 +879,7 @@ const SouDetForm = ({
                       step="0.01"
                       type="number"
                       value={croissanceEsp}
+                      onChange={(e: any) => setCroissanceEsp(e.target.value)}
                     />
                   </CardDescription>
                 </CardHeader>
