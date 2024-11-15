@@ -106,7 +106,9 @@ import {
   computeCroissance,
   computeRecomCroissance,
   computeRecomDetteCroissance,
+  computeTxInternational,
 } from "@/lib/_debtSubsActions";
+import { Label } from "../ui/label";
 
 const initialDisc = [
   { id: 1, tenor: 0, rate: 0 },
@@ -153,8 +155,12 @@ const SouDetForm = ({
   const [cma, setCma] = useState(0);
   //const [duration, setDuration] = useState(0);
   const [croissance, setCroissance] = useState();
+  const [croissanceEsp, setCroissanceEsp] = useState(0);
   const [recoCroi, setRecoCroi] = useState("");
   const [recoDetCroi, setRecoDetCroi] = useState("");
+
+  const [valTxInternational, setValTxInternational] = useState(0);
+  const [compTxInternational, setCompTxInternational] = useState(false);
   const [refinRisk, setRefinRisk] = useState(0);
   const [lastData, setLastData] = useState<any>();
   const [refresh, setRefresh] = useState(false);
@@ -162,6 +168,8 @@ const SouDetForm = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [defReco, setDefReco] = useState("");
   const [genReco, setGenReco] = useState("");
+  const [anaParam, setAnaParam] = useState(false);
+  const [parCal, setParCal] = useState(0);
 
   //console.log("Pathname: ", pathname.split("/")[3]);
   //console.log("opts: ", optIn);
@@ -299,16 +307,30 @@ const SouDetForm = ({
   const procesForm = async (values: z.infer<typeof AnaCroissancechema>) => {
     setLoading(true);
 
-    //console.log("values", values);
-    const res = await computeCroissance(values);
-    if (res?.data) {
-      setCroissance(res.data);
-      const defProbaf = await computeRecomCroissance(values, res?.data);
-      if (defProbaf?.data) setRecoCroi(defProbaf.data);
+    console.log("values", parCal, croissanceEsp, values);
+    if (parCal == 0) {
+      const res = await computeCroissance(values, parCal, croissanceEsp);
 
-      const defProba = await computeRecomDetteCroissance(values, res?.data);
-      if (defProba?.data) setRecoDetCroi(defProba.data);
+      if (res?.data) {
+        setCroissance(res.data);
+        setCroissanceEsp(res.data.toFixed(4));
+        const defProbaf = await computeRecomCroissance(values, res?.data);
+        if (defProbaf?.data) setRecoCroi(defProbaf.data);
+
+        const defProba = await computeRecomDetteCroissance(values, res?.data);
+        if (defProba?.data) setRecoDetCroi(defProba.data);
+      }
+    } else {
+      if (parCal == 1) {
+        const res = await computeTxInternational(values, croissanceEsp);
+        form.setValue(
+          "tInternational",
+          (res?.data * 100).toFixed(2).toString()
+        );
+      }
     }
+
+    //   setValTxInternational(values?.tInternational ? +values?.tInternational : 0);
 
     /*     const risk = values.refinRisk ? +values.refinRisk : 0;
     const defProbaf = await getDefaultProba(risk / 100);
@@ -339,7 +361,9 @@ const SouDetForm = ({
         <div className="max-md:px-1 md:flex gap-4 w-full ">
           <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full max-md:px-2 md:p-4 rounded-xl">
             <p className="text-center text-sky-400 font-semibold text-xl">
-              {"Analyse de la croissance économique"}
+              {!anaParam
+                ? "Analyse de la croissance économique"
+                : "Analyse des paramètres de la croissance économique"}
             </p>
             <Form {...form}>
               <form
@@ -390,7 +414,7 @@ const SouDetForm = ({
                   <div className="max-md:w-full flex gap-4">
                     <div className=" w-full flex flex-col gap-4 ">
                       <div className="flex flex-col justify-between items-center gap-4">
-                        <div className="flex">
+                        <div className="flex max-md:flex-col">
                           <div className="flex w-full gap-4">
                             <FormField
                               control={form.control}
@@ -398,16 +422,54 @@ const SouDetForm = ({
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compTxInternational && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(true);
+                                            setAnaParam(true);
+                                            setParCal(1);
+                                            form.setValue(
+                                              "tInternational",
+                                              "0"
+                                            );
+                                          }}
+                                        >
+                                          {"Tx international (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compTxInternational && (
+                                        <div className=" flex gap-2">
+                                          <Badge
+                                            className="bg-gray-400"
+                                            onClick={() => {
+                                              setCompTxInternational(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+                                    {/*                                     <FormLabel>
                                       {"Tx international (%)"}
-                                    </FormLabel>
+                                    </FormLabel> */}
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
-                                        //disabled={optIn ? true : false}
+                                        disabled={compTxInternational}
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -536,7 +598,7 @@ const SouDetForm = ({
                             />
                           </div>
                         </div>
-                        <div className="flex">
+                        <div className="flex  max-md:flex-col">
                           <div className="flex w-full gap-4">
                             <FormField
                               control={form.control}
@@ -704,113 +766,30 @@ const SouDetForm = ({
                   </div>
                 </div>
                 <div className="flex gap-4   justify-between pt-8">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className=" w-full md:w-1/3 max-md:w-1/2"
-                    onClick={() => {
-                      // console.log("ICI");
-                      form.reset();
-                      setOpen(false);
-                      router.back();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  {/*                   {!confirmDelete && (
+                  {!anaParam && (
                     <Button
                       type="button"
-                      variant="secondary"
-                      className="text-red-600 w-full md:w-1/3"
-                      onClick={async () => {
-                        setConfirmDelete(true);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  )} */}
-
-                  {/*                   {confirmDelete && (
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className=" w-full md:w-1/3 bg-red-600 hover:bg-red-600"
-                      onClick={async () => {
-
-                        const res = await deleteFinOpts(
-                          optIn?.id,
-                          form.getValues().code!
-                        );
-
-                        router.push(
-                          `/anadette/anaopfin/${form.getValues().code}`
-                        );
+                      variant="outline"
+                      className=" w-full md:w-1/3 max-md:w-1/2"
+                      onClick={() => {
+                        // console.log("ICI");
+                        form.reset();
                         setOpen(false);
+                        router.back();
                       }}
                     >
-                      Confirm Delete
+                      Cancel
                     </Button>
-                  )} */}
+                  )}
 
-                  {/*                   <Button
-                    type="button"
-                    variant="secondary"
-                    className="w-full md:w-1/3 bg-green-600 hover:bg-green-800"
-                    onClick={async () => {
-
-                      if (type == "U") {
-                        const reso = await updateCashflow(
-                          cashflow,
-                          pathname.split("/")[3],
-                          optIn?.id
-                        );
-
-                        const res = await updateFinOpt(
-                          form.getValues(),
-                          cma,
-                          duration,
-                          defProba,
-                          refinRisk
-                        );
-                      } else {
-                        const res = await createFinOpt(
-                          form.getValues(),
-                          lastData,
-                          cma,
-                          duration,
-                          defProba,
-                          refinRisk
-                        );
-
-
-
-                        const reso = await updateCashflow(
-                          cashflow,
-                          pathname.split("/")[3],
-                          res?.data?.id
-                        );
-
-                        const rs = await duplicateReserve(
-                          pathname.split("/")[3],
-                          lastData
-                        );
-                      }
-
-                      router.push(
-                        `/anadette/anaopfin/${form.getValues().code}`
-                      );
-                      setOpen(false);
-                    }}
-                  >
-                    Save
-                  </Button> */}
-
-                  <Button
-                    type="submit"
-                    className=" w-full max-md:w-1/2 md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
-                  >
-                    {loading ? "Evaluating ..." : "Evaluate"}
-                  </Button>
+                  {!anaParam && (
+                    <Button
+                      type="submit"
+                      className=" w-full max-md:w-1/2 md:w-1/3 hover:bg-sky-800 bg-sky-600 text-white uppercase"
+                    >
+                      {loading ? "Evaluating ..." : "Evaluate"}
+                    </Button>
+                  )}
 
                   {/*                 {lastData?.length < 1 && (
                     <TooltipProvider>
@@ -852,7 +831,7 @@ const SouDetForm = ({
             </Form>
           </div>
         </div>
-        <div className="flex max-md:flex-col gap-2 justify-between mt-8">
+        <div className="flex max-md:flex-col gap-2 justify-between mt-4">
           {recoCroi && (
             <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
               <CardHeader>
@@ -896,9 +875,10 @@ const SouDetForm = ({
                   </CardTitle>
                   <CardDescription>
                     <Input
-                      className="text-center text-4xl"
+                      className="text-center text-2xl"
                       step="0.01"
                       type="number"
+                      value={croissanceEsp}
                     />
                   </CardDescription>
                 </CardHeader>
@@ -928,6 +908,41 @@ const SouDetForm = ({
               </CardContent>
             </Card>
           )}
+        </div>
+        <div className="max-md:px-1 md:flex gap-4 w-full  mt-4 ">
+          <div className="bg-gray-500/10 dark:bg-teal-200/10 w-full max-md:px-2 md:p-4 rounded-xl">
+            <p className="text-center text-sky-400 font-semibold text-xl">
+              {"Analyse des paramètres de la croissance économique"}
+            </p>
+            <div className="flex flex-col gap-2">
+              {!compTxInternational && (
+                <Label
+                  className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                  onClick={() => setCompTxInternational(true)}
+                >
+                  {"Tx international"}
+                </Label>
+              )}
+              {compTxInternational && (
+                <div className=" flex gap-2">
+                  <Badge
+                    className="bg-gray-400"
+                    onClick={() => setCompTxInternational(false)}
+                  >
+                    Cancel
+                  </Badge>
+                  <Badge className="text-white bg-sky-600">Compute</Badge>
+                </div>
+              )}
+              <Input
+                className="text-center text-2xl"
+                step="0.01"
+                type="number"
+                value={valTxInternational}
+                disabled={compTxInternational}
+              />
+            </div>
+          </div>
         </div>
       </GeneralLayout>
     </div>
