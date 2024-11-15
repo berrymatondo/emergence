@@ -107,6 +107,7 @@ import {
   computeRecomCroissance,
   computeRecomDetteCroissance,
   computeTxInternational,
+  computeCreditSpread,
 } from "@/lib/_debtSubsActions";
 import { Label } from "../ui/label";
 
@@ -159,8 +160,8 @@ const SouDetForm = ({
   const [recoCroi, setRecoCroi] = useState("");
   const [recoDetCroi, setRecoDetCroi] = useState("");
 
-  const [valTxInternational, setValTxInternational] = useState(0);
   const [compTxInternational, setCompTxInternational] = useState(false);
+  const [compCreditSpread, setCompCreditSpread] = useState(false);
   const [refinRisk, setRefinRisk] = useState(0);
   const [lastData, setLastData] = useState<any>();
   const [refresh, setRefresh] = useState(false);
@@ -307,7 +308,7 @@ const SouDetForm = ({
   const procesForm = async (values: z.infer<typeof AnaCroissancechema>) => {
     setLoading(true);
 
-    console.log("values", parCal, croissanceEsp, values);
+    //console.log("values", parCal, croissanceEsp, values);
     if (parCal == 0) {
       const res = await computeCroissance(values, parCal, croissanceEsp);
 
@@ -327,6 +328,11 @@ const SouDetForm = ({
           "tInternational",
           (res?.data * 100).toFixed(2).toString()
         );
+      }
+
+      if (parCal == 2) {
+        const res = await computeCreditSpread(values, croissanceEsp);
+        form.setValue("creditSpread", (res?.data * 100).toFixed(2).toString());
       }
     }
 
@@ -414,8 +420,8 @@ const SouDetForm = ({
                   <div className="max-md:w-full flex gap-4">
                     <div className=" w-full flex flex-col gap-4 ">
                       <div className="flex flex-col justify-between items-center gap-4">
-                        <div className="flex max-md:flex-col">
-                          <div className="flex w-full gap-4">
+                        <div className="flex max-md:flex-col ">
+                          <div className="flex w-full gap-4 ">
                             <FormField
                               control={form.control}
                               name="tInternational"
@@ -460,9 +466,7 @@ const SouDetForm = ({
                                         </div>
                                       )}
                                     </div>
-                                    {/*                                     <FormLabel>
-                                      {"Tx international (%)"}
-                                    </FormLabel> */}
+
                                     <FormControl>
                                       <Input
                                         {...field}
@@ -477,7 +481,65 @@ const SouDetForm = ({
                                 );
                               }}
                             />
+
                             <FormField
+                              control={form.control}
+                              name="creditSpread"
+                              render={({ field }) => {
+                                return (
+                                  <FormItem className="w-full">
+                                    <div className="flex flex-col gap-2">
+                                      {!compCreditSpread && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompCreditSpread(true);
+                                            setAnaParam(true);
+                                            setParCal(2);
+                                            form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Credit Spread (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compCreditSpread && (
+                                        <div className=" flex gap-2">
+                                          <Badge
+                                            className="bg-gray-400"
+                                            onClick={() => {
+                                              setCompCreditSpread(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        placeholder="Entrer la valeur"
+                                        type="number"
+                                        step="0.01"
+                                        disabled={compCreditSpread}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+
+                            {/*                             <FormField
                               control={form.control}
                               name="creditSpread"
                               render={({ field }) => {
@@ -498,7 +560,7 @@ const SouDetForm = ({
                                   </FormItem>
                                 );
                               }}
-                            />
+                            /> */}
                           </div>
                           <div className="flex w-full gap-4">
                             <FormField
