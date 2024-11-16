@@ -162,6 +162,18 @@ const SouDetForm = ({
 
   const [compTxInternational, setCompTxInternational] = useState(false);
   const [compCreditSpread, setCompCreditSpread] = useState(false);
+  const [compTInterieur, setCompTInterieur] = useState(false);
+  const [compInfNationale, setCompInfNationale] = useState(false);
+  const [compInfMondiale, setCompInfMondiale] = useState(false);
+  const [compSoldePrim, setCompSoldePrim] = useState(false);
+  const [compExportations, setCompExportations] = useState(false);
+  const [compImportations, setCompImportations] = useState(false);
+  const [compRendement, setCompRendement] = useState(false);
+  const [compInvest, setCompInvest] = useState(false);
+  const [compDebtExterne, setCompDebtExterne] = useState(false);
+  const [compDebtInterne, setCompDebtInterne] = useState(false);
+  const [compVariation, setCompVariation] = useState(false);
+
   const [refinRisk, setRefinRisk] = useState(0);
   const [lastData, setLastData] = useState<any>();
   const [refresh, setRefresh] = useState(false);
@@ -420,7 +432,7 @@ const SouDetForm = ({
                   <div className="max-md:w-full flex gap-4">
                     <div className=" w-full flex flex-col gap-4 ">
                       <div className="flex flex-col justify-between items-center gap-4">
-                        <div className="flex max-md:flex-col ">
+                        <div className="flex max-md:flex-col gap-4 ">
                           <div className="flex w-full gap-4 ">
                             <FormField
                               control={form.control}
@@ -434,21 +446,33 @@ const SouDetForm = ({
                                           className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
                                           onClick={() => {
                                             setCompTxInternational(true);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
                                             setAnaParam(true);
                                             setParCal(1);
-                                            form.setValue(
+                                            /*   form.setValue(
                                               "tInternational",
                                               "0"
-                                            );
+                                            ); */
                                           }}
                                         >
                                           {"Tx international (%)"}
                                         </FormLabel>
                                       )}
                                       {compTxInternational && (
-                                        <div className=" flex gap-2">
+                                        <div className=" flex justify-between gap-2">
                                           <Badge
-                                            className="bg-gray-400"
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
                                             onClick={() => {
                                               setCompTxInternational(false);
                                               setAnaParam(false);
@@ -459,7 +483,7 @@ const SouDetForm = ({
                                           </Badge>
                                           <Button
                                             type="submit"
-                                            className="text-white bg-sky-600"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
                                           >
                                             Compute
                                           </Button>
@@ -493,19 +517,31 @@ const SouDetForm = ({
                                         <FormLabel
                                           className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
                                           onClick={() => {
+                                            setCompTxInternational(false);
                                             setCompCreditSpread(true);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
                                             setAnaParam(true);
                                             setParCal(2);
-                                            form.setValue("creditSpread", "0");
+                                            // form.setValue("creditSpread", "0");
                                           }}
                                         >
                                           {"Credit Spread (%)"}
                                         </FormLabel>
                                       )}
                                       {compCreditSpread && (
-                                        <div className=" flex gap-2">
+                                        <div className=" flex  justify-between   gap-2">
                                           <Badge
-                                            className="bg-gray-400"
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
                                             onClick={() => {
                                               setCompCreditSpread(false);
                                               setAnaParam(false);
@@ -516,7 +552,7 @@ const SouDetForm = ({
                                           </Badge>
                                           <Button
                                             type="submit"
-                                            className="text-white bg-sky-600"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
                                           >
                                             Compute
                                           </Button>
@@ -538,29 +574,6 @@ const SouDetForm = ({
                                 );
                               }}
                             />
-
-                            {/*                             <FormField
-                              control={form.control}
-                              name="creditSpread"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem className="w-full">
-                                    <FormLabel>Credit Spread (%)</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        {...field}
-                                        placeholder="Entrer la valeur"
-                                        type="number"
-                                        step="1"
-                                        //disabled={optIn ? true : false}
-                                      />
-                                    </FormControl>
-
-                                    <FormMessage />
-                                  </FormItem>
-                                );
-                              }}
-                            /> */}
                           </div>
                           <div className="flex w-full gap-4">
                             <FormField
@@ -569,41 +582,132 @@ const SouDetForm = ({
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel>{"Tx intérieur (%)"}</FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compTInterieur && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(true);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(3);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Tx intérieur (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compTInterieur && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompTInterieur(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
-                                        disabled={optIn ? true : false}
+                                        disabled={compTInterieur}
                                       />
                                     </FormControl>
-
                                     <FormMessage />
                                   </FormItem>
                                 );
                               }}
                             />
+
                             <FormField
                               control={form.control}
                               name="infNationale"
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel>
-                                      {"Inf. Nationale (%)"}
-                                    </FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compInfNationale && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(true);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(4);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Inf. Nationale (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compInfNationale && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompInfNationale(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
-                                        disabled={optIn ? true : false}
+                                        disabled={compInfNationale}
                                       />
                                     </FormControl>
-
                                     <FormMessage />
                                   </FormItem>
                                 );
@@ -617,17 +721,63 @@ const SouDetForm = ({
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel>{"Inf. Mondiale (%)"}</FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compInfMondiale && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(true);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(5);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Inf. Mondiale (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compInfMondiale && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompInfMondiale(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
-                                        disabled={optIn ? true : false}
+                                        disabled={compInfMondiale}
                                       />
                                     </FormControl>
-
                                     <FormMessage />
                                   </FormItem>
                                 );
@@ -640,19 +790,63 @@ const SouDetForm = ({
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel>
-                                      {"Solde Primaire (%)"}
-                                    </FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compSoldePrim && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(true);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(6);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Solde Primaire (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compSoldePrim && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompSoldePrim(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
-                                        disabled={optIn ? true : false}
+                                        disabled={compSoldePrim}
                                       />
                                     </FormControl>
-
                                     <FormMessage />
                                   </FormItem>
                                 );
@@ -660,7 +854,7 @@ const SouDetForm = ({
                             />
                           </div>
                         </div>
-                        <div className="flex  max-md:flex-col">
+                        <div className="flex  max-md:flex-col gap-4">
                           <div className="flex w-full gap-4">
                             <FormField
                               control={form.control}
@@ -668,15 +862,61 @@ const SouDetForm = ({
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel className="">
-                                      {"Exportations (%)"}
-                                    </FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compExportations && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(true);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(7);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Exportations (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compExportations && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompExportations(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
+                                        disabled={compExportations}
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -684,21 +924,68 @@ const SouDetForm = ({
                                 );
                               }}
                             />
+
                             <FormField
                               control={form.control}
                               name="importations"
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel className="">
-                                      {"Importations (%)"}
-                                    </FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compImportations && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(true);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(8);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Importations (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compImportations && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompImportations(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
+                                        disabled={compImportations}
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -714,38 +1001,130 @@ const SouDetForm = ({
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel className="">
-                                      {"Rendement espéré (%)"}
-                                    </FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compRendement && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(true);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(9);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Rendement espéré (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compRendement && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompRendement(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
+                                        disabled={compRendement}
                                       />
                                     </FormControl>
-
                                     <FormMessage />
                                   </FormItem>
                                 );
                               }}
                             />
+
                             <FormField
                               control={form.control}
                               name="invest"
                               render={({ field }) => {
                                 return (
                                   <FormItem className="w-full">
-                                    <FormLabel className="">
-                                      {"Investissement (%)"}
-                                    </FormLabel>
+                                    <div className="flex flex-col gap-2">
+                                      {!compInvest && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(true);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setParCal(10);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Investissement (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compInvest && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompInvest(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
+                                        disabled={compInvest}
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -760,16 +1139,63 @@ const SouDetForm = ({
                               name="debtExterne"
                               render={({ field }) => {
                                 return (
-                                  <FormItem className="w-1/2">
-                                    <FormLabel className="">
-                                      {"Dette Externe (%)"}
-                                    </FormLabel>
+                                  <FormItem className="w-full">
+                                    <div className="flex flex-col gap-2">
+                                      {!compDebtExterne && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(true);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(false);
+                                            setAnaParam(true);
+                                            setAnaParam(true);
+                                            setParCal(11);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Dette Externe (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compDebtExterne && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompDebtExterne(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
+                                        disabled={compDebtExterne}
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -777,21 +1203,70 @@ const SouDetForm = ({
                                 );
                               }}
                             />
+
                             <FormField
                               control={form.control}
                               name="debtInterne"
                               render={({ field }) => {
                                 return (
-                                  <FormItem className="w-1/2">
-                                    <FormLabel className="">
-                                      {"Dette Interne (%)"}
-                                    </FormLabel>
+                                  <FormItem className="w-full">
+                                    <div className="flex flex-col gap-2">
+                                      {!compDebtInterne && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(true);
+                                            setCompVariation(false);
+
+                                            setAnaParam(true);
+                                            setAnaParam(true);
+                                            setParCal(12);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Dette Interne (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compDebtInterne && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompDebtInterne(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
                                     <FormControl>
                                       <Input
                                         {...field}
                                         placeholder="Entrer la valeur"
                                         type="number"
                                         step="0.01"
+                                        disabled={compDebtInterne}
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -800,28 +1275,77 @@ const SouDetForm = ({
                               }}
                             />
                           </div>
-                          <FormField
-                            control={form.control}
-                            name="variation"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="w-1/2">
-                                  <FormLabel className="">
-                                    {"Variation Tx (%)"}
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Entrer la valeur"
-                                      type="number"
-                                      step="0.01"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              );
-                            }}
-                          />
+                          <div className=" flex w-full gap-4">
+                            <FormField
+                              control={form.control}
+                              name="variation"
+                              render={({ field }) => {
+                                return (
+                                  <FormItem className="w-1/2">
+                                    <div className="flex flex-col gap-2">
+                                      {!compVariation && (
+                                        <FormLabel
+                                          className="hover:bg-sky-600 hover:p-1 hover:rounded-sm hover:cursor-pointer"
+                                          onClick={() => {
+                                            setCompTxInternational(false);
+                                            setCompCreditSpread(false);
+                                            setCompTInterieur(false);
+                                            setCompInfNationale(false);
+                                            setCompInfMondiale(false);
+                                            setCompSoldePrim(false);
+                                            setCompExportations(false);
+                                            setCompImportations(false);
+                                            setCompRendement(false);
+                                            setCompInvest(false);
+                                            setCompDebtExterne(false);
+                                            setCompDebtInterne(false);
+                                            setCompVariation(true);
+                                            setAnaParam(true);
+                                            setAnaParam(true);
+                                            setParCal(13);
+                                            // form.setValue("creditSpread", "0");
+                                          }}
+                                        >
+                                          {"Tx Variation (%)"}
+                                        </FormLabel>
+                                      )}
+                                      {compVariation && (
+                                        <div className=" flex  justify-between   gap-2">
+                                          <Badge
+                                            className="bg-gray-400 hover:bg-gray-200 text-red-700"
+                                            onClick={() => {
+                                              setCompVariation(false);
+                                              setAnaParam(false);
+                                              setParCal(0);
+                                            }}
+                                          >
+                                            Cancel
+                                          </Badge>
+                                          <Button
+                                            type="submit"
+                                            className="text-white bg-sky-600 px-4 text-xs rounded-full"
+                                          >
+                                            Compute
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        placeholder="Entrer la valeur"
+                                        type="number"
+                                        step="0.01"
+                                        disabled={compVariation}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
