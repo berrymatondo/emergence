@@ -313,7 +313,7 @@ const SouDetForm = ({
     if (refinRisk?.data) setGenReco(refinRisk.data); */
 
     //console.log("type", type);
-    setParCal(0);
+
     setLoading(false);
     // router.push(`/anadette/anaopfin/${values.code}`);
     // setOpen(false);
