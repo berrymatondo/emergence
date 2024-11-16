@@ -1415,14 +1415,13 @@ const SouDetForm = ({
                 </CardTitle>
                 <CardDescription>
                   <Input
-                    className="text-center text-2xl"
+                    className="text-center text-2xl "
                     step="0.01"
                     type="number"
                     value={croissanceEsp}
                     onChange={(e: any) => setCroissanceEsp(e.target.value)}
                   />
                   <p className="text-center m-1 text-yellow-400">
-                    {" "}
                     {(croissanceEsp * 100).toFixed(2)} %
                   </p>
                 </CardDescription>
