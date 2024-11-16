@@ -108,6 +108,17 @@ import {
   computeRecomDetteCroissance,
   computeTxInternational,
   computeCreditSpread,
+  computeTInterieur,
+  computeInfNationale,
+  computeInfMondiale,
+  computeSoldePrim,
+  computeExportations,
+  computeImportations,
+  computeRendement,
+  computeInvest,
+  computeDebtExterne,
+  computeDebtInterne,
+  computeVariation,
 } from "@/lib/_debtSubsActions";
 import { Label } from "../ui/label";
 
@@ -184,26 +195,6 @@ const SouDetForm = ({
   const [anaParam, setAnaParam] = useState(false);
   const [parCal, setParCal] = useState(0);
 
-  //console.log("Pathname: ", pathname.split("/")[3]);
-  //console.log("opts: ", optIn);
-
-  /**
- * 
- *       valuationType: "",
-      modality: "",
-      couponRate: 1,
-      maturity: 1,
-      rating: "4",
-      notional: 1000000,
-      valuationDate: "2024-07-01",
-      currency: "1",
-      recovering: "40",
- */
-
-  //console.log("optIn: ", optIn?.issuePrice);
-  //console.log("optIn: ", optIn);
-  //console.log("refresh:", refresh);
-
   const form = useForm<z.infer<typeof AnaCroissancechema>>({
     resolver: zodResolver(AnaCroissancechema),
     defaultValues: {
@@ -226,97 +217,6 @@ const SouDetForm = ({
     },
   });
 
-  /*   useEffect(() => {
-    form.setValue("id", optIn?.id);
-    form.setValue("code", pathname.split("/")[3]);
-    form.setValue("valuationType", optIn?.valType);
-
-  }, [optIn, form]); */
-
-  /*   const maturityDate = form.watch("maturityDate");
-  const issueDate = form.watch("issueDate");
-  const valuationType = form.watch("valuationType");
-  const currency = form.watch("currency");
-  const valuationDate = form.watch("valuationDate"); */
-
-  /*   useEffect(() => {
-    const mati = getYears(
-      maturityDate ? maturityDate : "0",
-      issueDate ? issueDate : "0"
-    );
-
-    form.setValue("maturity", Math.floor(+mati).toString());
-    setMat(Math.floor(+mati));
-  }, [maturityDate, issueDate]); */
-
-  /*   useEffect(() => {
-    const mati = valuationTypes.find(
-      (va: any) => va.id == valuationType
-    )?.modality;
-    form.setValue("modality", mati ? mati.toString() : "1");
-  }, [valuationType]); */
-
-  /*   useEffect(() => {
-    // console.log("log");
-
-    // Fetch ZC Rates
-    const fetchZC = async (id: any, date: any) => {
-      //  console.log("id", id, date);
-
-      const resu = await getAllZC(+id, date);
-      const data = resu?.data;
-      //console.log("data ", data);
-
-      setZcrates(data);
-    };
-    fetchZC(currency, valuationDate);
-
-    // Fetch Currency name
-    const fetchCur = async (currency: any) => {
-      const resu = await getCurrency(+currency);
-      const dat = resu?.data;
-
-      //  console.log("dat?.code", dat?.code);
-
-      setCurCode(dat?.code ? dat?.code : "");
-    };
-    fetchCur(currency);
-  }, [currency, valuationDate]); */
-
-  // Fetch Last Reserve
-  /*   useEffect(() => {
-    const fetchLastReserve = async () => {
-      // console.log("optIn?.reserve ", optIn?.reserve);
-
-      if (optIn?.reserve) {
-        const res = await getReserveByCode(optIn?.reserve);
-        const data2 = res?.data;
-        if (data2)
-          setLastData(data2.sort((a: any, b: any) => a.tenor - b.tenor));
-        console.log("Reserve ", data2);
-      } else {
-        if (type == "U") {
-          const res = await getReserveByCode(pathname.split("/")[3]);
-          const data2 = res?.data;
-          if (data2)
-            setLastData(data2.sort((a: any, b: any) => a.tenor - b.tenor));
-          // console.log("Reserve ", data2);
-        }
-      }
-
-      //setYieldcurve(data);
-    };
-    fetchLastReserve();
-  }, [refresh]); */
-
-  /*   const getYears = (date1: string, date2: string) => {
-    const millisecondsDiff =
-      new Date(date1).getTime() - new Date(date2).getTime();
-
-    const years = Math.round(millisecondsDiff / (24 * 60 * 60 * 1000));
-    return (years / 365).toFixed(2);
-  };
- */
   const procesForm = async (values: z.infer<typeof AnaCroissancechema>) => {
     setLoading(true);
 
@@ -345,6 +245,61 @@ const SouDetForm = ({
       if (parCal == 2) {
         const res = await computeCreditSpread(values, croissanceEsp);
         form.setValue("creditSpread", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 3) {
+        const res = await computeTInterieur(values, croissanceEsp);
+        form.setValue("tInterieur", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 4) {
+        const res = await computeInfNationale(values, croissanceEsp);
+        form.setValue("infNationale", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 5) {
+        const res = await computeInfMondiale(values, croissanceEsp);
+        form.setValue("infMondiale", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 6) {
+        const res = await computeSoldePrim(values, croissanceEsp);
+        form.setValue("soldePrim", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 7) {
+        const res = await computeExportations(values, croissanceEsp);
+        form.setValue("exportations", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 8) {
+        const res = await computeImportations(values, croissanceEsp);
+        form.setValue("importations", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 9) {
+        const res = await computeRendement(values, croissanceEsp);
+        form.setValue("rendement", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 10) {
+        const res = await computeInvest(values, croissanceEsp);
+        form.setValue("invest", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 11) {
+        const res = await computeDebtExterne(values, croissanceEsp);
+        form.setValue("debtExterne", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 12) {
+        const res = await computeDebtInterne(values, croissanceEsp);
+        form.setValue("debtInterne", (res?.data * 100).toFixed(2).toString());
+      }
+
+      if (parCal == 13) {
+        const res = await computeVariation(values, croissanceEsp);
+        form.setValue("variation", (res?.data * 100).toFixed(2).toString());
       }
     }
 
@@ -1418,74 +1373,33 @@ const SouDetForm = ({
           </div>
         </div>
         <div className="flex max-md:flex-col gap-2 justify-between mt-4">
-          {recoCroi && (
-            <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
-              <CardHeader>
-                <CardTitle className="text-sky-600">
-                  Analyse macroéconomique
-                </CardTitle>
-                <CardDescription>{recoCroi}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div></div>
-                {/*               <Button size="sm" variant="secondary">
+          <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
+            <CardHeader>
+              <CardTitle className="text-sky-600">
+                Analyse macroéconomique
+              </CardTitle>
+              {recoCroi && <CardDescription>{recoCroi}</CardDescription>}
+            </CardHeader>
+            <CardContent>
+              <div></div>
+              {/*               <Button size="sm" variant="secondary">
                 Archive Product
               </Button> */}
-              </CardContent>
-            </Card>
-          )}
+            </CardContent>
+          </Card>
 
-          {croissance && (
-            <div className="flex flex-col gap-4 md:w-1/6">
-              <Card x-chunk="dashboard-07-chunk-5" className="">
-                <CardHeader>
-                  <CardTitle className="text-center text-sky-100 text-xl">
-                    Croissance estimée
-                  </CardTitle>
+          <div className="flex flex-col gap-4 md:w-1/6">
+            <Card x-chunk="dashboard-07-chunk-5" className="">
+              <CardHeader>
+                <CardTitle className="text-center text-sky-100 text-xl">
+                  Croissance estimée
+                </CardTitle>
+                {croissance && (
                   <CardDescription className="text-green-500 text-4xl text-center">
                     {(croissance * 100)?.toFixed(2)}
                     {" %"}
                   </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div></div>
-                  {/*               <Button size="sm" variant="secondary">
-                Archive Product
-              </Button> */}
-                </CardContent>
-              </Card>
-              <Card x-chunk="dashboard-07-chunk-5" className="">
-                <CardHeader>
-                  <CardTitle className="text-sky-100 text-xl text-center">
-                    Croissance espérée (%)
-                  </CardTitle>
-                  <CardDescription>
-                    <Input
-                      className="text-center text-2xl"
-                      step="0.01"
-                      type="number"
-                      value={croissanceEsp}
-                      onChange={(e: any) => setCroissanceEsp(e.target.value)}
-                    />
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div></div>
-                  {/*               <Button size="sm" variant="secondary">
-                            Archive Product
-                          </Button> */}
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {recoDetCroi && (
-            <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
-              <CardHeader>
-                <CardTitle className="text-sky-600">
-                  Analyse de la dette{" "}
-                </CardTitle>
-                <CardDescription>{recoDetCroi}</CardDescription>
+                )}
               </CardHeader>
               <CardContent>
                 <div></div>
@@ -1494,7 +1408,44 @@ const SouDetForm = ({
               </Button> */}
               </CardContent>
             </Card>
-          )}
+            <Card x-chunk="dashboard-07-chunk-5" className="">
+              <CardHeader>
+                <CardTitle className="text-sky-100 text-xl text-center">
+                  Croissance espérée (%)
+                </CardTitle>
+                <CardDescription>
+                  <Input
+                    className="text-center text-2xl"
+                    step="0.01"
+                    type="number"
+                    value={croissanceEsp}
+                    onChange={(e: any) => setCroissanceEsp(e.target.value)}
+                  />
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div></div>
+                {/*               <Button size="sm" variant="secondary">
+                            Archive Product
+                          </Button> */}
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card x-chunk="dashboard-07-chunk-5" className="md:w-2/5">
+            <CardHeader>
+              <CardTitle className="text-sky-600">
+                Analyse de la dette{" "}
+              </CardTitle>
+              {recoDetCroi && <CardDescription>{recoDetCroi}</CardDescription>}
+            </CardHeader>
+            <CardContent>
+              <div></div>
+              {/*               <Button size="sm" variant="secondary">
+                Archive Product
+              </Button> */}
+            </CardContent>
+          </Card>
         </div>
       </GeneralLayout>
     </div>
