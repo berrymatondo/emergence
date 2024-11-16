@@ -1411,7 +1411,7 @@ const SouDetForm = ({
             <Card x-chunk="dashboard-07-chunk-5" className="">
               <CardHeader>
                 <CardTitle className="text-sky-100 text-xl text-center">
-                  Croissance espérée (%)
+                  Croissance espérée
                 </CardTitle>
                 <CardDescription>
                   <Input
@@ -1421,6 +1421,10 @@ const SouDetForm = ({
                     value={croissanceEsp}
                     onChange={(e: any) => setCroissanceEsp(e.target.value)}
                   />
+                  <p className="text-center m-1 text-yellow-400">
+                    {" "}
+                    {(croissanceEsp * 100).toFixed(2)} %
+                  </p>
                 </CardDescription>
               </CardHeader>
               <CardContent>
