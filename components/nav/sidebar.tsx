@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { GiPayMoney, GiSuspensionBridge } from "react-icons/gi";
+import { GiPayMoney, GiSuspensionBridge, GiTakeMyMoney } from "react-icons/gi";
 
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { Button } from "../ui/button";
@@ -416,13 +416,13 @@ const ListItems = [
       { id: 3, title: "Energie", link: "/industrie/ener" },
     ],
   },
-  /*   {
+  {
     id: 9,
-    link: "admin",
-    icon: <MdLock size={20} />,
-    tooltip: "Espace Admin",
-    title: "Espace Admin",
-  }, */
+    link: "financingCapacity",
+    icon: <GiTakeMyMoney size={20} />,
+    tooltip: "Financing Capacity",
+    title: "Financing Capacity",
+  },
   {
     id: 10,
     link: "admin",

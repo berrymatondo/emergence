@@ -490,3 +490,39 @@ export const AnaCroissancechema = z.object({
   debtInterne: z.string().optional(),
   variation: z.string().optional(),
 });
+
+//Croissance
+export const croissanceSchema = z.object({
+  id: z.number().optional(),
+  type: z.string().optional(),
+  subType: z.string().optional(),
+  year: z.string().optional(),
+  croissance: z.string().optional(),
+  debtExtPIB: z.string().optional(),
+  txInternational: z.string().optional(),
+  creditSpread: z.string().optional(),
+  txInterieur: z.string().optional(),
+  infNat: z.string().optional(),
+  infMon: z.string().optional(),
+  soldePrim: z.string().optional(),
+  exportation: z.string().optional(),
+  inportation: z.string().optional(),
+  rendement: z.string().optional(),
+  invest: z.string().optional(),
+  debtIntPIB: z.string().optional(),
+  variantion: z.string().optional(),
+});
+
+// Financing capacity
+export const finCapSchema = z.object({
+  taux_interet: z.string().optional(),
+  taux_interet_ref: z.string().optional(),
+  spread_souverain: z.string().optional(),
+  spread_ref: z.string().optional(),
+  taux_change: z.string().optional(),
+  taux_change_ref: z.string().optional(),
+  inflation: z.string().optional(),
+  inflation_ref: z.string().optional(),
+  performance_matieres: z.string().optional(),
+  cours: z.string().optional(),
+});

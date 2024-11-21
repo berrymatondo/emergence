@@ -389,7 +389,61 @@ export default function OverView({
             </ChartContainer>
           </CardContent>
         </Card>
+        <Card
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
+          x-chunk="charts-01-chunk-3"
+        >
+          <CardHeader className="p-4 pb-0">
+            <CardTitle>Fixed Income Market</CardTitle>
+            <CardDescription>Data from last tenor.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Tenor</TableHead>
+                  <TableHead>Yield</TableHead>
+                  <TableHead className="">Change</TableHead>
+                </TableRow>
+              </TableHeader>
 
+              <TableBody>
+                {yieldcurve?.data?.map((yc: any) => (
+                  <TableRow key={yc.id}>
+                    <TableCell className="font-medium text-xs">
+                      {yc.tenor}Y
+                    </TableCell>
+                    <TableCell className="text-xs">{yc.yield}%</TableCell>
+                    <TableCell
+                      className={`text-right text-xs ${
+                        yc.change < 0
+                          ? "text-red-600"
+                          : yc.change == 0
+                          ? ""
+                          : "text-green-400"
+                      }`}
+                    >
+                      {yc.change < 0 ? (
+                        <div className="flex items-center gap-1">
+                          <TbTriangleInvertedFilled />
+                          {yc.change}%
+                        </div>
+                      ) : yc.change == 0 ? (
+                        <div className="pl-4 flex items-center gap-1">
+                          {yc.change}%
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1">
+                          <TbTriangleFilled />+{yc.change}%
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
           x-chunk="charts-01-chunk-5"
@@ -487,61 +541,6 @@ export default function OverView({
           </CardContent>
         </Card>
 
-        <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
-          x-chunk="charts-01-chunk-3"
-        >
-          <CardHeader className="p-4 pb-0">
-            <CardTitle>Fixed Income Market</CardTitle>
-            <CardDescription>Data from last tenor.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Tenor</TableHead>
-                  <TableHead>Yield</TableHead>
-                  <TableHead className="">Change</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {yieldcurve?.data?.map((yc: any) => (
-                  <TableRow key={yc.id}>
-                    <TableCell className="font-medium text-xs">
-                      {yc.tenor}Y
-                    </TableCell>
-                    <TableCell className="text-xs">{yc.yield}%</TableCell>
-                    <TableCell
-                      className={`text-right text-xs ${
-                        yc.change < 0
-                          ? "text-red-600"
-                          : yc.change == 0
-                          ? ""
-                          : "text-green-400"
-                      }`}
-                    >
-                      {yc.change < 0 ? (
-                        <div className="flex items-center gap-1">
-                          <TbTriangleInvertedFilled />
-                          {yc.change}%
-                        </div>
-                      ) : yc.change == 0 ? (
-                        <div className="pl-4 flex items-center gap-1">
-                          {yc.change}%
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1">
-                          <TbTriangleFilled />+{yc.change}%
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-7"

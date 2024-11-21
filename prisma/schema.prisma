@@ -398,3 +398,32 @@ model ImpliciteMatrix{
   @@map("impliciteMatrix")
 }
 
+
+model Croissance{
+  id Int @id @default(autoincrement())
+  type String 
+  subType String ?
+  year Int
+  croissance Float
+  debtExtPIB Float
+  txInternational Float
+  creditSpread Float
+  txInterieur Float
+  infNat Float
+  infMon Float
+  soldePrim Float
+  exportation Float
+  inportation Float
+  rendement Float
+  invest Float
+  debtIntPIB Float
+  variantion Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("croissance")
+}
+
+
+

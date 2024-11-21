@@ -135,3 +135,24 @@ export const ratings = [
   { id: 7, label: "B" },
   { id: 8, label: "CCC/C" },
 ];
+
+export const scenList = [
+  { id: 1, type: "Scenario de référence", subType: "" },
+  { id: 2, type: "Croissance Accélérée", subType: "" },
+  {
+    id: 3,
+    type: "Récession",
+    subType: [
+      { id: 1, label: "Sévère" },
+      { id: 1, label: "Légère" },
+    ],
+  },
+  {
+    id: 4,
+    type: "Choc sur Matières Premières",
+    subType: [
+      { id: 1, label: "Sévère" },
+      { id: 1, label: "Légère" },
+    ],
+  },
+];
