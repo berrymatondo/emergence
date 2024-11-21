@@ -112,7 +112,7 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
               onSubmit={form.handleSubmit(procesForm)}
               className="space-y-6 w-full  col-span-2"
             >
-              <div className="bg-gray-500/10 dark:bg-teal-200/10 rounded-lg w-full flex flex-col justify-between items-center p-4">
+              <div className="gap-2 bg-gray-500/10 dark:bg-teal-200/10 rounded-lg w-full flex flex-col justify-between items-center p-4">
                 <div className="flex justify-between gap-4 w-full">
                   <FormField
                     control={form.control}
@@ -140,9 +140,7 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
                     render={({ field }) => {
                       return (
                         <FormItem className="max-md:w-1/2 w-1/3 ">
-                          <FormLabel>
-                            {"Taux d'intérêt référence (%)"}
-                          </FormLabel>
+                          <FormLabel>{"Taux d'intérêt réf. (%)"}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -163,9 +161,7 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
                     render={({ field }) => {
                       return (
                         <FormItem className="max-md:w-1/2 w-1/3 ">
-                          <FormLabel>
-                            {"Spread de crédit souverain (%)"}
-                          </FormLabel>
+                          <FormLabel>{"Spread souverain (%)"}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -185,9 +181,7 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
                     render={({ field }) => {
                       return (
                         <FormItem className="max-md:w-1/2 w-1/3 ">
-                          <FormLabel>
-                            {"Spread de crédit référence (%)"}
-                          </FormLabel>
+                          <FormLabel>{"Spread de crédit réf. (%)"}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
