@@ -266,6 +266,14 @@ const ListItems = [
       { id: 3, title: "Energie", link: "/industrie/ener" },
     ],
   },
+  {
+    id: 9,
+    link: "financingCapacity",
+    icon: <RiDashboardLine size={20} />,
+    tooltip: "Capacité de financement",
+    title: "Capacité de financement",
+    role: "AGENT",
+  },
   /*   {
     id: 9,
     link: "admin",

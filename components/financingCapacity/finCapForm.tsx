@@ -222,13 +222,13 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
                       );
                     }}
                   />
-                  <div className="flex items-center max-md:w-1/2 w-1/3 ">
+                  <div className="flex max-md:flex-col items-center max-md:w-1/2 w-1/3 ">
                     <FormField
                       control={form.control}
                       name="taux_change_ref"
                       render={({ field }) => {
                         return (
-                          <FormItem className="w-1/2">
+                          <FormItem className="md:w-1/2">
                             <FormLabel>{"Taux de change réf. "}</FormLabel>
                             <FormControl>
                               <Input
@@ -247,7 +247,7 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
                       name="cours"
                       render={({ field }) => {
                         return (
-                          <FormItem className="w-1/2">
+                          <FormItem className="w-full md:w-1/2">
                             <FormLabel>Devise</FormLabel>
                             <Select
                               onValueChange={field.onChange}
