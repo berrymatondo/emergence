@@ -494,6 +494,7 @@ export const AnaCroissancechema = z.object({
 //Croissance
 export const croissanceSchema = z.object({
   id: z.number().optional(),
+  scenario: z.string().optional(),
   type: z.string().optional(),
   subType: z.string().optional(),
   year: z.string().optional(),

@@ -50,6 +50,7 @@ import { scenList } from "@/lib/enums";
 
 type ScenRefFormProps = {
   transIn?: any;
+  scenario?: any;
   type: any;
   openDialog: any;
   label: string;
@@ -59,18 +60,20 @@ const ScenRefForm = ({
   openDialog,
   transIn,
   type,
+  scenario,
   label,
   hasSubType,
 }: ScenRefFormProps) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(openDialog);
 
-  console.log("code: ", label);
+  //console.log("code: ", label);
 
   const form = useForm<z.infer<typeof croissanceSchema>>({
     resolver: zodResolver(croissanceSchema),
     defaultValues: {
       id: type == "U" ? +transIn.id : undefined,
+      scenario: scenario ? transIn?.scenario.toString() : "1",
       type: transIn?.type ? transIn.type.toString() : label,
       subType: transIn?.subType ? transIn.subType.toString() : "",
       year: transIn?.year ? transIn.year.toString() : "0",
@@ -190,6 +193,27 @@ const ScenRefForm = ({
                     }}
                   />
 
+                  <FormField
+                    control={form.control}
+                    name="scenario"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="w-full">
+                          <FormLabel>{"Scenario"}</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter the value"
+                              type="text"
+                              disabled={true}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
                   {hasSubType && (
                     <FormField
                       control={form.control}
@@ -271,7 +295,9 @@ const ScenRefForm = ({
                     name="debtExtPIB"
                     render={({ field }) => {
                       return (
-                        <FormItem className="w-1/2">
+                        <FormItem
+                          className={`w-1/2 ${type == "A" ? "hidden" : ""}`}
+                        >
                           <FormLabel>{"Dette externe"}</FormLabel>
                           <FormControl>
                             <Input

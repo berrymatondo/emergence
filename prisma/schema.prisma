@@ -401,6 +401,7 @@ model ImpliciteMatrix{
 
 model Croissance{
   id Int @id @default(autoincrement())
+  scenario Int @default(1)
   type String 
   subType String ?
   year Int
