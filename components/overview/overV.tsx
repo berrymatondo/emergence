@@ -58,6 +58,7 @@ import GeneralLayout from "../generalLayout";
 import Image from "next/image";
 import avatar from "../../public/rdc.png";
 import { ScrollArea } from "../ui/scroll-area";
+import Copper from "./copper";
 
 type OverViewProps = {
   country: string;
@@ -550,7 +551,7 @@ export default function OverView({
             </ScrollArea>
           </CardContent>
         </Card>
-        <Card
+        {/*         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10  max-md:w-full"
           x-chunk="charts-01-chunk-5"
         >
@@ -645,7 +646,9 @@ export default function OverView({
               </RadialBarChart>
             </ChartContainer>
           </CardContent>
-        </Card>
+        </Card> */}
+
+        <Copper />
 
         <Card
           className="md:container border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
@@ -655,9 +658,8 @@ export default function OverView({
             <div className="flex justify-between items-center text-orange-400">
               <Badge className="bg-orange-500 text-white">USDCDF</Badge>
               <span className="dark:text-white">
-                today:{" "}
                 <strong className="text-2xl">
-                  {newTab[newTab.length - 1].usdcdf.toFixed(1)}
+                  {newTab[newTab.length - 1]?.usdcdf?.toFixed(1)}
                 </strong>
               </span>
             </div>
