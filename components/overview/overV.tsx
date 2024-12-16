@@ -59,6 +59,8 @@ import Image from "next/image";
 import avatar from "../../public/rdc.png";
 import { ScrollArea } from "../ui/scroll-area";
 import Copper from "./copper";
+import Flag from "../flag";
+import { Suspense } from "react";
 
 type OverViewProps = {
   country: string;
@@ -117,84 +119,84 @@ export default function OverView({
  */
   let newYC = [
     {
-      date: "1",
+      date: "1Y",
       rdc: 8.642,
       africa: 8.776,
       rdcChange: 0.35,
       africaChange: 0.35,
     },
     {
-      date: "2",
+      date: "2Y",
       rdc: 9.258,
       africa: 8.49693,
       rdcChange: 0.06,
       africaChange: 0.35,
     },
     {
-      date: "3",
+      date: "3Y",
       rdc: 9.501,
       africa: 9.2356885,
       rdcChange: 0.34,
       africaChange: 0.35,
     },
     {
-      date: "5",
+      date: "5Y",
       rdc: 9.694,
       africa: 9.7597285,
       rdcChange: -0.33,
       africaChange: 0.35,
     },
     {
-      date: "6",
+      date: "6Y",
       rdc: 9.846,
       africa: 9.8785015,
       rdcChange: -0.69,
       africaChange: 0.35,
     },
     {
-      date: "7",
+      date: "7Y",
       rdc: 9.967,
       africa: 10.239566,
       rdcChange: -0.91,
       africaChange: 0.35,
     },
     {
-      date: "8",
+      date: "8Y",
       rdc: 10.069,
       africa: 10.55757825,
       rdcChange: -0.5,
       africaChange: 0.35,
     },
     {
-      date: "9",
+      date: "9Y",
       rdc: 10.248,
       africa: 10.75172425,
       rdcChange: 0.35,
       africaChange: 0.35,
     },
     {
-      date: "10",
+      date: "10Y",
       rdc: 10.487,
       africa: 10.945569,
       rdcChange: 0.35,
       africaChange: 0.35,
     },
     {
-      date: "15",
+      date: "15Y",
       rdc: 10.793,
       africa: 11.331017,
       rdcChange: 0.35,
       africaChange: 0.35,
     },
     {
-      date: "20",
+      date: "20Y",
       rdc: 10.94,
       africa: 11.594614,
       rdcChange: 0.35,
       africaChange: 0.35,
     },
     {
-      date: "25",
+      date: "25Y",
       rdc: 10.951,
       africa: 11.5869435,
       rdcChange: 0.35,
@@ -403,11 +405,7 @@ export default function OverView({
                     <ChartTooltipContent
                       indicator="line"
                       labelFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        });
+                        return "16-12-2024";
                       }}
                     />
                   }
@@ -482,7 +480,27 @@ export default function OverView({
         >
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
             <div className="flex justify-between items-center text-orange-400">
-              <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+              {/*               <Badge className="bg-orange-500 text-white">USDCDF</Badge>
+               */}
+              <div className="flex items-end">
+                <div className="rounded-full overflow-hidden">
+                  <img
+                    src="https://flagcdn.Com/w40/cd.png"
+                    alt="Flag"
+                    style={{ width: "1.75rem", height: "1.75rem" }}
+                  />
+                </div>
+
+                <div className="-mx-1 rounded-full overflow-hidden">
+                  <img
+                    src="https://flagcdn.Com/w40/us.png"
+                    alt="Flag"
+                    style={{ width: "1.75rem", height: "1.75rem" }}
+                  />
+                </div>
+                <span className="text-white ml-2 text-xl">USD/CDF</span>
+              </div>
+
               <span className="dark:text-white">
                 <strong className="text-2xl">
                   {newTab[newTab.length - 1]?.usdcdf?.toFixed(1)}
@@ -667,22 +685,5 @@ const CustomBreadcrumb = ({ name }: { name: string }) => {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
-  );
-};
-
-const Flag = async (flagCode: any) => {
-  let flag = "https://flagcdn.Com/w40/" + flagCode + ".png";
-  if (flagCode == "zz") flag = "/continents/uemoa.gif";
-
-  return (
-    <div className=" -mb-4 rounded-full overflow-hidden">
-      {flagCode && (
-        <img
-          src={flag}
-          alt="Flag"
-          style={{ width: "1.5rem", height: "1.5rem" }}
-        />
-      )}
-    </div>
   );
 };

@@ -109,7 +109,7 @@ const Copper = () => {
       x-chunk="charts-01-chunk-1"
     >
       <CardHeader className=" gap-4 space-y-0 pb-2 [&>div]:flex-1">
-        <CardTitle>World Top 3 Copper Producer</CardTitle>
+        <CardTitle>World Top 3 Copper Producer Unit-Thousand Tonnes</CardTitle>
 
         <div className="grid grid-cols-3 w-full gap-2">
           <Badge className="col-span-1 bg-[hsl(var(--chart-1))] text-white">
