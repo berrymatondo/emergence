@@ -265,7 +265,7 @@ export default function OverView({
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0"></CardContent>
         </Card>
-        {/*         <Card
+        <Card
           className="md:container border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-1"
         >
@@ -310,7 +310,6 @@ export default function OverView({
                   </span>
                   <div className="flex justify-between items-end gap-2 ">
                     <span className="text-3xl font-semibold">
-          
                       {newYC[newYC.length - 1].africa.toFixed(2)}
                     </span>
                     <span
@@ -417,8 +416,8 @@ export default function OverView({
               </LineChart>
             </ChartContainer>
           </CardContent>
-        </Card> */}
-        {/*      <Card
+        </Card>
+        <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10"
           x-chunk="charts-01-chunk-3"
         >
@@ -438,8 +437,7 @@ export default function OverView({
                 </TableHeader>
                 <TableBody>
                   {newYC?.map((yc: any) => (
-                    <TableRow key={yc.id}>
-           
+                    <TableRow key={yc.date}>
                       <TableCell className="font-medium text-xs">
                         {yc.date}Y
                       </TableCell>
@@ -468,18 +466,17 @@ export default function OverView({
                           </div>
                         )}
                       </TableCell>
-           
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </ScrollArea>
           </CardContent>
-        </Card> */}
+        </Card>
 
-        {/*         <Copper />
-         */}
-        {/*   <Card
+        <Copper />
+
+        <Card
           className="md:container border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-7"
         >
@@ -544,8 +541,6 @@ export default function OverView({
                   </linearGradient>
                 </defs>
                 <Area
-          
-
                   dataKey="usdcdf"
                   type="linear"
                   fill="url(#fillTime)"
@@ -575,7 +570,7 @@ export default function OverView({
               </AreaChart>
             </ChartContainer>
           </CardContent>
-        </Card> */}
+        </Card>
         {/*         <Card
           className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full"
           x-chunk="charts-01-chunk-7"
