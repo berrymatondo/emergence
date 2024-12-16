@@ -6,6 +6,8 @@ import Header from "@/components/nav/header";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/components/providers";
 import { auth } from "@/auth";
+import Image from "next/image";
+import rdc from "../public/rdc5.jpg";
 
 export const metadata: Metadata = {
   title: "Emergence",
@@ -39,6 +41,13 @@ export default async function RootLayout({
             <Toaster richColors />
           </Providers>
         </ThemeProvider>
+        <Image
+          alt="bg"
+          src={rdc}
+          fill
+          quality={100}
+          className="-z-50 bg-red-400"
+        />
       </body>
     </html>
   );

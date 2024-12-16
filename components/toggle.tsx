@@ -22,10 +22,10 @@ export default function ModeToggle() {
   return (
     <div className="max-md:text-right md:flex w-full md:justify-between">
       <div className="flex max-md:hidden items-center md:items-end gap-2 ">
-        <GiSuspensionBridge
+        {/*         <GiSuspensionBridge
           className="max-md:hidden  text-sky-700 dark:text-sky-500"
           size={40}
-        />
+        /> */}
 
         <div className="flex items-start gap-2">
           <Link
@@ -35,7 +35,7 @@ export default function ModeToggle() {
             {/*             <p className="text-xs md:text-3xl text-teal-600">
               Emerging Markets
             </p> */}
-            <p className="text-xs md:text-3xl text-teal-600">Emergence</p>
+            <p className="text-xs md:text-4xl text-teal-300">Emergence</p>
           </Link>
         </div>
       </div>

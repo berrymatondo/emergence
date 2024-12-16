@@ -44,22 +44,56 @@ const HomePage = () => {
      */
     <div className="relative h-full  w-full md:container flex max-md:flex-col justify-start items-center my-auto max-md:gap-8">
       <div className=" md:container md:py-24 max-md:pt-10 flex flex-col gap-4 justify-center md:my-auto  dark:bg-transparent">
-        <div className="flex justify-center text-teal-700 text-xl font-bold">
-          {/*           <strong className="text-9xl max-md:text-7xl">E</strong>
-           */}{" "}
+        {/*         <div className="flex justify-center text-teal-700 text-xl font-bold">
+  
           <div className="leading-10 flex flex-col items-start justify-center">
             <span className="pt-1 text-8xl max-md:text-4xl">Emergence</span>
-            {/*             <span className="text-4xl max-md:text-xl md:py-4">
-              <strong>M</strong>arkets
-            </span> */}
+
           </div>
-        </div>
-        <p className="text-xl max-md:text-sm text-center text-yellow-400">
-          {"Boosting your activity on the financial markets"}
+        </div> */}
+        <p className="md:hidden container text-4xl max-md:text-sm text-center ">
+          {/*  {"xxBoosting your activity on the financial markets"} */}
+          <span className="text-6xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
+            Unleash
+          </span>{" "}
+          <span className="text-xl">
+            <strong className="font-semibold">{"Congo's"}</strong> Full
+            Commodity Potential to{" "}
+          </span>
+          <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-6xl">
+            Break into
+            <br />
+          </span>{" "}
+          <span className="text-6xl">Financial Markets</span>.
         </p>
 
+        <div className=" max-md:hidden">
+          <p className="text-4xl max-md:text-sm text-start ">
+            {/*  {"xxBoosting your activity on the financial markets"} */}
+            <span className="text-8xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
+              Unleash
+            </span>{" "}
+            <strong className="font-semibold">{"Congo's"}</strong> <br />
+            Full Commodity Potential <br /> to{" "}
+            <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-8xl">
+              Break into <br />{" "}
+            </span>{" "}
+            <span className="text-8xl">Financial Markets.</span>
+          </p>
+          {!session?.user && (
+            <p className="text-start my-16">
+              <Link
+                href="/auth/login"
+                className="text-white py-4 px-32 max-md:w-full max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
+              >
+                Login
+              </Link>
+            </p>
+          )}
+        </div>
+
         {!session?.user && (
-          <p className="text-center my-4">
+          <p className="md:hidden text-center mt-8">
             <Link
               href="/auth/login"
               className="text-white py-4 px-32 max-md:w-full max-md:py-2 font-semibold bg-gradient-to-r from-purple-600 to-orange-600 rounded-full"
@@ -78,10 +112,11 @@ const HomePage = () => {
         )}
       </div>
 
-      <div className=" w-full max-md:p-2">
-        <Conte />
+      {/*       <div className=" w-full flex justify-center text-center max-md:p-2">
+         <TrendingUp size={200} className="font-thin text-teal-400" />
+        <Conte />  
       </div>
-
+ */}
       {/*       <div className="max-md:hidden opacity-80 absolute flex justify-center items-center left-1/2 bottom-0 w-1/3  rounded-bl-full">
         <Card
           className="bg-transparent/20 flex flex-col w-3/4 border-none -translate-x-40"

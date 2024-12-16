@@ -362,7 +362,7 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
               </p>
               <div className="flex justify-center">
                 <div
-                  className={`h-36 w-36 rounded-full bg-sky-800/20 font-semibold text-5xl flex justify-center items-center ${
+                  className={`h-44 w-44 border-white border-2 rounded-full bg-sky-800/20 font-semibold text-6xl flex justify-center items-center ${
                     +finCap < 5 ? " text-red-400 " : " text-green-400"
                   }`}
                 >
