@@ -41,13 +41,7 @@ export default async function RootLayout({
             <Toaster richColors />
           </Providers>
         </ThemeProvider>
-        <Image
-          alt="bg"
-          src={rdc}
-          fill
-          quality={100}
-          className="-z-50 bg-red-400"
-        />
+        <Image alt="bg" src={rdc} fill quality={100} className="-z-50 " />
       </body>
     </html>
   );
