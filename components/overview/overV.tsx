@@ -57,6 +57,7 @@ import { TbTriangleFilled, TbTriangleInvertedFilled } from "react-icons/tb";
 import GeneralLayout from "../generalLayout";
 import Image from "next/image";
 import avatar from "../../public/rdc.png";
+import { ScrollArea } from "../ui/scroll-area";
 
 type OverViewProps = {
   country: string;
@@ -125,42 +126,42 @@ export default function OverView({
       date: "2",
       rdc: 9.258,
       africa: 8.49693,
-      rdcChange: 0.35,
+      rdcChange: 0.06,
       africaChange: 0.35,
     },
     {
       date: "3",
       rdc: 9.501,
       africa: 9.2356885,
-      rdcChange: 0.35,
+      rdcChange: 0.34,
       africaChange: 0.35,
     },
     {
       date: "5",
       rdc: 9.694,
       africa: 9.7597285,
-      rdcChange: 0.35,
+      rdcChange: -0.33,
       africaChange: 0.35,
     },
     {
       date: "6",
       rdc: 9.846,
       africa: 9.8785015,
-      rdcChange: 0.35,
+      rdcChange: -0.69,
       africaChange: 0.35,
     },
     {
       date: "7",
       rdc: 9.967,
       africa: 10.239566,
-      rdcChange: 0.35,
+      rdcChange: -0.91,
       africaChange: 0.35,
     },
     {
       date: "8",
       rdc: 10.069,
       africa: 10.55757825,
-      rdcChange: 0.35,
+      rdcChange: -0.5,
       africaChange: 0.35,
     },
     {
@@ -220,9 +221,9 @@ export default function OverView({
       title={"General Overview"}
       bred={<CustomBreadcrumb name="General Overview" />}
     >
-      <div className="gap-2 grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 ">
+      <div className="max-md:px-2 max-md:flex max-md:flex-col   md:container gap-2 md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 ">
         <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
+          className="bg-green-400 border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
           x-chunk="charts-01-chunk-3"
         >
           <CardHeader className="p-4 pb-0">
@@ -249,7 +250,7 @@ export default function OverView({
                   <span className="text-sm font-normal text-muted-foreground">
                     {data.key}
                   </span>
-                  <span className="text-sm   font-normal text-black dark:text-white">
+                  <span className="text-sm   font-semibold text-black dark:text-white">
                     {data.key.includes("Growth") ||
                     data.key.includes("GDP") ||
                     data.key.includes("Interest") ||
@@ -336,7 +337,7 @@ export default function OverView({
           </CardContent>
         </Card>
         <Card
-          className="p-4 border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
+          className="md:container border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-1"
         >
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
@@ -408,7 +409,7 @@ export default function OverView({
               </div>
             </div>
           </CardHeader>
-          <CardContent className="flex flex-1 items-center m-12 ">
+          <CardContent className="flex flex-1 items-center  ">
             <ChartContainer
               config={{
                 rdc: {
@@ -490,58 +491,63 @@ export default function OverView({
           </CardContent>
         </Card>
         <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 max-md:w-full"
+          className="border-none bg-gray-500/10 dark:bg-teal-200/10"
           x-chunk="charts-01-chunk-3"
         >
           <CardHeader className="p-4 pb-0">
             <CardTitle>Fixed Income Market</CardTitle>
             <CardDescription>Data from last tenor.</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Tenor</TableHead>
-                  <TableHead>Yield</TableHead>
-                  <TableHead className="">Change</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {yieldcurve?.data?.map((yc: any) => (
-                  <TableRow key={yc.id}>
-                    <TableCell className="font-medium text-xs">
-                      {yc.tenor}Y
-                    </TableCell>
-                    <TableCell className="text-xs">{yc.yield}%</TableCell>
-                    <TableCell
-                      className={`text-right text-xs ${
-                        yc.change < 0
-                          ? "text-red-600"
-                          : yc.change == 0
-                          ? ""
-                          : "text-green-400"
-                      }`}
-                    >
-                      {yc.change < 0 ? (
-                        <div className="flex items-center gap-1">
-                          <TbTriangleInvertedFilled />
-                          {yc.change}%
-                        </div>
-                      ) : yc.change == 0 ? (
-                        <div className="pl-4 flex items-center gap-1">
-                          {yc.change}%
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1">
-                          <TbTriangleFilled />+{yc.change}%
-                        </div>
-                      )}
-                    </TableCell>
+          <CardContent className="flex flex-row items-baseline gap-4 md:p-4 pt-0 ">
+            <ScrollArea className="max-md:w-full h-80">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Tenor</TableHead>
+                    <TableHead>Yield</TableHead>
+                    <TableHead className="">Change</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {newYC?.map((yc: any) => (
+                    <TableRow key={yc.id}>
+                      {/*                     <ScrollArea className="h-96">
+                       */}{" "}
+                      <TableCell className="font-medium text-xs">
+                        {yc.date}Y
+                      </TableCell>
+                      <TableCell className="text-xs">{yc.rdc}%</TableCell>
+                      <TableCell
+                        className={`text-right text-xs ${
+                          yc.rdcChange < 0
+                            ? "text-red-600"
+                            : yc.rdcChange == 0
+                            ? ""
+                            : "text-green-400"
+                        }`}
+                      >
+                        {yc.rdcChange < 0 ? (
+                          <div className="flex items-center gap-1">
+                            <TbTriangleInvertedFilled />
+                            {yc.rdcChange}%
+                          </div>
+                        ) : yc.rdcChange == 0 ? (
+                          <div className="pl-4 flex items-center gap-1">
+                            {yc.rdcChange}%
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1">
+                            <TbTriangleFilled />+{yc.rdcChange}%
+                          </div>
+                        )}
+                      </TableCell>
+                      {/*                     </ScrollArea>
+                       */}{" "}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
           </CardContent>
         </Card>
         <Card
@@ -642,7 +648,7 @@ export default function OverView({
         </Card>
 
         <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
+          className="md:container border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-7"
         >
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">

@@ -30,6 +30,7 @@ import { LoginSchema } from "@/lib/schemas";
 import { loginlogin } from "@/lib/_userActions";
 import { useSession } from "next-auth/react";
 import { GiSuspensionBridge } from "react-icons/gi";
+import { TrendingUp } from "lucide-react";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -86,7 +87,7 @@ const LoginForm = () => {
           className="overflow-hidden relative w-full hover:cursor-pointer"
           onClick={() => router.push("/")}
         >
-          <GiSuspensionBridge
+          {/*           <GiSuspensionBridge
             size={400}
             className="max-md:hidden opacity-40 text-sky-600"
           />
@@ -96,17 +97,28 @@ const LoginForm = () => {
               size={50}
               className="md:hidden opacity-70 text-sky-600 dark:text-white"
             />
-          </div>
+          </div> */}
           <div
             className="md:absolute md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2
-  flex max-md:justify-center text-teal-700 text-xl font-bold"
+  flex max-md:justify-center text-teal-600 text-xl font-bold"
           >
             {/*       <strong className="text-9xl max-md:text-7xl">E</strong> */}
-            <div className="leading-10 flex flex-col items-start justify-center">
-              <span className="pt-1 text-8xl max-md:text-2xl">Emergence</span>
+            <div className="max-md:hidden relative leading-10 flex flex-col items-start justify-center">
+              <span className="pt-1 text-8xl max-md:text-4xl max-md:mb-24">
+                <strong className="text-sky-600 text-[12rem]">E</strong>
+                <strong className="text-[16rem]">M</strong>
+              </span>
+              <TrendingUp className="absolute text-white/40" size={400} />
               {/*               <span className="text-4xl max-md:text-xl md:py-4">
                 <strong>M</strong>arkets
               </span> */}
+            </div>
+
+            <div className="md:hidden relative leading-10 flex flex-col items-start justify-center">
+              <span className="pt-1 text-8xl max-md:text-4xl max-md:mb-24">
+                <strong className="text-sky-600 text-[5rem]">E</strong>
+                <strong className="text-[3rem]">mergence</strong>
+              </span>
             </div>
           </div>
         </div>
@@ -167,7 +179,7 @@ const LoginForm = () => {
                     }}
                   />
                 </div>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="text-white bg-sky-700 w-full">
                   {loading ? "En cours de connexion ..." : "Se Connecter"}
                 </Button>
               </form>

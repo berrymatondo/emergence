@@ -39,7 +39,7 @@ export default function ModeToggle() {
           </Link>
         </div>
       </div>
-      <>
+      {/*       <>
         {light ? (
           <Button
             onClick={() => {
@@ -65,7 +65,7 @@ export default function ModeToggle() {
             <Sun className="h-[1.2rem] w-[1.2rem] " />
           </Button>
         )}
-      </>
+      </> */}
       {/*       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">

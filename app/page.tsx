@@ -54,34 +54,35 @@ const HomePage = () => {
 
           </div>
         </div> */}
-          <p className="md:hidden container text-4xl max-md:text-sm text-center py-24 ">
+          <p className="md:hidden container text-4xl max-md:text-sm text-center mt-48 ">
             {/*  {"xxBoosting your activity on the financial markets"} */}
-            <span className="text-6xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
+            <span className="text-5xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
               Unleash
             </span>{" "}
             <span className="text-xl">
-              <strong className="font-semibold">{"Congo's"}</strong> Full
-              Commodity Potential to{" "}
+              <strong className="font-semibold text-7xl">{"Congo's"}</strong>{" "}
+              Full Commodity Potential to{" "}
             </span>
-            <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-6xl">
+            <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-5xl">
               Break into
               <br />
             </span>{" "}
-            <span className="text-6xl">Financial Markets</span>.
+            <span className="text-4xl">Financial Markets</span>.
           </p>
 
           <div className=" max-md:hidden pt-24">
             <p className="text-4xl max-md:text-sm text-start ">
               {/*  {"xxBoosting your activity on the financial markets"} */}
-              <span className="text-8xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
+              <span className="text-7xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
                 Unleash
               </span>{" "}
-              <strong className="font-semibold">{"Congo's"}</strong> <br />
+              <strong className="font-semibold text-8xl">{"Congo's"}</strong>{" "}
+              <br />
               Full Commodity Potential <br /> to{" "}
-              <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-8xl">
+              <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-7xl">
                 Break into <br />{" "}
               </span>{" "}
-              <span className="text-8xl">Financial Markets.</span>
+              <span className="text-6xl">Financial Markets.</span>
             </p>
             {!session?.user && (
               <p className="text-start my-16">

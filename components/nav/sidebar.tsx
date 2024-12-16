@@ -490,7 +490,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
               </div>
 
               <div
-                className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all ${
+                className={`flex justify-between items-center  mx-3 gap-2 overflow-hidden transition-all ${
                   expended ? "w-52" : "w-0"
                 }`}
               >
@@ -516,14 +516,14 @@ const Sidebar = ({ userSession }: SidebarProps) => {
                 )}
               </div>
               <Button
-                className="p-2 rounded-full absolute -right-5 bg-slate-200 dark:bg-neutral-100 dark:text-card"
+                className="p-2 rounded-full absolute -right-5 bg-slate-200/30 dark:bg-neutral-400/40 dark:text-card"
                 onClick={() => setExpended(!expended)}
                 variant="empty"
               >
                 {expended ? (
-                  <FiChevronsLeft size={25} />
+                  <FiChevronsLeft className="text-white" size={25} />
                 ) : (
-                  <FiChevronsRight size={25} />
+                  <FiChevronsRight className="text-white" size={25} />
                 )}
               </Button>
             </div>
