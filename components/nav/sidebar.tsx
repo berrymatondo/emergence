@@ -451,26 +451,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
       {userSession?.user && (
         <nav className=" relative h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
-            {/*             <div className="flex flex-col ml-4">
-              <div
-                className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all ${
-                  expended ? "w-52" : "w-0"
-                }`}
-                onClick={() => router.replace("/")}
-              >
-                <GiSuspensionBridge size={40} className="text-sky-600" />{" "}
-                <div className=" flex text-teal-700 text-xl font-semibold">
-                  <strong className="text-4xl">E</strong>
-                  <div className="leading-4 flex flex-col items-start justify-center">
-                    <span className="pt-1">merging</span>
-                    <span className="text-sm">
-                      <strong>M</strong>arkets
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            <div className="flex p-3 mb-8">
+            <div className="flex p-3 mb-8 ">
               <div className="overflow-hidden relative  w-10 h-10 rounded-full">
                 {userSession?.user.role == "AGENT" ? (
                   <Image

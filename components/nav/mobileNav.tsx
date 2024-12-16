@@ -298,9 +298,10 @@ type MobileNavProps = {
 const MobileNav = ({ userSession }: MobileNavProps) => {
   const router = useRouter();
   return (
-    <div className="md:hidden flex items-end gap-4">
-      <MobileMenu userSession={userSession} />
-      <div className=" flex flex-col ml-4">
+    <div className="md:hidden w-full py-2 flex items-center justify-between gap-4">
+      <div className=" flex justify-between items-end gap-2 w-full">
+        <MobileMenu userSession={userSession} />
+
         <div
           className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all `}
           onClick={() => router.replace("/")}
@@ -314,8 +315,7 @@ const MobileNav = ({ userSession }: MobileNavProps) => {
             </div>
           </div>
         </div>
-      </div>
-      <div className=" flex ">
+
         {userSession?.user && (
           <div className="overflow-hidden relative  w-8 h-8 rounded-full">
             {userSession?.user.role == "AGENT" ? (
@@ -382,10 +382,10 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
   const router = useRouter();
 
   return (
-    <div className="">
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <FiMenu className="flex pt-1 mt-2" size={35} />{" "}
+          <MdMenu className="" size={40} />{" "}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {ListItems.map((lik: any) =>
@@ -419,29 +419,7 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
               </DropdownMenuItem>
             )
           )}
-          {/*           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite users</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub> */}
+
           {userSession?.user.role == "ADMIN" && (
             <DropdownMenuLabel className="text-orange-500 flex gap-2">
               <MdLock size={20} /> <span>Espace Admin</span>
@@ -460,235 +438,7 @@ const MobileMenu = ({ userSession }: MobileMenuProps) => {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      {/*       <MdMenu onClick={() => setExpended(!expended)} size={30} />
-      {expended && <NavigationMenuDemo />} */}
-      {/*       <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger>
-            {" "}
-            <MdMenu className="" size={30} />
-          </MenubarTrigger>
-          <MenubarContent>
-
-            <ul className="flex-1 px-3 mt-4">
-              {ListItems.map((item) => (
-                <div>
-                  <MenubarSeparator />
-                  <MenubarItem>
-                    {item.subtitle ? (
-                      <Valorisation
-                        st={item.subtitle}
-                        sd={item.subdesc}
-                        sl={item.sublinks}
-                        ic={item.icon}
-                        ex={expended}
-                        tp={item.tooltip}
-                        // chem={chem}
-                        lk={item.link}
-                        item={item}
-                      />
-                    ) : (
-                      <SimpleLink
-                        title={item.title}
-                        link={item.link}
-                        ex={expended}
-                        tp={item.tooltip}
-                        // chem={chem}
-                        icon={item.icon}
-                        role={item.role}
-                      />
-                    )}
-                  </MenubarItem>
-                </div>
-              ))}
-
-            </ul>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar> */}
-      {/*       <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">
-            {" "}
-            <MdMenu size={30} />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="bg-sky-950 text-white border-none">
-          <p>TEST</p>
-          <ul className="flex-1 px-3 mt-4">
-            {ListItems.map((item) => (
-              <div
-                key={item.id}
-                className={` hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
-                  expended ? " px-3" : "px-0"
-                }`}
-              >
-                <div
-                  className={` flex items-center gap-2 overflow-hidden transition-all ${
-                    expended ? "w-68" : "w-10"
-                  } ${
-                    userSession?.user?.role != "ADMIN" && item.role == "ADMIN"
-                      ? " hidden"
-                      : ""
-                  }`}
-                >
-                  {item.subtitle ? (
-                    <Valorisation
-                      st={item.subtitle}
-                      sd={item.subdesc}
-                      sl={item.sublinks}
-                      ic={item.icon}
-                      ex={expended}
-                      tp={item.tooltip}
-                      // chem={chem}
-                      lk={item.link}
-                      item={item}
-                    />
-                  ) : (
-                    <SimpleLink
-                      title={item.title}
-                      link={item.link}
-                      ex={expended}
-                      tp={item.tooltip}
-                      // chem={chem}
-                      icon={item.icon}
-                      role={item.role}
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </ul>
-        </PopoverContent>
-      </Popover>
- */}
-      {/*       <aside className="md:hidden min-h-screen ">
-        {userSession?.user && (
-          <nav className="h-full flex flex-col  border-r shadow-sm">
-            <div className="p-2 pb-2 flex justify-between items-center">
-              <div className="flex flex-col ml-4">
-                <div
-                  className={`hover:cursor-pointer flex items-start gap-2 overflow-hidden transition-all ${
-                    expended ? "w-52" : "w-0"
-                  }`}
-                  onClick={() => router.replace("/")}
-                >
-                  <GiSuspensionBridge size={40} className="text-sky-600" />{" "}
-                  <div className=" flex text-teal-700 text-xl font-semibold">
-                    <strong className="text-4xl">E</strong>
-                    <div className="leading-4 flex flex-col items-start justify-center">
-                      <span className="pt-1">merging</span>
-                      <span className="text-sm">
-                        <strong>M</strong>arkets
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Button onClick={() => setExpended(!expended)} variant="empty">
-                {expended ? (
-                  <FiChevronsLeft size={30} />
-                ) : (
-                  <FiChevronsRight size={30} />
-                )}
-              </Button>
-            </div>
-
-            <div className="border-t flex p-3 mb-8">
-              <div className="overflow-hidden relative  w-10 h-10 rounded-full">
-                {userSession?.user.role == "AGENT" ? (
-                  <Image
-                    alt="bcg"
-                    src={avatar}
-                    placeholder="blur"
-                    quality={100}
-                    fill
-                    sizes="100vw"
-                    className="object-cover z-10 rounded-lg"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-sky-600 flex justify-center items-center font-bold text-gray-200">
-                    AD
-                  </div>
-                )}
-              </div>
-
-              <div
-                className={`flex justify-between items-center ml-3 gap-2 overflow-hidden transition-all ${
-                  expended ? "w-52" : "w-0"
-                }`}
-              >
-                <div className="leading-4">
-                  <h4 className="font-semibold">{userSession?.user?.name}</h4>
-                  <span className="text-xs text-gray-600 dark:text-gray-400">
-                    {userSession?.user?.email}
-                  </span>
-                </div>
-
-                {(!userSession || !userSession.user) && (
-                  <MdLogin
-                    className="md:hidden text-teal-600"
-                    onClick={() => router.push("/auth/login")}
-                    size={30}
-                  />
-                )}
-                {userSession && userSession.user && (
-                  <Link href="/redirout">
-                    {" "}
-                    <MdLogout className="text-red-600" size={30} />
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            <ul className="flex-1 px-3 mt-8">
-              {ListItems.map((item) => (
-                <div
-                  key={item.id}
-                  className={`text-gray-600 hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
-                    expended ? " px-3" : "px-0"
-                  }`}
-                >
-                  <div
-                    className={` flex items-center gap-2 overflow-hidden transition-all ${
-                      expended ? "w-68" : "w-10"
-                    } ${
-                      userSession?.user?.role != "ADMIN" && item.role == "ADMIN"
-                        ? " hidden"
-                        : ""
-                    }`}
-                  >
-                    {item.subtitle ? (
-                      <Valorisation
-                        st={item.subtitle}
-                        sd={item.subdesc}
-                        sl={item.sublinks}
-                        ic={item.icon}
-                        ex={expended}
-                        tp={item.tooltip}
-                        // chem={chem}
-                        lk={item.link}
-                        item={item}
-                      />
-                    ) : (
-                      <SimpleLink
-                        title={item.title}
-                        link={item.link}
-                        ex={expended}
-                        tp={item.tooltip}
-                        //chem={chem}
-                        icon={item.icon}
-                        role={item.role}
-                      />
-                    )}
-                  </div>
-                </div>
-              ))}
-            </ul>
-          </nav>
-        )}
-      </aside> */}
-    </div>
+    </>
   );
 };
 
