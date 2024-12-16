@@ -246,7 +246,7 @@ const ListItems = [
       {
         id: 10,
         title: "European/American Option",
-        link: "//options",
+        link: "/valorisation/options",
       },
       //{ id: 11, title: "American Option", link: "/valorisation/ao" },
       //  { id: 12, title: "Interest Rate Swap", link: "/valorisation/irs" },
