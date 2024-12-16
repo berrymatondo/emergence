@@ -101,7 +101,7 @@ export default function OverView({
   //console.log("tab", newTab);
 
   const yc = [...yieldcurve.data];
-  let newYC = [];
+  /*   let newYC = [];
   for (let i = 0; i < yc.length; i++) {
     let tr = {
       date: yc[i].tenor + "Y",
@@ -112,6 +112,93 @@ export default function OverView({
     };
     newYC.push(tr);
   }
+ */
+  let newYC = [
+    {
+      date: "1",
+      rdc: 8.642,
+      africa: 8.776,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "2",
+      rdc: 9.258,
+      africa: 8.49693,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "3",
+      rdc: 9.501,
+      africa: 9.2356885,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "5",
+      rdc: 9.694,
+      africa: 9.7597285,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "6",
+      rdc: 9.846,
+      africa: 9.8785015,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "7",
+      rdc: 9.967,
+      africa: 10.239566,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "8",
+      rdc: 10.069,
+      africa: 10.55757825,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "9",
+      rdc: 10.248,
+      africa: 10.75172425,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "10",
+      rdc: 10.487,
+      africa: 10.945569,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "15",
+      rdc: 10.793,
+      africa: 11.331017,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "20",
+      rdc: 10.94,
+      africa: 11.594614,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+    {
+      date: "25",
+      rdc: 10.951,
+      africa: 11.5869435,
+      rdcChange: 0.35,
+      africaChange: 0.35,
+    },
+  ];
 
   // BCC Int
   const tbcc = [...bccrates.data];
@@ -175,7 +262,7 @@ export default function OverView({
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
+            <div className=" text-orange-500 flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
               {tempoPour / 10}%
               <span className="text-sm font-normal text-muted-foreground">
                 {"Economic Growth Rate"}
@@ -249,7 +336,7 @@ export default function OverView({
           </CardContent>
         </Card>
         <Card
-          className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
+          className="p-4 border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
           x-chunk="charts-01-chunk-1"
         >
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
@@ -260,19 +347,24 @@ export default function OverView({
                   <span className="text-xs font-semibold">DRC Yield Curve</span>
                   <div className="flex justify-between items-end gap-2 ">
                     <span className="text-3xl font-semibold">
-                      {newYC[0].rdcChange}
+                      {newYC[newYC.length - 1].rdc.toFixed(2)}
                     </span>
                     <span
                       className={` ${
-                        newYC[0].rdc < newYC[1].rdc
+                        newYC[newYC.length - 1].rdc <
+                        newYC[newYC.length - 2].rdc
                           ? "text-red-500"
                           : "text-green-600"
                       }`}
                     >
-                      {newYC[0].rdc > newYC[1].rdc ? "+" : ""}
+                      {newYC[newYC.length - 1].rdc > newYC[newYC.length - 2].rdc
+                        ? "+"
+                        : ""}
                       {(
-                        ((newYC[0].rdc - newYC[1].rdc) * 100) /
-                        newYC[1].rdc
+                        ((newYC[newYC.length - 1].rdc -
+                          newYC[newYC.length - 2].rdc) *
+                          100) /
+                        newYC[newYC.length - 2].rdc
                       ).toFixed(2)}
                     </span>
                   </div>
@@ -288,19 +380,27 @@ export default function OverView({
                   </span>
                   <div className="flex justify-between items-end gap-2 ">
                     <span className="text-3xl font-semibold">
-                      {newYC[0].africaChange}
+                      {/*                       {newYC[0].africaChange}
+                       */}{" "}
+                      {newYC[newYC.length - 1].africa.toFixed(2)}
                     </span>
                     <span
                       className={` ${
-                        newYC[0].africa < newYC[1].africa
+                        newYC[newYC.length - 1].africa <
+                        newYC[newYC.length - 2].africa
                           ? "text-red-500"
                           : "text-green-600"
                       }`}
                     >
-                      {newYC[0].africa > newYC[1].africa ? "+" : ""}
+                      {newYC[newYC.length - 1].africa >
+                      newYC[newYC.length - 2].africa
+                        ? "+"
+                        : ""}
                       {(
-                        ((newYC[0].africa - newYC[1].africa) * 100) /
-                        newYC[1].africa
+                        ((newYC[newYC.length - 1].africa -
+                          newYC[newYC.length - 2].africa) *
+                          100) /
+                        newYC[newYC.length - 2].africa
                       ).toFixed(2)}
                     </span>
                   </div>
@@ -308,7 +408,7 @@ export default function OverView({
               </div>
             </div>
           </CardHeader>
-          <CardContent className="flex flex-1 items-center">
+          <CardContent className="flex flex-1 items-center m-12 ">
             <ChartContainer
               config={{
                 rdc: {
@@ -337,7 +437,7 @@ export default function OverView({
                   stroke="hsl(var(--muted-foreground))"
                   strokeOpacity={0.5}
                 />
-                <YAxis hide domain={["dataMin - 5", "dataMax + 5"]} />
+                <YAxis hide domain={["dataMin - 3", "dataMax + 3"]} />
                 <XAxis
                   dataKey="date"
                   tickLine={false}
@@ -594,7 +694,7 @@ export default function OverView({
                   axisLine={false}
                   tickMargin={4}
                 /> */}
-                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                <YAxis hide domain={["dataMin", "dataMax"]} />
 
                 <defs>
                   <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">

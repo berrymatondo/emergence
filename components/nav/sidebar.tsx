@@ -447,7 +447,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
   //console.log("USER", userSession?.user);
 
   return (
-    <aside className="max-md:hidden min-h-screen ">
+    <aside className="max-md:hidden min-h-screen bg-black/70 ">
       {userSession?.user && (
         <nav className=" relative h-full flex flex-col  border-r shadow-sm">
           <div className="p-2 pb-2 flex justify-between items-center">
@@ -533,7 +533,7 @@ const Sidebar = ({ userSession }: SidebarProps) => {
             {ListItems.map((item) => (
               <div
                 key={item.id}
-                className={`text-gray-600 hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
+                className={`text-white hover:text-sky-400 flex relative items-center my-2 font-medium rounded-md cursor-pointer ${
                   expended ? " px-3" : "px-0"
                 }`}
               >
