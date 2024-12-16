@@ -100,10 +100,12 @@ const copperData = [
 
 const tempo = [...copperData].reverse();
 
+//console.log("tempo", tempo);
+
 const Copper = () => {
   return (
     <Card
-      className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-1"
+      className="border-none bg-gray-500/10 dark:bg-teal-200/10 flex flex-col max-md:w-full col-span-2"
       x-chunk="charts-01-chunk-1"
     >
       <CardHeader className=" gap-4 space-y-0 pb-2 [&>div]:flex-1">
@@ -146,6 +148,7 @@ const Copper = () => {
               right: 14,
               top: 10,
             }}
+            height={100}
             data={tempo}
           >
             <CartesianGrid
@@ -154,7 +157,7 @@ const Copper = () => {
               stroke="hsl(var(--muted-foreground))"
               strokeOpacity={0.5}
             />
-            <YAxis hide domain={["dataMin - 3", "dataMax + 3"]} />
+            <YAxis hide domain={["dataMin", "dataMax"]} />
             <XAxis
               dataKey="date"
               tickLine={false}
