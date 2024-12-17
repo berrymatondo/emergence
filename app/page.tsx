@@ -31,7 +31,8 @@ import { GiSuspensionBridge } from "react-icons/gi";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import rdc from "../public/rdc5.jpg";
+import rdc from "../public/a6.jpg";
+import rdc2 from "../public/a5.jpg";
 
 const HomePage = () => {
   const { data: session, status } = useSession();
@@ -56,14 +57,14 @@ const HomePage = () => {
         </div> */}
           <p className="md:hidden container text-4xl max-md:text-sm text-center mt-48 ">
             {/*  {"xxBoosting your activity on the financial markets"} */}
-            <span className="text-5xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
+            <span className="text-5xl bg-gradient-to-r from-yellow-400 to-red-300 bg-clip-text text-transparent ">
               Unleash
             </span>{" "}
-            <span className="text-xl">
+            <span className="text-2xl">
               <strong className="font-semibold text-7xl">{"Congo's"}</strong>{" "}
               Full Commodity Potential to{" "}
             </span>
-            <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-5xl">
+            <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent text-5xl">
               Break into
               <br />
             </span>{" "}
@@ -71,15 +72,15 @@ const HomePage = () => {
           </p>
 
           <div className=" max-md:hidden pt-24">
-            <p className="text-4xl max-md:text-sm text-start ">
+            <p className="text-4xl max-md:text-sm text-end ">
               {/*  {"xxBoosting your activity on the financial markets"} */}
-              <span className="text-7xl bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent ">
+              <span className="text-7xl bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent ">
                 Unleash
               </span>{" "}
               <strong className="font-semibold text-8xl">{"Congo's"}</strong>{" "}
               <br />
               Full Commodity Potential <br /> to{" "}
-              <span className="bg-gradient-to-r from-sky-300 to-teal-300 bg-clip-text text-transparent text-7xl">
+              <span className="bg-gradient-to-r from-yellow-600 to-pink-400 bg-clip-text text-transparent text-7xl">
                 Break into <br />{" "}
               </span>{" "}
               <span className="text-6xl">Financial Markets.</span>
@@ -116,7 +117,20 @@ const HomePage = () => {
           )}
         </div>
       </div>
-      <Image alt="bg" src={rdc} fill quality={100} className=" -z-50 " />
+      <Image
+        alt="bg"
+        src={rdc}
+        fill
+        quality={100}
+        className="md:hidden -z-50 "
+      />
+      <Image
+        alt="bg"
+        src={rdc2}
+        fill
+        quality={100}
+        className="max-md:hidden -z-50 "
+      />
     </div>
   );
 };
