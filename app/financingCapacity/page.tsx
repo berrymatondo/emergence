@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 };
 
 const fxList = [
-  { id: "1", label: "USD-CDF", taux: 1.2 },
-  { id: "2", label: "EUR-CDF", taux: 1.6 },
+  { id: "1", label: "USD-CDF", taux: 2800 },
+  { id: "2", label: "EUR-CDF", taux: 2850 },
 ];
 const FinancingCapacityPage = async () => {
   /*   const overs = await getAllOverview();

@@ -55,17 +55,17 @@ const FinCapForm = ({ fxList }: FinancingProps) => {
   const form = useForm<z.infer<typeof finCapSchema>>({
     resolver: zodResolver(finCapSchema),
     defaultValues: {
-      taux_interet: "5.0",
-      taux_interet_ref: "3.0",
-      spread_souverain: "2.5",
-      spread_ref: "2.0",
+      taux_interet: "25",
+      taux_interet_ref: "22",
+      spread_souverain: "4",
+      spread_ref: "4",
       taux_change: fxList
         ?.find((el: any) => el.label == "USD-CDF")
         ?.taux.toString(),
-      taux_change_ref: "1.0",
-      inflation: "4.5",
-      inflation_ref: "2.0",
-      performance_matieres: "-3.0",
+      taux_change_ref: "2800",
+      inflation: "22",
+      inflation_ref: "21",
+      performance_matieres: "1",
       cours: "1",
     },
   });
