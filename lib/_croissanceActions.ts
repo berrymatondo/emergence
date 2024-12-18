@@ -286,7 +286,11 @@ export const computeDebt = async (year: any, croissance: any, tab: any) => {
   } catch (error) {}
 };
 
-export const computeCroissance = async (data: any, detteExternePIB: number) => {
+export const computeCroissance = async (
+  data: any,
+  detteExternePIB: number,
+  tab: any
+) => {
   //console.log("reserve", data);
 
   const {
@@ -300,6 +304,8 @@ export const computeCroissance = async (data: any, detteExternePIB: number) => {
     inflation_ref,
     performance_matieres,
   } = data;
+
+  //console.log("tab", tab);
 
   let headersList = {
     Accept: "*/*",
@@ -319,7 +325,7 @@ export const computeCroissance = async (data: any, detteExternePIB: number) => {
         ? +data.performance_matieres
         : 0, */
 
-    tauxInteretUSD: 0.055,
+    /*     tauxInteretUSD: 0.055,
     spreadInteret: 0.04,
     tauxInteretLocal: 0.25,
     tauxInflationNational: 0.23,
@@ -331,8 +337,45 @@ export const computeCroissance = async (data: any, detteExternePIB: number) => {
     investissement: 0.108,
     detteExternePIB: detteExternePIB,
     detteInternePIB: 0.02,
-    variationTauxChange: 0.22,
+    variationTauxChange: 0.22, */
+
+    /*     id: 31,
+    scenario: 6,
+    type: 'Choc sur Matières Premières',
+    subType: 'Sévère',
+    year: 2028,
+    croissance: 0,
+    debtExtPIB: 0,
+    txInternational: 3.94,
+    creditSpread: 4,
+    txInterieur: 19,
+    infNat: 15,
+    infMon: 3.5,
+    soldePrim: 3.5,
+    exportation: 14,
+    inportation: 18,
+    rendement: 5,
+    invest: 5,
+    debtIntPIB: 4,
+    variantion: 5, */
+
+    tauxInteretUSD: tab[0]?.txInternational / 100,
+    spreadInteret: tab[0]?.creditSpread / 100,
+    tauxInteretLocal: tab[0]?.txInterieur / 100,
+    tauxInflationNational: tab[0]?.infNat / 100,
+    tauxInflationMondial: tab[0]?.infMon / 100,
+    SoldePrimaire: tab[0]?.soldePrim / 100,
+    exportation: tab[0]?.exportation / 100,
+    importation: tab[0]?.inportation / 100,
+    rendementInvestissement: tab[0]?.rendement / 100,
+    investissement: tab[0]?.invest / 100,
+    detteExternePIB: detteExternePIB,
+    detteInternePIB: tab[0]?.debtIntPIB / 100,
+    variationTauxChange: tab[0]?.variantion / 100,
   });
+
+  //console.log("tab", tab[0]?.txInternational);
+  //console.log("body", bodyContent);
 
   try {
     let response = await fetch(
@@ -348,7 +391,7 @@ export const computeCroissance = async (data: any, detteExternePIB: number) => {
 
     let data = await response.json();
 
-    //  console.log("Data", data);
+    //console.log("Data", data);
 
     return {
       success: true,

@@ -13,6 +13,7 @@ import {
   computeCroissance,
   computeDebt,
   getAllCroissances,
+  getCroissancesByYear,
 } from "@/lib/_croissanceActions";
 import TransMatrixForm from "@/components/matrix/transMatrixForm";
 import ScenRefForm from "./scenRefForm";
@@ -91,8 +92,12 @@ const ScenRef = ({
       }
 
       //console.log("res0?.data", res0?.data);
-
-      const ret0 = await computeCroissance(scenRef[i]?.year, res0?.data);
+      const x = await getCroissancesByYear(recLeg[i]?.year, 1);
+      const ret0 = await computeCroissance(
+        scenRef[i]?.year,
+        res0?.data,
+        x?.data
+      );
 
       // console.log("ret0", ret0);
 
@@ -100,7 +105,12 @@ const ScenRef = ({
         const fnd1 = croisAcc?.find((el: any) => el?.year == croisAcc[i]?.year);
         if (fnd1 != null) {
           fnd1.data.debtExtPIB = res0?.data ? res0?.data : 0;
-          const ret1 = await computeCroissance(croisAcc[i]?.year, res0?.data);
+          const y = await getCroissancesByYear(recLeg[i]?.year, 2);
+          const ret1 = await computeCroissance(
+            croisAcc[i]?.year,
+            res0?.data,
+            y?.data
+          );
 
           fnd1.data.croissance = ret1?.data;
         }
@@ -108,7 +118,16 @@ const ScenRef = ({
         const fnd2 = recLeg?.find((el: any) => el?.year == recLeg[i]?.year);
         if (fnd2 != null) {
           fnd2.data.debtExtPIB = res0?.data ? res0?.data : 0;
-          const ret2 = await computeCroissance(recLeg[i]?.year, res0?.data);
+          const y = await getCroissancesByYear(recLeg[i]?.year, 3);
+          //  console.log("y", y?.data);
+
+          const ret2 = await computeCroissance(
+            recLeg[i]?.year,
+            res0?.data,
+            y?.data
+          );
+
+          //console.log("do,", recLeg[i]?.year, res0?.data);
 
           fnd2.data.croissance = ret2?.data;
         }
@@ -116,7 +135,12 @@ const ScenRef = ({
         const fnd3 = recSev?.find((el: any) => el?.year == recSev[i]?.year);
         if (fnd3 != null) {
           fnd3.data.debtExtPIB = res0?.data ? res0?.data : 0;
-          const ret3 = await computeCroissance(recSev[i]?.year, res0?.data);
+          const y = await getCroissancesByYear(recLeg[i]?.year, 4);
+          const ret3 = await computeCroissance(
+            recSev[i]?.year,
+            res0?.data,
+            y?.data
+          );
 
           fnd3.data.croissance = ret3?.data;
         }
@@ -124,7 +148,12 @@ const ScenRef = ({
         const fnd4 = chocLeg?.find((el: any) => el?.year == chocLeg[i]?.year);
         if (fnd4 != null) {
           fnd4.data.debtExtPIB = res0?.data ? res0?.data : 0;
-          const ret4 = await computeCroissance(chocLeg[i]?.year, res0?.data);
+          const y = await getCroissancesByYear(recLeg[i]?.year, 5);
+          const ret4 = await computeCroissance(
+            chocLeg[i]?.year,
+            res0?.data,
+            y?.data
+          );
 
           fnd4.data.croissance = ret4?.data;
         }
@@ -132,7 +161,12 @@ const ScenRef = ({
         const fnd5 = chocSev?.find((el: any) => el?.year == chocSev[i]?.year);
         if (fnd5 != null) {
           fnd5.data.debtExtPIB = res0?.data ? res0?.data : 0;
-          const ret5 = await computeCroissance(chocSev[i]?.year, res0?.data);
+          const y = await getCroissancesByYear(recLeg[i]?.year, 6);
+          const ret5 = await computeCroissance(
+            chocSev[i]?.year,
+            res0?.data,
+            y?.data
+          );
 
           fnd5.data.croissance = ret5?.data;
         }
@@ -402,7 +436,13 @@ const ScenRef = ({
                     <TableCell className="text-left mx-0 px-0">
                       {ic.year}
                     </TableCell>
-                    <TableCell className="text-left mx-0 px-0 text-sky-400">
+                    <TableCell
+                      className={
+                        +ic?.data?.croissance < 0
+                          ? "text-left mx-0 px-0 text-red-400"
+                          : "text-left mx-0 px-0 text-green-400"
+                      }
+                    >
                       {(ic?.data?.croissance * 100)?.toFixed(2)} %
                     </TableCell>
                     <TableCell className="text-left mx-0 px-0">
@@ -523,7 +563,13 @@ const ScenRef = ({
                       <TableCell className="text-left mx-0 px-0">
                         {ic.year}
                       </TableCell>
-                      <TableCell className="text-left mx-0 px-0 text-sky-400">
+                      <TableCell
+                        className={
+                          +ic?.data?.croissance < 0
+                            ? "text-left mx-0 px-0 text-red-400"
+                            : "text-left mx-0 px-0 text-green-400"
+                        }
+                      >
                         {(ic?.data?.croissance * 100)?.toFixed(2)} %
                       </TableCell>
                       <TableCell className="text-left mx-0 px-0">
@@ -638,7 +684,13 @@ const ScenRef = ({
                       <TableCell className="text-left mx-0 px-0">
                         {ic.year}
                       </TableCell>
-                      <TableCell className="text-left mx-0 px-0 text-sky-400">
+                      <TableCell
+                        className={
+                          +ic?.data?.croissance < 0
+                            ? "text-left mx-0 px-0 text-red-400"
+                            : "text-left mx-0 px-0 text-green-400"
+                        }
+                      >
                         {(ic?.data?.croissance * 100)?.toFixed(2)} %
                       </TableCell>
                       <TableCell className="text-left mx-0 px-0">
@@ -765,7 +817,13 @@ const ScenRef = ({
                       <TableCell className="text-left mx-0 px-0">
                         {ic.year}
                       </TableCell>
-                      <TableCell className="text-left mx-0 px-0 text-sky-400">
+                      <TableCell
+                        className={
+                          +ic?.data?.croissance < 0
+                            ? "text-left mx-0 px-0 text-red-400"
+                            : "text-left mx-0 px-0 text-green-400"
+                        }
+                      >
                         {(ic?.data?.croissance * 100)?.toFixed(2)} %
                       </TableCell>
                       <TableCell className="text-left mx-0 px-0">
@@ -880,7 +938,13 @@ const ScenRef = ({
                       <TableCell className="text-left mx-0 px-0">
                         {ic.year}
                       </TableCell>
-                      <TableCell className="text-left mx-0 px-0 text-sky-400">
+                      <TableCell
+                        className={
+                          +ic?.data?.croissance < 0
+                            ? "text-left mx-0 px-0 text-red-400"
+                            : "text-left mx-0 px-0 text-green-400"
+                        }
+                      >
                         {(ic?.data?.croissance * 100)?.toFixed(2)} %
                       </TableCell>
                       <TableCell className="text-left mx-0 px-0">
