@@ -745,17 +745,17 @@ const ScenRef = ({
         <Tabs defaultValue="legere" className="w-full ">
           <TabsList className="w-full">
             <TabsTrigger value="legere">
-              Choc sur Matières Premières Léger
+              Choc sur Matières Premières - Sévère
             </TabsTrigger>
             <TabsTrigger value="severe">
               {" "}
-              Choc sur Matières Premières Sévère{" "}
+              Choc sur Matières Premières - Léger{" "}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="legere" className="px-4">
             <ScrollArea className=" h-96 max-md:h-[20rem] pr-2">
               <p className="text-xl font-semibold text-sky-400">
-                {"Choc sur Matières Premières Léger"}
+                {"Choc sur Matières Premières - Sévère"}
               </p>
 
               <Table>
@@ -876,7 +876,7 @@ const ScenRef = ({
           <TabsContent value="severe" className="px-4">
             <ScrollArea className=" h-96 max-md:h-[20rem] pr-2">
               <p className="text-xl font-semibold text-sky-400">
-                {"Choc sur Matières Premières Sévère"}
+                {"Choc sur Matières Premières - Léger"}
               </p>
 
               <Table>
