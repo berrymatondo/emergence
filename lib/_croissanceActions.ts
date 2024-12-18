@@ -3,8 +3,43 @@ import prisma from "./prisma";
 import { z } from "zod";
 import { croissanceSchema } from "./schemas";
 import { revalidatePath } from "next/cache";
+import { log } from "console";
 
 type Inputs = z.infer<typeof croissanceSchema>;
+
+export const getYears = async () => {
+  try {
+    const croissances = await prisma.croissance.findMany({
+      distinct: ["year"],
+      select: { year: true },
+      orderBy: {
+        year: "asc",
+      },
+    });
+
+    //  console.log("croissances ", croissances);
+
+    return {
+      success: true,
+      data: croissances,
+    };
+  } catch (error) {}
+};
+
+export const getCroissancesByYear = async (year: number, scenario: number) => {
+  try {
+    const croissances = await prisma.croissance.findMany({
+      where: {
+        AND: [{ year: year }, { scenario: scenario }],
+      },
+    });
+
+    return {
+      success: true,
+      data: croissances,
+    };
+  } catch (error) {}
+};
 
 export const getAllCroissances = async () => {
   try {
@@ -182,7 +217,76 @@ export const deleteCroissance = async (id: string) => {
 };
 
 // Compute external debt
-export const computeDebt = async (data: any) => {
+export const computeDebt = async (year: any, croissance: any, tab: any) => {
+  //console.log("reserve ", tab?.data?.txInternational);
+
+  /*   const {
+    taux_interet,
+    taux_interet_ref,
+    spread_souverain,
+    spread_ref,
+    taux_change,
+    taux_change_ref,
+    inflation,
+    inflation_ref,
+    performance_matieres,
+  } = data;
+ */
+  let headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+  };
+
+  let bodyContent = JSON.stringify({
+    /*       taux_interet: data.taux_interet ? +data.taux_interet : 0,
+      taux_interet_ref: data.taux_interet_ref ? +data.taux_interet_ref : 0,
+      spread_souverain: data.spread_souverain ? +data.spread_souverain : 0,
+      spread_ref: data.spread_ref ? +data.spread_ref : 0,
+      taux_change: data.taux_change ? +data.taux_change : 0,
+      taux_change_ref: data.taux_change_ref ? +data.taux_change_ref : 0,
+      inflation: data.inflation ? +data.inflation : 0,
+      inflation_ref: data.inflation_ref ? +data.inflation_ref : 0,
+      performance_matieres: data.performance_matieres
+        ? +data.performance_matieres
+        : 0, */
+    targetCroissancePIB: +croissance / 100,
+    tauxInteretUSD: +tab?.data?.txInternational / 100,
+    spreadInteret: +tab?.data?.creditSpread / 100,
+    tauxInteretLocal: +tab?.data?.txInterieur / 100,
+    tauxInflationNational: +tab?.data?.infNat / 100,
+    tauxInflationMondial: +tab?.data?.infMon / 100,
+    SoldePrimaire: +tab?.data?.soldePrim / 100,
+    exportation: +tab?.data?.exportation / 100,
+    importation: +tab?.data?.inportation / 100,
+    rendementInvestissement: +tab?.data?.rendement / 100,
+    investissement: +tab?.data?.invest / 100,
+    detteInternePIB: +tab?.data?.debtIntPIB / 100,
+    variationTauxChange: +tab?.data?.variantion / 100,
+  });
+
+  try {
+    let response = await fetch(
+      "http://213.165.83.130/analysis/estimation_du_ratio_dette_externe_PIB",
+      {
+        method: "POST",
+        body: bodyContent,
+        headers: headersList,
+      }
+    );
+
+    //console.log("bodyContent", bodyContent);
+    //console.log("response", response);
+
+    let data = await response.json();
+
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error) {}
+};
+
+export const computeCroissance = async (data: any, detteExternePIB: number) => {
   //console.log("reserve", data);
 
   const {
@@ -214,7 +318,7 @@ export const computeDebt = async (data: any) => {
       performance_matieres: data.performance_matieres
         ? +data.performance_matieres
         : 0, */
-    targetCroissancePIB: 0.062516,
+
     tauxInteretUSD: 0.055,
     spreadInteret: 0.04,
     tauxInteretLocal: 0.25,
@@ -225,13 +329,14 @@ export const computeDebt = async (data: any) => {
     importation: 0.18,
     rendementInvestissement: 0.01,
     investissement: 0.108,
+    detteExternePIB: detteExternePIB,
     detteInternePIB: 0.02,
     variationTauxChange: 0.22,
   });
 
   try {
     let response = await fetch(
-      "http://213.165.83.130/analysis/estimation_du_ratio_dette_externe_PIB",
+      "http://213.165.83.130/analysis/estimation_de_croissance",
       {
         method: "POST",
         body: bodyContent,
@@ -239,9 +344,11 @@ export const computeDebt = async (data: any) => {
       }
     );
 
-    console.log("response", response);
+    //console.log("response", response);
 
     let data = await response.json();
+
+    //  console.log("Data", data);
 
     return {
       success: true,

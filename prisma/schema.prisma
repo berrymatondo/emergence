@@ -423,6 +423,7 @@ model Croissance{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([year,scenario]) 
   @@map("croissance")
 }
 
