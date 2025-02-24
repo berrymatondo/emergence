@@ -350,7 +350,7 @@ const ListItems = [
     subtitle: "Central Bank",
     subdesc: "Comparer les taux directeurs et calculer l'inflation anticipée.",
     sublinks: [
-      {
+      /*       {
         id: 1,
         title: "Key Interest Rate",
         link: "/banque/tdir",
@@ -359,7 +359,7 @@ const ListItems = [
         id: 2,
         title: "Expected Inflation",
         link: "/banque/infa",
-      },
+      }, */
 
       { id: 3, title: "Interest Rate Swap", link: "/banque/irs" },
       { id: 4, title: "Cross Currency Swap", link: "/banque/ccs" },
@@ -394,7 +394,7 @@ const ListItems = [
       },
     ],
   },
-  {
+  /*   {
     id: "8",
     link: "industrie",
     icon: <LiaIndustrySolid size={20} />,
@@ -415,7 +415,7 @@ const ListItems = [
       },
       { id: 3, title: "Energie", link: "/industrie/ener" },
     ],
-  },
+  }, */
   {
     id: 9,
     link: "financingCapacity",

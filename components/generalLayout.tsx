@@ -71,7 +71,7 @@ const shorts = [
     name: "Central Bank",
     logo: <CiBank size={30} className="font-thin text-sky-500" />,
     links: [
-      {
+      /*       {
         id: 1,
         title: "Key Interest Rate",
         link: "/banque/tdir",
@@ -80,7 +80,7 @@ const shorts = [
         id: 2,
         title: "Expected Inflation",
         link: "/banque/infa",
-      },
+      }, */
 
       { id: 3, title: "Interest Rate Swap", link: "/banque/irs" },
       { id: 4, title: "Cross Currency Swap", link: "/banque/ccs" },

@@ -200,7 +200,7 @@ const ListItems = [
     subtitle: "Central Bank",
     subdesc: "Comparer les taux directeurs et calculer l'inflation anticipée.",
     sublinks: [
-      {
+      /*       {
         id: 1,
         title: "Key Interest Rate",
         link: "/banque/tdir",
@@ -210,7 +210,7 @@ const ListItems = [
         title: "Expected Inflation",
         link: "/banque/infa",
       },
-
+ */
       { id: 3, title: "Interest Rate Swap", link: "/banque/irs" },
       { id: 4, title: "Cross Currency Swap", link: "/banque/ccs" },
       { id: 5, title: "Commodity Swap", link: "/banque/comos" },

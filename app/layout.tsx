@@ -28,7 +28,7 @@ export default async function RootLayout({
       <body suppressHydrationWarning={true} className="flex bg-card ">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
