@@ -530,7 +530,7 @@ const stats = [
 
 // ─── PDF helpers (unchanged) ──────────────────────────────────────────────────
 
-const APP_NAME = "Convergence";
+const APP_NAME = "Emergence";
 const AUTHOR = "EmergenceRDC";
 const BLUE = [15, 76, 129] as const;
 const GREEN = [0, 100, 50] as const;

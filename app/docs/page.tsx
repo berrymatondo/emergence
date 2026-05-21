@@ -2,13 +2,13 @@ import DocsPage from "@/components/docs/DocsPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Documentation — Convergence",
+  title: "Documentation — Emergence",
   description:
-    "Documentation complète de l'application Convergence — valorisation de dette souveraine et analyse financière pour les marchés émergents.",
+    "Documentation complète de l'application Emergence — valorisation de dette souveraine et analyse financière pour les marchés émergents.",
   authors: [{ name: "EmergenceRDC" }],
-  applicationName: "Convergence",
+  applicationName: "Emergence",
   keywords: [
-    "convergence",
+    "emergence",
     "dette souveraine",
     "RDC",
     "marchés émergents",
