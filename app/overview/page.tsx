@@ -17,7 +17,6 @@ const OverviewPage = async () => {
   const yieldcurve = await getAllYC(true, 1, "2024-07-01");
   const fxrs = await getAllFXR();
   const bccrates = await getAllBCCIntRates();
-  //console.log("OVERVIEW", bccrates);
 
   return (
     <OverView
