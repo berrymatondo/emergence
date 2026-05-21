@@ -274,6 +274,14 @@ const ListItems = [
     title: "Capacité de financement",
     role: "AGENT",
   },
+  {
+    id: 11,
+    link: "docs",
+    icon: <BookOpen size={20} />,
+    tooltip: "Documentation",
+    title: "Documentation",
+    role: "AGENT",
+  },
   /*   {
     id: 9,
     link: "admin",
@@ -539,7 +547,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { UserPlus } from "lucide-react";
+import { UserPlus, BookOpen } from "lucide-react";
 import { LiaIndustrySolid } from "react-icons/lia";
 import { BsBank, BsCurrencyExchange } from "react-icons/bs";
 import { Badge } from "../ui/badge";

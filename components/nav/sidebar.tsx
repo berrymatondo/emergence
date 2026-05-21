@@ -8,6 +8,7 @@ import avatar from "../../public/rdc.png";
 import Image from "next/image";
 import { RiDashboardLine, RiExchange2Line, RiMore2Line } from "react-icons/ri";
 import { GrUserAdmin } from "react-icons/gr";
+import { BookOpen } from "lucide-react";
 
 import { IoStatsChartOutline } from "react-icons/io5";
 import { BsBank, BsCurrencyExchange } from "react-icons/bs";
@@ -430,6 +431,14 @@ const ListItems = [
     icon: <MdLock size={20} />,
     tooltip: "Espace admin",
     title: "Espace Admin",
+  },
+  {
+    id: 11,
+    link: "docs",
+    icon: <BookOpen size={20} />,
+    tooltip: "Documentation",
+    title: "Documentation",
+    role: "AGENT",
   },
 ];
 
